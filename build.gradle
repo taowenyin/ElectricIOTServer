@@ -1,0 +1,51 @@
+group 'siso.edu.cn'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-context
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.20.RELEASE'
+    // https://mvnrepository.com/artifact/org.springframework/spring-webmvc
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.20.RELEASE'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-orm
+    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.20.RELEASE'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.13'
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'
+
+    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4
+    compile group: 'org.thymeleaf', name: 'thymeleaf-spring4', version: '3.0.11.RELEASE'
+    // https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-servlet-api
+    // 解决“找不到javax.servlet.ServletException的类文件”的问题
+    compile group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: '9.0.12'
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
+    // 解决“Failed to load class "org.slf4j.impl.StaticLoggerBinder"的问题
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.7'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
+
+    // https://mvnrepository.com/artifact/io.netty/netty-all
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.31.Final'
+
+}

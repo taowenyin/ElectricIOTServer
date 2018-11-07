@@ -40,7 +40,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "login_name", nullable = false, length = 45)
+    @Column(name = "login_name", nullable = false, unique = true, length = 45)
     public String getLoginName() {
         return loginName;
     }

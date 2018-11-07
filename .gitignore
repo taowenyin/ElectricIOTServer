@@ -3,9 +3,12 @@
 
 # 应用程序构建以及Gradle临时文件
 .gradle/
-.idea/
 build/
 out/
+
+#IDEA临时文件
+.idea/
+*.iml
 
 # Compiled class file
 *.class

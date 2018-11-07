@@ -41,10 +41,10 @@ public class IDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public List<T> findByParams(String sql, Object... params) {
+    public List<T> findByParams(String sql, String... params) {
         Query query = this.entityManager.createQuery(sql);
         for (int i = 0; params != null && i < params.length; i++) {
-            query.setParameter(i, params);
+            query.setParameter(i + 1, params);
         }
 
         return query.getResultList();

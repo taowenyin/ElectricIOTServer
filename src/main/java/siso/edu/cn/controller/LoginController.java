@@ -2,11 +2,8 @@ package siso.edu.cn.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import siso.edu.cn.dao.UserDao;
 import siso.edu.cn.entity.UserEntity;
 import siso.edu.cn.service.UserService;
-
-import java.io.Serializable;
 
 @RestController
 @RequestMapping(value = "/api/login", produces = "application/json")

@@ -19,7 +19,7 @@ public class RightEntity {
     private String name;
     @JsonProperty("description")
     private String description;
-    @JsonProperty("parent_id")
+    @JsonProperty("parentId")
     private long parentId;
 
     @Id

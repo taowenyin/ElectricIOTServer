@@ -23,14 +23,14 @@ public class DepartmentEntity {
     private String modifyTime;
     @JsonProperty("create_time")
     private String createTime;
+    @JsonProperty("is_delete")
+    private byte isDelete;
     @JsonProperty("modify_user_id")
     private long modifyUserId;
     @JsonProperty("create_user_id")
     private long createUserId;
     @JsonProperty("parent_id")
     private long parentId;
-    @JsonProperty("is_delete")
-    private byte isDelete;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -93,6 +93,16 @@ public class DepartmentEntity {
     }
 
     @Basic
+    @Column(name = "is_delete", nullable = false)
+    public byte getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(byte isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    @Basic
     @Column(name = "modify_user_id", nullable = false)
     public long getModifyUserId() {
         return modifyUserId;
@@ -122,16 +132,6 @@ public class DepartmentEntity {
         this.parentId = parentId;
     }
 
-    @Basic
-    @Column(name = "is_delete", nullable = false)
-    public byte getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(byte isDelete) {
-        this.isDelete = isDelete;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -142,6 +142,7 @@ public class DepartmentEntity {
         if (id != that.id) return false;
         if (uid != that.uid) return false;
         if (level != that.level) return false;
+        if (isDelete != that.isDelete) return false;
         if (modifyUserId != that.modifyUserId) return false;
         if (createUserId != that.createUserId) return false;
         if (parentId != that.parentId) return false;
@@ -160,10 +161,10 @@ public class DepartmentEntity {
         result = 31 * result + level;
         result = 31 * result + (modifyTime != null ? modifyTime.hashCode() : 0);
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
+        result = 31 * result + (int) isDelete;
         result = 31 * result + (int) (modifyUserId ^ (modifyUserId >>> 32));
         result = 31 * result + (int) (createUserId ^ (createUserId >>> 32));
         result = 31 * result + (int) (parentId ^ (parentId >>> 32));
         return result;
     }
-
 }

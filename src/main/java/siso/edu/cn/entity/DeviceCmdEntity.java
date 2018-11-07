@@ -1,41 +1,49 @@
 package siso.edu.cn.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "department_device_relation", schema = "electric_iot", catalog = "")
-public class DepartmentDeviceRelationEntity {
-    @JsonProperty("id")
-    private long id;
-    @JsonProperty("department_id")
-    private long departmentId;
-    @JsonProperty("device_id")
+@Table(name = "device_cmd", schema = "electric_iot", catalog = "")
+public class DeviceCmdEntity {
+    private int id;
+    private byte[] cmd;
+    private byte isSend;
     private long deviceId;
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "department_id", nullable = false)
-    public long getDepartmentId() {
-        return departmentId;
+    @Column(name = "cmd", nullable = false)
+    public byte[] getCmd() {
+        return cmd;
     }
 
-    public void setDepartmentId(long departmentId) {
-        this.departmentId = departmentId;
+    public void setCmd(byte[] cmd) {
+        this.cmd = cmd;
+    }
+
+    @Basic
+    @Column(name = "is_send", nullable = false)
+    public byte getIsSend() {
+        return isSend;
+    }
+
+    public void setIsSend(byte isSend) {
+        this.isSend = isSend;
     }
 
     @Basic
@@ -53,19 +61,21 @@ public class DepartmentDeviceRelationEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DepartmentDeviceRelationEntity that = (DepartmentDeviceRelationEntity) o;
+        DeviceCmdEntity that = (DeviceCmdEntity) o;
 
         if (id != that.id) return false;
-        if (departmentId != that.departmentId) return false;
+        if (isSend != that.isSend) return false;
         if (deviceId != that.deviceId) return false;
+        if (!Arrays.equals(cmd, that.cmd)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (departmentId ^ (departmentId >>> 32));
+        int result = id;
+        result = 31 * result + Arrays.hashCode(cmd);
+        result = 31 * result + (int) isSend;
         result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
         return result;
     }

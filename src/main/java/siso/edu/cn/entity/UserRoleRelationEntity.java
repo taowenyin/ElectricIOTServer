@@ -1,10 +1,14 @@
 package siso.edu.cn.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "user_role_relation", schema = "electric_iot", catalog = "")
 public class UserRoleRelationEntity {
     @JsonProperty("id")

@@ -1,11 +1,14 @@
 package siso.edu.cn.dao;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+@Transactional
 public class IDaoImpl<T> implements IDao<T> {
 
     private Class<T> clazz = null;
@@ -23,6 +26,7 @@ public class IDaoImpl<T> implements IDao<T> {
     @Override
     public void save(T entity) {
         this.entityManager.persist(entity);
+        this.entityManager.flush();
     }
 
     @Override
@@ -41,10 +45,10 @@ public class IDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public List<T> findByParams(String sql, String... params) {
+    public List<T> findByParams(String sql, String[] params) {
         Query query = this.entityManager.createQuery(sql);
-        for (int i = 0; params != null && i < params.length; i++) {
-            query.setParameter(i + 1, params);
+        for (int i = 1; params != null && i <= params.length; i++) {
+            query.setParameter(i, params[i - 1]);
         }
 
         return query.getResultList();

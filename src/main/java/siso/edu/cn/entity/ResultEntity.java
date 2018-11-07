@@ -13,10 +13,13 @@ public class ResultEntity {
     private int code = 0;
     @JsonProperty("msg")
     private String msg = "";
+    @JsonProperty("data")
+    private Object data = null;
 
-    public ResultEntity(int code, String msg) {
+    public ResultEntity(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
+        this.data = data;
     }
 
     public ResultEntity() {
@@ -37,5 +40,13 @@ public class ResultEntity {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }

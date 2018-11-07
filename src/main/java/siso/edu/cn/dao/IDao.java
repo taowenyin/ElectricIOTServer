@@ -35,6 +35,6 @@ public interface IDao<T> {
      * @param params 参数列表
      * @return null表示没有找到，非null表示一组结果
      */
-    public List<T> findByParams(String sql, String... params);
+    public List<T> findByParams(String sql, String[] params);
 
 }

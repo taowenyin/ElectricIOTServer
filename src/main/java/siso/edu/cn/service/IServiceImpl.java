@@ -33,7 +33,7 @@ public class IServiceImpl<T> implements IService<T> {
     }
 
     @Override
-    public List<T> findByParams(String sql, String... params) {
+    public List<T> findByParams(String sql, String[] params) {
         return this.dao.findByParams(sql, params);
     }
 }

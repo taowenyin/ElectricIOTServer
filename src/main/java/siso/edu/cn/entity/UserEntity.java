@@ -5,7 +5,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @DynamicInsert
@@ -26,8 +25,8 @@ public class UserEntity {
     private String mobile;
     @JsonProperty("email")
     private String email;
-    @JsonProperty("is_delete")
-    private byte isDelete;
+    @JsonProperty("isDelete")
+    private boolean isDelete;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -40,7 +39,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "login_name", nullable = false, unique = true, length = 45)
+    @Column(name = "login_name", nullable = false, length = 45)
     public String getLoginName() {
         return loginName;
     }
@@ -101,12 +100,12 @@ public class UserEntity {
 
     @Basic
     @Column(name = "is_delete", nullable = false)
-    public byte getIsDelete() {
+    public boolean isDelete() {
         return isDelete;
     }
 
-    public void setIsDelete(byte isDelete) {
-        this.isDelete = isDelete;
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 
     @Override
@@ -138,7 +137,7 @@ public class UserEntity {
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (mobile != null ? mobile.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (int) isDelete;
+        result = 31 * result + (isDelete ? 1 : 0);
         return result;
     }
 }

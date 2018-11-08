@@ -11,7 +11,7 @@ import javax.persistence.*;
 @DynamicUpdate
 @Table(name = "user_department_relation", schema = "electric_iot", catalog = "")
 public class UserDepartmentRelationEntity {
-    @JsonProperty("name")
+    @JsonProperty("id")
     private long id;
     @JsonProperty("user_id")
     private long userId;

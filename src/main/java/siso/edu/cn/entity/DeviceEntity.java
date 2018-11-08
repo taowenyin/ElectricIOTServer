@@ -22,7 +22,7 @@ public class DeviceEntity {
     @JsonProperty("serial_number")
     private String serialNumber;
     @JsonProperty("is_delete")
-    private byte isDelete;
+    private double isDelete;
     @JsonProperty("type_id")
     private Long typeId;
     @JsonProperty("status_id")
@@ -31,6 +31,8 @@ public class DeviceEntity {
     private Long userId;
     @JsonProperty("comment")
     private String comment;
+    @JsonProperty("create_time")
+    private String createTime;
     @JsonProperty("battery_record_gps_interval")
     private int batteryRecordGpsInterval;
     @JsonProperty("power_record_gps_interval")
@@ -94,11 +96,11 @@ public class DeviceEntity {
 
     @Basic
     @Column(name = "is_delete", nullable = false)
-    public byte getIsDelete() {
+    public double getIsDelete() {
         return isDelete;
     }
 
-    public void setIsDelete(byte isDelete) {
+    public void setIsDelete(double isDelete) {
         this.isDelete = isDelete;
     }
 
@@ -140,6 +142,16 @@ public class DeviceEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Basic
+    @Column(name = "create_time", nullable = false)
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     @Basic
@@ -200,7 +212,7 @@ public class DeviceEntity {
         DeviceEntity that = (DeviceEntity) o;
 
         if (id != that.id) return false;
-        if (isDelete != that.isDelete) return false;
+        if (Double.compare(that.isDelete, isDelete) != 0) return false;
         if (batteryRecordGpsInterval != that.batteryRecordGpsInterval) return false;
         if (powerRecordGpsInterval != that.powerRecordGpsInterval) return false;
         if (batterySendGpsInterval != that.batterySendGpsInterval) return false;
@@ -214,22 +226,27 @@ public class DeviceEntity {
         if (statusId != null ? !statusId.equals(that.statusId) : that.statusId != null) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
+        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result;
+        long temp;
+        result = (int) (id ^ (id >>> 32));
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (imsi != null ? imsi.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (serialNumber != null ? serialNumber.hashCode() : 0);
-        result = 31 * result + (int) isDelete;
+        temp = Double.doubleToLongBits(isDelete);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (typeId != null ? typeId.hashCode() : 0);
         result = 31 * result + (statusId != null ? statusId.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + batteryRecordGpsInterval;
         result = 31 * result + powerRecordGpsInterval;
         result = 31 * result + batterySendGpsInterval;

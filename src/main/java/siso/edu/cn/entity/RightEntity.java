@@ -13,13 +13,11 @@ import javax.persistence.*;
 public class RightEntity {
     @JsonProperty("id")
     private long id;
-    @JsonProperty("uid")
-    private long uid;
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")
     private String description;
-    @JsonProperty("parentId")
+    @JsonProperty("parent_id")
     private long parentId;
 
     @Id
@@ -30,16 +28,6 @@ public class RightEntity {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "uid", nullable = false)
-    public long getUid() {
-        return uid;
-    }
-
-    public void setUid(long uid) {
-        this.uid = uid;
     }
 
     @Basic
@@ -80,7 +68,6 @@ public class RightEntity {
         RightEntity that = (RightEntity) o;
 
         if (id != that.id) return false;
-        if (uid != that.uid) return false;
         if (parentId != that.parentId) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
@@ -91,7 +78,6 @@ public class RightEntity {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (uid ^ (uid >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (int) (parentId ^ (parentId >>> 32));

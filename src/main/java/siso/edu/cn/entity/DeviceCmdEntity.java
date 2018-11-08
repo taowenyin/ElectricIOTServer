@@ -1,49 +1,57 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.Arrays;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "device_cmd", schema = "electric_iot", catalog = "")
 public class DeviceCmdEntity {
-    private int id;
-    private byte[] cmd;
-    private byte isSend;
+    @JsonProperty("id")
+    private long id;
+    @JsonProperty("cmd")
+    private String cmd;
+    @JsonProperty("is_send")
+    private boolean isSend;
+    @JsonProperty("device_id")
     private long deviceId;
+    @JsonProperty("create_time")
+    private String createTime;
+    @JsonProperty("send_time")
+    private String sendTime;
 
     @Id
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "cmd", nullable = false)
-    public byte[] getCmd() {
+    public String getCmd() {
         return cmd;
     }
 
-    public void setCmd(byte[] cmd) {
+    public void setCmd(String cmd) {
         this.cmd = cmd;
     }
 
     @Basic
     @Column(name = "is_send", nullable = false)
-    public byte getIsSend() {
+    public boolean isSend() {
         return isSend;
     }
 
-    public void setIsSend(byte isSend) {
-        this.isSend = isSend;
+    public void setSend(boolean send) {
+        isSend = send;
     }
 
     @Basic
@@ -56,6 +64,26 @@ public class DeviceCmdEntity {
         this.deviceId = deviceId;
     }
 
+    @Basic
+    @Column(name = "create_time", nullable = false)
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    @Basic
+    @Column(name = "send_time", nullable = true)
+    public String getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,17 +94,21 @@ public class DeviceCmdEntity {
         if (id != that.id) return false;
         if (isSend != that.isSend) return false;
         if (deviceId != that.deviceId) return false;
-        if (!Arrays.equals(cmd, that.cmd)) return false;
+        if (cmd != null ? !cmd.equals(that.cmd) : that.cmd != null) return false;
+        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
+        if (sendTime != null ? !sendTime.equals(that.sendTime) : that.sendTime != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + Arrays.hashCode(cmd);
-        result = 31 * result + (int) isSend;
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (cmd != null ? cmd.hashCode() : 0);
+        result = 31 * result + (isSend ? 1 : 0);
         result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
+        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
+        result = 31 * result + (sendTime != null ? sendTime.hashCode() : 0);
         return result;
     }
 }

@@ -5,7 +5,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @DynamicInsert
@@ -20,6 +19,8 @@ public class RoleEntity {
     private String createTime;
     @JsonProperty("comment")
     private String comment;
+    @JsonProperty("is_delete")
+    private boolean isDelete;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -61,6 +62,16 @@ public class RoleEntity {
         this.comment = comment;
     }
 
+    @Basic
+    @Column(name = "is_delete", nullable = false)
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +80,7 @@ public class RoleEntity {
         RoleEntity that = (RoleEntity) o;
 
         if (id != that.id) return false;
+        if (isDelete != that.isDelete) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
         if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
@@ -82,6 +94,7 @@ public class RoleEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + (isDelete ? 1 : 0);
         return result;
     }
 }

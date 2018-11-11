@@ -26,7 +26,6 @@ public class IDaoImpl<T> implements IDao<T> {
     @Override
     public void save(T entity) {
         this.entityManager.persist(entity);
-        this.entityManager.flush();
     }
 
     @Override

@@ -24,6 +24,7 @@ public class DeviceLocationEntity {
     private long deviceId;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;

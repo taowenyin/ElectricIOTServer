@@ -21,6 +21,7 @@ public class RightEntity {
     private long parentId;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;

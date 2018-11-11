@@ -23,6 +23,7 @@ public class RoleEntity {
     private boolean isDelete;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;

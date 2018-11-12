@@ -1,8 +1,8 @@
 {
   "name": "华电服务器API文档",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "开发技术接口文档",
   "title": "华电服务器API文档",
-  "url" : "http://localhost:8080/test",
-  "sampleUrl":"http://localhost:8080/test"
+  "url" : "http://localhost:8080/apidoc",
+  "sampleUrl":"http://localhost:8080/apidoc"
 }

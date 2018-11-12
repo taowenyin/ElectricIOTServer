@@ -11,6 +11,8 @@ public class ResultEntity {
     public static final int SUCCESS = 0;
     public static final int SAVE_DATA_ERROR = 1;
     public static final int ACCOUNT_ERROR = 2;
+    public static final int NOT_FIND_ERROR = 3;
+    public static final int DELETE_ERROR = 4;
 
     @JsonProperty("code")
     private int code = 0;

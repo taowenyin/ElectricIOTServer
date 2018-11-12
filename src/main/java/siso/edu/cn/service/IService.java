@@ -14,13 +14,13 @@ public interface IService<T> {
      * 删除一条记录
      * @param id ID号
      */
-    public void delete(long id);
+    public T delete(long id);
 
     /**
      * 修改一条记录
      * @param entity 实体对象
      */
-    public void update(T entity);
+    public T update(T entity);
 
     /**
      * 根据ID查找一条记录

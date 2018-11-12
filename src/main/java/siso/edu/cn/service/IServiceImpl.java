@@ -18,13 +18,13 @@ public class IServiceImpl<T> implements IService<T> {
     }
 
     @Override
-    public void delete(long id) {
-        this.dao.delete(id);
+    public T delete(long id) {
+        return this.dao.delete(id);
     }
 
     @Override
-    public void update(T entity) {
-        this.dao.update(entity);
+    public T update(T entity) {
+        return this.dao.update(entity);
     }
 
     @Override

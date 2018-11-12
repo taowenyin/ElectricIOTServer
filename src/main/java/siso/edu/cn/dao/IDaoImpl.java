@@ -29,13 +29,18 @@ public class IDaoImpl<T> implements IDao<T> {
     }
 
     @Override
-    public void delete(long id) {
-        this.entityManager.remove(this.findById(id));
+    public T delete(long id) {
+        T obj = this.findById(id);
+        if (obj != null) {
+            this.entityManager.remove(obj);
+        }
+
+        return obj;
     }
 
     @Override
-    public void update(T entity) {
-        this.entityManager.merge(entity);
+    public T update(T entity) {
+        return this.entityManager.merge(entity);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package siso.edu.cn.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,8 @@ public class ManageController {
     }
 
     @RequestMapping(value = "/department", method = RequestMethod.POST)
-    public ResultEntity department(@RequestParam("name") String name, @RequestParam("level") int level, @RequestParam("parent_id") long parentId) {
+    public ResultEntity createDepartment(@RequestParam("name") String name, @RequestParam("level") int level,
+                                         @RequestParam("parent_id") long parentId) {
         ResultEntity resultEntity = new ResultEntity();
 
         // 获取时间格式
@@ -54,23 +56,50 @@ public class ManageController {
         return resultEntity;
     }
 
-//    @RequestMapping(value = "/department", method = RequestMethod.GET)
-//    public ResultEntity department(@RequestParam("id") long id) {
-//        ResultEntity resultEntity = new ResultEntity();
-//
-//        DepartmentEntity departmentEntity = departmentService.findById(id);
-//
-//        return resultEntity;
-//    }
+    /**
+     * @api {get} /department/:id 请求部门信息
+     * @apiName getDepartmentById
+     * @apiGroup Department
+     *
+     * @apiParam {Number} id 部门ID
+     *
+     * @apiSuccess {String} firstname Firstname of the User.
+     * @apiSuccess {String} lastname  Lastname of the User.
+     */
+    @RequestMapping(value = "/department/{id}", method = RequestMethod.GET)
+    public ResultEntity getDepartmentById(@PathVariable("id") long id) {
+        ResultEntity resultEntity = new ResultEntity();
 
-//    @RequestMapping(value = "/{loginName}/{loginPassword}", method = RequestMethod.GET)
-//    @ResponseBody
-//    public String login(@PathVariable("loginName") String loginName, @PathVariable("loginPassword") String loginPassword) {
-//
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-//        String data = simpleDateFormat.format(new Date());
-//
-//        return "用户名 = " + loginName + " 密码 = " + loginPassword;
-//    }
+        DepartmentEntity departmentEntity = departmentService.findById(id);
+
+        if (departmentEntity != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            resultEntity.setCode(ResultEntity.SUCCESS);
+            resultEntity.setData(objectMapper.convertValue(departmentEntity, JsonNode.class));
+        } else {
+            resultEntity.setCode(ResultEntity.NOT_FIND_ERROR);
+        }
+
+        return resultEntity;
+    }
+
+    @RequestMapping(value = "/department/{id}", method = RequestMethod.DELETE)
+    public ResultEntity deleteDepartmentById(@PathVariable("id") long id) {
+        ResultEntity resultEntity = new ResultEntity();
+
+        DepartmentEntity departmentEntity = departmentService.findById(id);
+
+        if (departmentEntity == null) {
+            resultEntity.setCode(ResultEntity.DELETE_ERROR);
+            return resultEntity;
+        }
+
+        departmentEntity.setDelete(true);
+        departmentEntity = departmentService.update(departmentEntity);
+        ObjectMapper objectMapper = new ObjectMapper();
+        resultEntity.setCode(ResultEntity.SUCCESS);
+        resultEntity.setData(objectMapper.convertValue(departmentEntity, JsonNode.class));
+
+        return resultEntity;
+    }
 }

@@ -88,6 +88,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addResourceHandler("/images/**").addResourceLocations("/WEB-INF/images/");
         registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/js/");
+        // 添加API-DOC的静态地址
         registry.addResourceHandler("/apidoc/**").addResourceLocations("/WEB-INF/apidoc/");
     }
 

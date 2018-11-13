@@ -3,6 +3,7 @@ package siso.edu.cn.dao;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.lang.reflect.ParameterizedType;
@@ -56,6 +57,14 @@ public class IDaoImpl<T> implements IDao<T> {
         }
 
         return query.getResultList();
+    }
+
+    @Override
+    public int findMaxValue(String sql) {
+        Query query = this.entityManager.createQuery(sql);
+        List resultList = query.getResultList();
+
+        return (int) resultList.get(0);
     }
 
 }

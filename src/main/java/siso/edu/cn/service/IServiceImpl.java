@@ -36,4 +36,9 @@ public class IServiceImpl<T> implements IService<T> {
     public List<T> findByParams(String sql, String[] params) {
         return this.dao.findByParams(sql, params);
     }
+
+    @Override
+    public int findMaxValue(String sql) {
+        return this.dao.findMaxValue(sql);
+    }
 }

@@ -103,6 +103,25 @@ public class ManageController {
     }
 
     /**
+     * @api {get} /api/manage/department 获取所有部门信息
+     * @apiVersion 0.0.1
+     * @apiName getDepartment
+     * @apiGroup group
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/department", method = RequestMethod.GET)
+    public ResultEntity getDepartment() {
+        ResultEntity resultEntity = new ResultEntity();
+
+        int maxLevel = departmentService.maxLevel();
+
+        return resultEntity;
+    }
+
+    /**
      * @api {delete} /api/manage/department/:id 根据ID删除部门
      * @apiVersion 0.0.1
      * @apiName deleteDepartmentById

@@ -15,7 +15,6 @@ import java.util.TimeZone;
 
 /**
  * @apiDefine group 管理接口
- * @apiDefine version 0.0.1
  */
 @RestController
 @RequestMapping(value = "/api/manage", produces = "application/json;charset=utf-8")
@@ -28,6 +27,20 @@ public class ManageController {
         this.departmentService = departmentService;
     }
 
+    /**
+     * @api {post} /api/manage/department 创建新部门
+     * @apiVersion 0.0.1
+     * @apiName createDepartment
+     * @apiGroup group
+     *
+     * @apiParam {name} name 部门名称
+     * @apiParam {level} level 部门层级
+     * @apiParam {parent_id} parent_id="0" 父部门ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
     @RequestMapping(value = "/department", method = RequestMethod.POST)
     public ResultEntity createDepartment(@RequestParam("name") String name, @RequestParam("level") int level,
                                          @RequestParam("parent_id") long parentId) {
@@ -62,6 +75,7 @@ public class ManageController {
 
     /**
      * @api {get} /api/manage/department/:id 根据ID获取部门信息
+     * @apiVersion 0.0.1
      * @apiName getDepartmentById
      * @apiGroup group
      *
@@ -88,6 +102,18 @@ public class ManageController {
         return resultEntity;
     }
 
+    /**
+     * @api {delete} /api/manage/department/:id 根据ID删除部门
+     * @apiVersion 0.0.1
+     * @apiName deleteDepartmentById
+     * @apiGroup group
+     *
+     * @apiParam {Number} id 部门ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
     @RequestMapping(value = "/department/{id}", method = RequestMethod.DELETE)
     public ResultEntity deleteDepartmentById(@PathVariable("id") long id) {
         ResultEntity resultEntity = new ResultEntity();

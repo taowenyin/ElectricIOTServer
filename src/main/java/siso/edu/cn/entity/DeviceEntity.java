@@ -1,10 +1,12 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @DynamicInsert
@@ -22,7 +24,7 @@ public class DeviceEntity {
     @JsonProperty("serial_number")
     private String serialNumber;
     @JsonProperty("is_delete")
-    private double isDelete;
+    private int isDelete;
     @JsonProperty("type_id")
     private Long typeId;
     @JsonProperty("status_id")
@@ -43,6 +45,18 @@ public class DeviceEntity {
     private int powerSendGpsInterval;
     @JsonProperty("power_tcp_live_interval")
     private int powerTcpLiveInterval;
+    @JsonIgnore
+    private Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById;
+    @JsonIgnore
+    private TypeEntity typeByTypeId;
+    @JsonIgnore
+    private StatusEntity statusByStatusId;
+    @JsonIgnore
+    private UserEntity userByUserId;
+    @JsonIgnore
+    private Collection<DeviceCmdEntity> deviceCmdsById;
+    @JsonIgnore
+    private Collection<DeviceLocationEntity> deviceLocationsById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,11 +111,11 @@ public class DeviceEntity {
 
     @Basic
     @Column(name = "is_delete", nullable = false)
-    public double getIsDelete() {
+    public int getIsDelete() {
         return isDelete;
     }
 
-    public void setIsDelete(double isDelete) {
+    public void setIsDelete(int isDelete) {
         this.isDelete = isDelete;
     }
 
@@ -213,7 +227,7 @@ public class DeviceEntity {
         DeviceEntity that = (DeviceEntity) o;
 
         if (id != that.id) return false;
-        if (Double.compare(that.isDelete, isDelete) != 0) return false;
+        if (isDelete != that.isDelete) return false;
         if (batteryRecordGpsInterval != that.batteryRecordGpsInterval) return false;
         if (powerRecordGpsInterval != that.powerRecordGpsInterval) return false;
         if (batterySendGpsInterval != that.batterySendGpsInterval) return false;
@@ -234,15 +248,12 @@ public class DeviceEntity {
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (id ^ (id >>> 32));
+        int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (imsi != null ? imsi.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (serialNumber != null ? serialNumber.hashCode() : 0);
-        temp = Double.doubleToLongBits(isDelete);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + isDelete;
         result = 31 * result + (typeId != null ? typeId.hashCode() : 0);
         result = 31 * result + (statusId != null ? statusId.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
@@ -254,5 +265,62 @@ public class DeviceEntity {
         result = 31 * result + powerSendGpsInterval;
         result = 31 * result + powerTcpLiveInterval;
         return result;
+    }
+
+    @OneToMany(mappedBy = "deviceByDeviceId")
+    public Collection<DepartmentDeviceRelationEntity> getDepartmentDeviceRelationsById() {
+        return departmentDeviceRelationsById;
+    }
+
+    public void setDepartmentDeviceRelationsById(Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById) {
+        this.departmentDeviceRelationsById = departmentDeviceRelationsById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id", insertable = false, updatable = false)
+    public TypeEntity getTypeByTypeId() {
+        return typeByTypeId;
+    }
+
+    public void setTypeByTypeId(TypeEntity typeByTypeId) {
+        this.typeByTypeId = typeByTypeId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id", insertable = false, updatable = false)
+    public StatusEntity getStatusByStatusId() {
+        return statusByStatusId;
+    }
+
+    public void setStatusByStatusId(StatusEntity statusByStatusId) {
+        this.statusByStatusId = statusByStatusId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    public UserEntity getUserByUserId() {
+        return userByUserId;
+    }
+
+    public void setUserByUserId(UserEntity userByUserId) {
+        this.userByUserId = userByUserId;
+    }
+
+    @OneToMany(mappedBy = "deviceByDeviceId")
+    public Collection<DeviceCmdEntity> getDeviceCmdsById() {
+        return deviceCmdsById;
+    }
+
+    public void setDeviceCmdsById(Collection<DeviceCmdEntity> deviceCmdsById) {
+        this.deviceCmdsById = deviceCmdsById;
+    }
+
+    @OneToMany(mappedBy = "deviceByDeviceId")
+    public Collection<DeviceLocationEntity> getDeviceLocationsById() {
+        return deviceLocationsById;
+    }
+
+    public void setDeviceLocationsById(Collection<DeviceLocationEntity> deviceLocationsById) {
+        this.deviceLocationsById = deviceLocationsById;
     }
 }

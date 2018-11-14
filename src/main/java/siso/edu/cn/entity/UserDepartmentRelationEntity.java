@@ -1,5 +1,6 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -17,6 +18,10 @@ public class UserDepartmentRelationEntity {
     private long userId;
     @JsonProperty("department_id")
     private long departmentId;
+    @JsonIgnore
+    private UserEntity userByUserId;
+    @JsonIgnore
+    private DepartmentEntity departmentByDepartmentId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,5 +74,25 @@ public class UserDepartmentRelationEntity {
         result = 31 * result + (int) (userId ^ (userId >>> 32));
         result = 31 * result + (int) (departmentId ^ (departmentId >>> 32));
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public UserEntity getUserByUserId() {
+        return userByUserId;
+    }
+
+    public void setUserByUserId(UserEntity userByUserId) {
+        this.userByUserId = userByUserId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public DepartmentEntity getDepartmentByDepartmentId() {
+        return departmentByDepartmentId;
+    }
+
+    public void setDepartmentByDepartmentId(DepartmentEntity departmentByDepartmentId) {
+        this.departmentByDepartmentId = departmentByDepartmentId;
     }
 }

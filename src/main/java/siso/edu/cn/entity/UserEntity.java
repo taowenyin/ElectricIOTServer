@@ -1,10 +1,12 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @DynamicInsert
@@ -26,7 +28,15 @@ public class UserEntity {
     @JsonProperty("email")
     private String email;
     @JsonProperty("isDelete")
-    private boolean isDelete;
+    private int isDelete;
+    @JsonIgnore
+    private Collection<DeviceEntity> devicesById;
+    @JsonIgnore
+    private Collection<UserDepartmentRelationEntity> userDepartmentRelationsById;
+    @JsonIgnore
+    private Collection<UserRightRelationEntity> userRightRelationsById;
+    @JsonIgnore
+    private Collection<UserRoleRelationEntity> userRoleRelationsById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,12 +111,12 @@ public class UserEntity {
 
     @Basic
     @Column(name = "is_delete", nullable = false)
-    public boolean isDelete() {
+    public int getIsDelete() {
         return isDelete;
     }
 
-    public void setDelete(boolean delete) {
-        isDelete = delete;
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
     }
 
     @Override
@@ -138,7 +148,43 @@ public class UserEntity {
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (mobile != null ? mobile.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (isDelete ? 1 : 0);
+        result = 31 * result + isDelete;
         return result;
+    }
+
+    @OneToMany(mappedBy = "userByUserId")
+    public Collection<DeviceEntity> getDevicesById() {
+        return devicesById;
+    }
+
+    public void setDevicesById(Collection<DeviceEntity> devicesById) {
+        this.devicesById = devicesById;
+    }
+
+    @OneToMany(mappedBy = "userByUserId")
+    public Collection<UserDepartmentRelationEntity> getUserDepartmentRelationsById() {
+        return userDepartmentRelationsById;
+    }
+
+    public void setUserDepartmentRelationsById(Collection<UserDepartmentRelationEntity> userDepartmentRelationsById) {
+        this.userDepartmentRelationsById = userDepartmentRelationsById;
+    }
+
+    @OneToMany(mappedBy = "userByUserId")
+    public Collection<UserRightRelationEntity> getUserRightRelationsById() {
+        return userRightRelationsById;
+    }
+
+    public void setUserRightRelationsById(Collection<UserRightRelationEntity> userRightRelationsById) {
+        this.userRightRelationsById = userRightRelationsById;
+    }
+
+    @OneToMany(mappedBy = "userByUserId")
+    public Collection<UserRoleRelationEntity> getUserRoleRelationsById() {
+        return userRoleRelationsById;
+    }
+
+    public void setUserRoleRelationsById(Collection<UserRoleRelationEntity> userRoleRelationsById) {
+        this.userRoleRelationsById = userRoleRelationsById;
     }
 }

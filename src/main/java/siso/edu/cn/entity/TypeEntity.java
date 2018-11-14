@@ -1,10 +1,12 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @DynamicInsert
@@ -15,6 +17,8 @@ public class TypeEntity {
     private long id;
     @JsonProperty("name")
     private String name;
+    @JsonIgnore
+    private Collection<DeviceEntity> devicesById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +59,14 @@ public class TypeEntity {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "typeByTypeId")
+    public Collection<DeviceEntity> getDevicesById() {
+        return devicesById;
+    }
+
+    public void setDevicesById(Collection<DeviceEntity> devicesById) {
+        this.devicesById = devicesById;
     }
 }

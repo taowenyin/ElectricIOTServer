@@ -1,5 +1,6 @@
 package siso.edu.cn.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -9,12 +10,13 @@ import siso.edu.cn.entity.DepartmentEntity;
 import siso.edu.cn.entity.ResultEntity;
 import siso.edu.cn.service.DepartmentService;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * @apiDefine group 管理接口
+ * @apiDefine manageGroup 管理接口
  */
 @RestController
 @RequestMapping(value = "/api/manage", produces = "application/json;charset=utf-8")
@@ -31,7 +33,7 @@ public class ManageController {
      * @api {post} /api/manage/department 创建新部门
      * @apiVersion 0.0.1
      * @apiName createDepartment
-     * @apiGroup group
+     * @apiGroup manageGroup
      *
      * @apiParam {name} name 部门名称
      * @apiParam {level} level 部门层级
@@ -77,7 +79,7 @@ public class ManageController {
      * @api {get} /api/manage/department/:id 根据ID获取部门信息
      * @apiVersion 0.0.1
      * @apiName getDepartmentById
-     * @apiGroup group
+     * @apiGroup manageGroup
      *
      * @apiParam {Number} id 部门ID
      *
@@ -94,7 +96,11 @@ public class ManageController {
         if (departmentEntity != null) {
             ObjectMapper objectMapper = new ObjectMapper();
             resultEntity.setCode(ResultEntity.SUCCESS);
-            resultEntity.setData(objectMapper.convertValue(departmentEntity, JsonNode.class));
+            try {
+                resultEntity.setData(objectMapper.readTree(objectMapper.writeValueAsString(departmentEntity)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             resultEntity.setCode(ResultEntity.NOT_FIND_ERROR);
         }
@@ -103,29 +109,10 @@ public class ManageController {
     }
 
     /**
-     * @api {get} /api/manage/department 获取所有部门信息
-     * @apiVersion 0.0.1
-     * @apiName getDepartment
-     * @apiGroup group
-     *
-     * @apiSuccess {String} code 返回码.
-     * @apiSuccess {String} msg  返回消息.
-     * @apiSuccess {Object} data  JSON格式的对象.
-     */
-    @RequestMapping(value = "/department", method = RequestMethod.GET)
-    public ResultEntity getDepartment() {
-        ResultEntity resultEntity = new ResultEntity();
-
-        int maxLevel = departmentService.maxLevel();
-
-        return resultEntity;
-    }
-
-    /**
      * @api {delete} /api/manage/department/:id 根据ID删除部门
      * @apiVersion 0.0.1
      * @apiName deleteDepartmentById
-     * @apiGroup group
+     * @apiGroup manageGroup
      *
      * @apiParam {Number} id 部门ID
      *
@@ -144,11 +131,31 @@ public class ManageController {
             return resultEntity;
         }
 
-        departmentEntity.setDelete(true);
+        departmentEntity.setIsDelete(1);
         departmentEntity = departmentService.update(departmentEntity);
         ObjectMapper objectMapper = new ObjectMapper();
         resultEntity.setCode(ResultEntity.SUCCESS);
         resultEntity.setData(objectMapper.convertValue(departmentEntity, JsonNode.class));
+
+        return resultEntity;
+    }
+
+    /**
+     * @api {get} /api/manage/department 获取所有部门信息
+     * @apiVersion 0.0.1
+     * @apiName getDepartment
+     * @apiGroup manageGroup
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/department", method = RequestMethod.GET)
+    public ResultEntity getDepartment() {
+        ResultEntity resultEntity = new ResultEntity();
+
+        resultEntity.setCode(ResultEntity.SUCCESS);
+        resultEntity.setData(departmentService.getOrganizationStructure());
 
         return resultEntity;
     }

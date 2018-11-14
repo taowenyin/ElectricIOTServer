@@ -1,10 +1,12 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @DynamicInsert
@@ -20,7 +22,11 @@ public class RoleEntity {
     @JsonProperty("comment")
     private String comment;
     @JsonProperty("is_delete")
-    private boolean isDelete;
+    private int isDelete;
+    @JsonIgnore
+    private Collection<RoleRightRelationEntity> roleRightRelationsById;
+    @JsonIgnore
+    private Collection<UserRoleRelationEntity> userRoleRelationsById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,12 +71,12 @@ public class RoleEntity {
 
     @Basic
     @Column(name = "is_delete", nullable = false)
-    public boolean isDelete() {
+    public int getIsDelete() {
         return isDelete;
     }
 
-    public void setDelete(boolean delete) {
-        isDelete = delete;
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
     }
 
     @Override
@@ -95,7 +101,25 @@ public class RoleEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (isDelete ? 1 : 0);
+        result = 31 * result + isDelete;
         return result;
+    }
+
+    @OneToMany(mappedBy = "roleByRoleId")
+    public Collection<RoleRightRelationEntity> getRoleRightRelationsById() {
+        return roleRightRelationsById;
+    }
+
+    public void setRoleRightRelationsById(Collection<RoleRightRelationEntity> roleRightRelationsById) {
+        this.roleRightRelationsById = roleRightRelationsById;
+    }
+
+    @OneToMany(mappedBy = "roleByRoleId")
+    public Collection<UserRoleRelationEntity> getUserRoleRelationsById() {
+        return userRoleRelationsById;
+    }
+
+    public void setUserRoleRelationsById(Collection<UserRoleRelationEntity> userRoleRelationsById) {
+        this.userRoleRelationsById = userRoleRelationsById;
     }
 }

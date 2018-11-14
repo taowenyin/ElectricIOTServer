@@ -1,5 +1,6 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -17,6 +18,10 @@ public class RoleRightRelationEntity {
     private long roleId;
     @JsonProperty("right_id")
     private long rightId;
+    @JsonIgnore
+    private RoleEntity roleByRoleId;
+    @JsonIgnore
+    private RightEntity rightByRightId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,5 +74,25 @@ public class RoleRightRelationEntity {
         result = 31 * result + (int) (roleId ^ (roleId >>> 32));
         result = 31 * result + (int) (rightId ^ (rightId >>> 32));
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public RoleEntity getRoleByRoleId() {
+        return roleByRoleId;
+    }
+
+    public void setRoleByRoleId(RoleEntity roleByRoleId) {
+        this.roleByRoleId = roleByRoleId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "right_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public RightEntity getRightByRightId() {
+        return rightByRightId;
+    }
+
+    public void setRightByRightId(RightEntity rightByRightId) {
+        this.rightByRightId = rightByRightId;
     }
 }

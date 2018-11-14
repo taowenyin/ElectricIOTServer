@@ -1,5 +1,6 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -22,6 +23,8 @@ public class DeviceLocationEntity {
     private String recordTime;
     @JsonProperty("device_id")
     private long deviceId;
+    @JsonIgnore
+    private DeviceEntity deviceByDeviceId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,5 +101,15 @@ public class DeviceLocationEntity {
         result = 31 * result + (recordTime != null ? recordTime.hashCode() : 0);
         result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public DeviceEntity getDeviceByDeviceId() {
+        return deviceByDeviceId;
+    }
+
+    public void setDeviceByDeviceId(DeviceEntity deviceByDeviceId) {
+        this.deviceByDeviceId = deviceByDeviceId;
     }
 }

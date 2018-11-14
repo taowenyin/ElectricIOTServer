@@ -1,5 +1,6 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -16,13 +17,15 @@ public class DeviceCmdEntity {
     @JsonProperty("cmd")
     private String cmd;
     @JsonProperty("is_send")
-    private boolean isSend;
+    private int isSend;
     @JsonProperty("device_id")
     private long deviceId;
     @JsonProperty("create_time")
     private String createTime;
     @JsonProperty("send_time")
     private String sendTime;
+    @JsonIgnore
+    private DeviceEntity deviceByDeviceId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,12 +50,12 @@ public class DeviceCmdEntity {
 
     @Basic
     @Column(name = "is_send", nullable = false)
-    public boolean isSend() {
+    public int getIsSend() {
         return isSend;
     }
 
-    public void setSend(boolean send) {
-        isSend = send;
+    public void setIsSend(int isSend) {
+        this.isSend = isSend;
     }
 
     @Basic
@@ -106,10 +109,20 @@ public class DeviceCmdEntity {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (cmd != null ? cmd.hashCode() : 0);
-        result = 31 * result + (isSend ? 1 : 0);
+        result = 31 * result + isSend;
         result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (sendTime != null ? sendTime.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public DeviceEntity getDeviceByDeviceId() {
+        return deviceByDeviceId;
+    }
+
+    public void setDeviceByDeviceId(DeviceEntity deviceByDeviceId) {
+        this.deviceByDeviceId = deviceByDeviceId;
     }
 }

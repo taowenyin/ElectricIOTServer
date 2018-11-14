@@ -1,5 +1,6 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -17,6 +18,10 @@ public class DepartmentDeviceRelationEntity {
     private long departmentId;
     @JsonProperty("device_id")
     private long deviceId;
+    @JsonIgnore
+    private DepartmentEntity departmentByDepartmentId;
+    @JsonIgnore
+    private DeviceEntity deviceByDeviceId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,5 +74,25 @@ public class DepartmentDeviceRelationEntity {
         result = 31 * result + (int) (departmentId ^ (departmentId >>> 32));
         result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public DepartmentEntity getDepartmentByDepartmentId() {
+        return departmentByDepartmentId;
+    }
+
+    public void setDepartmentByDepartmentId(DepartmentEntity departmentByDepartmentId) {
+        this.departmentByDepartmentId = departmentByDepartmentId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public DeviceEntity getDeviceByDeviceId() {
+        return deviceByDeviceId;
+    }
+
+    public void setDeviceByDeviceId(DeviceEntity deviceByDeviceId) {
+        this.deviceByDeviceId = deviceByDeviceId;
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public class UserService extends IServiceImpl<UserEntity> {
 
     public final static String SQL_LOGIN_CHECK =
-            "SELECT user FROM UserEntity as user WHERE user.loginName = ?1 AND user.loginPassword = ?2";
+            "SELECT user FROM UserEntity user WHERE user.loginName = ?1 AND user.loginPassword = ?2";
 
     private UserDao userDao = null;
 

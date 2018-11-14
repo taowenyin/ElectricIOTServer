@@ -1,10 +1,12 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @DynamicInsert
@@ -20,9 +22,13 @@ public class DepartmentEntity {
     @JsonProperty("create_time")
     private String createTime;
     @JsonProperty("is_delete")
-    private boolean isDelete;
+    private int isDelete;
     @JsonProperty("parent_id")
     private long parentId;
+    @JsonIgnore
+    private Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById;
+    @JsonIgnore
+    private Collection<UserDepartmentRelationEntity> userDepartmentRelationsById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,12 +73,12 @@ public class DepartmentEntity {
 
     @Basic
     @Column(name = "is_delete", nullable = false)
-    public boolean isDelete() {
+    public int getIsDelete() {
         return isDelete;
     }
 
-    public void setDelete(boolean delete) {
-        isDelete = delete;
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
     }
 
     @Basic
@@ -90,14 +96,14 @@ public class DepartmentEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DepartmentEntity that = (DepartmentEntity) o;
+        DepartmentEntity entity = (DepartmentEntity) o;
 
-        if (id != that.id) return false;
-        if (level != that.level) return false;
-        if (isDelete != that.isDelete) return false;
-        if (parentId != that.parentId) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
+        if (id != entity.id) return false;
+        if (level != entity.level) return false;
+        if (isDelete != entity.isDelete) return false;
+        if (parentId != entity.parentId) return false;
+        if (name != null ? !name.equals(entity.name) : entity.name != null) return false;
+        if (createTime != null ? !createTime.equals(entity.createTime) : entity.createTime != null) return false;
 
         return true;
     }
@@ -108,8 +114,26 @@ public class DepartmentEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + level;
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (isDelete ? 1 : 0);
+        result = 31 * result + isDelete;
         result = 31 * result + (int) (parentId ^ (parentId >>> 32));
         return result;
+    }
+
+    @OneToMany(mappedBy = "departmentByDepartmentId")
+    public Collection<DepartmentDeviceRelationEntity> getDepartmentDeviceRelationsById() {
+        return departmentDeviceRelationsById;
+    }
+
+    public void setDepartmentDeviceRelationsById(Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById) {
+        this.departmentDeviceRelationsById = departmentDeviceRelationsById;
+    }
+
+    @OneToMany(mappedBy = "departmentByDepartmentId")
+    public Collection<UserDepartmentRelationEntity> getUserDepartmentRelationsById() {
+        return userDepartmentRelationsById;
+    }
+
+    public void setUserDepartmentRelationsById(Collection<UserDepartmentRelationEntity> userDepartmentRelationsById) {
+        this.userDepartmentRelationsById = userDepartmentRelationsById;
     }
 }

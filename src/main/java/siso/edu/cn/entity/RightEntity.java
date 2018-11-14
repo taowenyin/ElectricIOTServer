@@ -1,10 +1,12 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @DynamicInsert
@@ -19,6 +21,10 @@ public class RightEntity {
     private String description;
     @JsonProperty("parent_id")
     private long parentId;
+    @JsonIgnore
+    private Collection<RoleRightRelationEntity> roleRightRelationsById;
+    @JsonIgnore
+    private Collection<UserRightRelationEntity> userRightRelationsById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,5 +89,23 @@ public class RightEntity {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (int) (parentId ^ (parentId >>> 32));
         return result;
+    }
+
+    @OneToMany(mappedBy = "rightByRightId")
+    public Collection<RoleRightRelationEntity> getRoleRightRelationsById() {
+        return roleRightRelationsById;
+    }
+
+    public void setRoleRightRelationsById(Collection<RoleRightRelationEntity> roleRightRelationsById) {
+        this.roleRightRelationsById = roleRightRelationsById;
+    }
+
+    @OneToMany(mappedBy = "rightByRightId")
+    public Collection<UserRightRelationEntity> getUserRightRelationsById() {
+        return userRightRelationsById;
+    }
+
+    public void setUserRightRelationsById(Collection<UserRightRelationEntity> userRightRelationsById) {
+        this.userRightRelationsById = userRightRelationsById;
     }
 }

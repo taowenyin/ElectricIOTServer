@@ -61,7 +61,7 @@ public class IDaoImpl<T> implements IDao<T> {
 
     @Override
     public int findMaxValue(String sql) {
-        Query query = this.entityManager.createNativeQuery(sql);
+        Query query = this.entityManager.createQuery(sql);
         List resultList = query.getResultList();
 
         return (int) resultList.get(0);

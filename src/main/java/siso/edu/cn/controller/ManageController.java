@@ -141,7 +141,7 @@ public class ManageController {
     }
 
     /**
-     * @api {get} /api/manage/department 获取所有部门信息
+     * @api {get} /api/manage/department 获取部门组织结构
      * @apiVersion 0.0.1
      * @apiName getDepartment
      * @apiGroup manageGroup

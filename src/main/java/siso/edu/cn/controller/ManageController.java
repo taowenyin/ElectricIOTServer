@@ -76,6 +76,71 @@ public class ManageController {
     }
 
     /**
+     * @api {delete} /api/manage/department/:id 根据ID删除部门
+     * @apiVersion 0.0.1
+     * @apiName deleteDepartmentById
+     * @apiGroup manageGroup
+     *
+     * @apiParam {Number} id 部门ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/department/{id}", method = RequestMethod.DELETE)
+    public ResultEntity deleteDepartmentById(@PathVariable("id") long id) {
+        ResultEntity resultEntity = new ResultEntity();
+
+        DepartmentEntity departmentEntity = departmentService.findById(id);
+
+        if (departmentEntity == null) {
+            resultEntity.setCode(ResultEntity.DELETE_ERROR);
+            return resultEntity;
+        }
+
+        departmentEntity.setIsDelete(1);
+        departmentEntity = departmentService.update(departmentEntity);
+        ObjectMapper objectMapper = new ObjectMapper();
+        resultEntity.setCode(ResultEntity.SUCCESS);
+        resultEntity.setData(objectMapper.convertValue(departmentEntity, JsonNode.class));
+
+        return resultEntity;
+    }
+
+
+    /**
+     * @api {put} /api/manage/department 根据ID修改部门
+     * @apiVersion 0.0.1
+     * @apiName modifyDepartmentById
+     * @apiGroup manageGroup
+     *
+     * @apiParam {Number} id 部门ID
+     *
+     * @apiParam (Request body) {Object} departmentEntity 部门更新的部门对象
+     * @apiParam (Request body) {String} name 部门名称
+     * @apiParam (Request body) {Number} level 部门等级
+     * @apiParam (Request body) {Number} parent_id 父部门ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/department", method = RequestMethod.PUT)
+    public ResultEntity modifyDepartmentById(@RequestParam("id") long id,
+                                             @RequestBody DepartmentEntity departmentEntity) {
+        ResultEntity resultEntity = new ResultEntity();
+
+        departmentEntity.setId(id);
+        departmentService.update(departmentEntity);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        resultEntity.setCode(ResultEntity.SUCCESS);
+        resultEntity.setData(objectMapper.convertValue(departmentEntity, JsonNode.class));
+
+        return resultEntity;
+    }
+
+    /**
      * @api {get} /api/manage/department/:id 根据ID获取部门信息
      * @apiVersion 0.0.1
      * @apiName getDepartmentById
@@ -104,38 +169,6 @@ public class ManageController {
         } else {
             resultEntity.setCode(ResultEntity.NOT_FIND_ERROR);
         }
-
-        return resultEntity;
-    }
-
-    /**
-     * @api {delete} /api/manage/department/:id 根据ID删除部门
-     * @apiVersion 0.0.1
-     * @apiName deleteDepartmentById
-     * @apiGroup manageGroup
-     *
-     * @apiParam {Number} id 部门ID
-     *
-     * @apiSuccess {String} code 返回码.
-     * @apiSuccess {String} msg  返回消息.
-     * @apiSuccess {Object} data  JSON格式的对象.
-     */
-    @RequestMapping(value = "/department/{id}", method = RequestMethod.DELETE)
-    public ResultEntity deleteDepartmentById(@PathVariable("id") long id) {
-        ResultEntity resultEntity = new ResultEntity();
-
-        DepartmentEntity departmentEntity = departmentService.findById(id);
-
-        if (departmentEntity == null) {
-            resultEntity.setCode(ResultEntity.DELETE_ERROR);
-            return resultEntity;
-        }
-
-        departmentEntity.setIsDelete(1);
-        departmentEntity = departmentService.update(departmentEntity);
-        ObjectMapper objectMapper = new ObjectMapper();
-        resultEntity.setCode(ResultEntity.SUCCESS);
-        resultEntity.setData(objectMapper.convertValue(departmentEntity, JsonNode.class));
 
         return resultEntity;
     }

@@ -1,6 +1,5 @@
 package siso.edu.cn.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -16,16 +15,16 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * @apiDefine manageGroup 管理接口
+ * @apiDefine departmentGroup 部门管理接口
  */
 @RestController
 @RequestMapping(value = "/api/manage", produces = "application/json;charset=utf-8")
-public class ManageController {
+public class DepartmentController {
 
     private DepartmentService departmentService;
 
     @Autowired
-    public ManageController(DepartmentService departmentService) {
+    public DepartmentController(DepartmentService departmentService) {
         this.departmentService = departmentService;
     }
 
@@ -33,11 +32,11 @@ public class ManageController {
      * @api {post} /api/manage/department 创建新部门
      * @apiVersion 0.0.1
      * @apiName createDepartment
-     * @apiGroup manageGroup
+     * @apiGroup departmentGroup
      *
-     * @apiParam {name} name 部门名称
-     * @apiParam {level} level 部门层级
-     * @apiParam {parent_id} parent_id="0" 父部门ID
+     * @apiParam {String} name 部门名称
+     * @apiParam {Number} level 部门层级
+     * @apiParam {Number} parent_id="0" 父部门ID
      *
      * @apiSuccess {String} code 返回码.
      * @apiSuccess {String} msg  返回消息.
@@ -79,7 +78,7 @@ public class ManageController {
      * @api {delete} /api/manage/department/:id 根据ID删除部门
      * @apiVersion 0.0.1
      * @apiName deleteDepartmentById
-     * @apiGroup manageGroup
+     * @apiGroup departmentGroup
      *
      * @apiParam {Number} id 部门ID
      *
@@ -112,7 +111,7 @@ public class ManageController {
      * @api {put} /api/manage/department 根据ID修改部门信息
      * @apiVersion 0.0.1
      * @apiName modifyDepartmentById
-     * @apiGroup manageGroup
+     * @apiGroup departmentGroup
      *
      * @apiParam {Number} id 部门id
      * @apiParam {String} [name] 部门名称
@@ -125,7 +124,7 @@ public class ManageController {
      */
     @RequestMapping(value = "/department", method = RequestMethod.PUT)
     public ResultEntity modifyDepartmentById(@RequestParam("id") long id,
-                                             @RequestParam(name = "name", required = false) String name,
+                                             @RequestParam(name = "name", required = false, defaultValue = "") String name,
                                              @RequestParam(name = "level", required = false, defaultValue = "-1") int level,
                                              @RequestParam(name = "parent_id", required = false, defaultValue = "-1") long parentId) {
         ResultEntity resultEntity = new ResultEntity();
@@ -138,7 +137,7 @@ public class ManageController {
         }
 
         // 更新数据
-        if (name != null) {
+        if (!name.isEmpty()) {
             entity.setName(name);
         }
         if (level != -1) {
@@ -161,7 +160,7 @@ public class ManageController {
      * @api {get} /api/manage/department/:id 根据ID获取部门信息
      * @apiVersion 0.0.1
      * @apiName getDepartmentById
-     * @apiGroup manageGroup
+     * @apiGroup departmentGroup
      *
      * @apiParam {Number} id 部门ID
      *
@@ -194,7 +193,7 @@ public class ManageController {
      * @api {get} /api/manage/department 获取部门组织结构
      * @apiVersion 0.0.1
      * @apiName getDepartment
-     * @apiGroup manageGroup
+     * @apiGroup departmentGroup
      *
      * @apiSuccess {String} code 返回码.
      * @apiSuccess {String} msg  返回消息.

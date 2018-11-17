@@ -6,10 +6,8 @@ import siso.edu.cn.entity.ResultEntity;
 import siso.edu.cn.entity.UserEntity;
 import siso.edu.cn.service.UserService;
 
-import java.util.List;
-
 /**
- * @apiDefine userGroup 用户接口
+ * @apiDefine loginGroup 登录接口
  */
 @RestController
 @RequestMapping(value = "/api/login", produces = "application/json")
@@ -26,7 +24,7 @@ public class LoginController {
      * @api {post} /api/login/ 用户登录
      * @apiVersion 0.0.1
      * @apiName login
-     * @apiGroup userGroup
+     * @apiGroup loginGroup
      *
      * @apiParam {String} login_name  登录用户名
      * @apiParam {String} login_password  登录用户密码

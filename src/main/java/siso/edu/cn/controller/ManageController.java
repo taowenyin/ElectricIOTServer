@@ -109,17 +109,15 @@ public class ManageController {
 
 
     /**
-     * @api {put} /api/manage/department 根据ID修改部门
+     * @api {put} /api/manage/department 根据ID修改部门信息
      * @apiVersion 0.0.1
      * @apiName modifyDepartmentById
      * @apiGroup manageGroup
      *
-     * @apiParam {Number} id 部门ID
-     *
-     * @apiParam (Request body) {Object} departmentEntity 部门更新的部门对象
-     * @apiParam (Request body) {String} name 部门名称
-     * @apiParam (Request body) {Number} level 部门等级
-     * @apiParam (Request body) {Number} parent_id 父部门ID
+     * @apiParam {Number} id 部门id
+     * @apiParam {String} [name] 部门名称
+     * @apiParam {Number} [level] 部门层级
+     * @apiParam {Number} [parent_id] 上级部门ID
      *
      * @apiSuccess {String} code 返回码.
      * @apiSuccess {String} msg  返回消息.
@@ -127,11 +125,30 @@ public class ManageController {
      */
     @RequestMapping(value = "/department", method = RequestMethod.PUT)
     public ResultEntity modifyDepartmentById(@RequestParam("id") long id,
-                                             @RequestBody DepartmentEntity departmentEntity) {
+                                             @RequestParam(name = "name", required = false) String name,
+                                             @RequestParam(name = "level", required = false, defaultValue = "-1") int level,
+                                             @RequestParam(name = "parent_id", required = false, defaultValue = "-1") long parentId) {
         ResultEntity resultEntity = new ResultEntity();
 
-        departmentEntity.setId(id);
-        departmentService.update(departmentEntity);
+        DepartmentEntity entity = departmentService.findById(id);
+
+        if (entity == null) {
+            resultEntity.setCode(ResultEntity.NOT_FIND_ERROR);
+            return resultEntity;
+        }
+
+        // 更新数据
+        if (name != null) {
+            entity.setName(name);
+        }
+        if (level != -1) {
+            entity.setLevel(level);
+        }
+        if (parentId != -1) {
+            entity.setParentId(parentId);
+        }
+
+        DepartmentEntity departmentEntity = departmentService.update(entity);
 
         ObjectMapper objectMapper = new ObjectMapper();
         resultEntity.setCode(ResultEntity.SUCCESS);

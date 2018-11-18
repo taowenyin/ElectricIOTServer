@@ -42,12 +42,10 @@ public class LoginController {
         userEntity.setLoginPassword(loginPassword);
 
         if (userService.loginCheck(userEntity)) {
-            resultEntity.setCode(ResultEntity.SUCCESS);
-        } else {
-            resultEntity.setCode(ResultEntity.ACCOUNT_ERROR);
+            return CommonController.CreateResultEntity(ResultEntity.SUCCESS);
         }
 
-        return resultEntity;
+        return CommonController.CreateResultEntity(ResultEntity.ACCOUNT_ERROR);
     }
 
 }

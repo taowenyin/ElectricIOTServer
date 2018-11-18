@@ -3,6 +3,7 @@ package siso.edu.cn.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
 
@@ -30,6 +31,35 @@ public class ResultEntity {
 
     public ResultEntity() {
 
+    }
+
+    /**
+     * 根据错误代码获取消息内容
+     * @param code 错误代码
+     * @return String 错误信息
+     */
+    public String getCodeMsg(int code) {
+        String msg = StringUtils.EMPTY;
+
+        switch (code) {
+            case SUCCESS:
+                msg = "操作成功";
+                break;
+            case SAVE_DATA_ERROR:
+                msg = "保存数据错误";
+                break;
+            case ACCOUNT_ERROR:
+                msg = "登录错误";
+                break;
+            case NOT_FIND_ERROR:
+                msg = "没有找到数据";
+                break;
+            case DELETE_ERROR:
+                msg = "删除数据错误";
+                break;
+        }
+
+        return msg;
     }
 
     public int getCode() {

@@ -109,7 +109,7 @@ public class DeviceCmdEntity {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (cmd != null ? cmd.hashCode() : 0);
-        result = 31 * result + isSend;
+        result = 31 * result + (int) isSend;
         result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (sendTime != null ? sendTime.hashCode() : 0);

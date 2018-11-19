@@ -24,9 +24,9 @@ public class RoleEntity {
     @JsonProperty("is_delete")
     private int isDelete;
     @JsonIgnore
-    private Collection<RoleRightRelationEntity> roleRightRelationsById;
+    private Collection<BindUserDepartmentRoleEntity> bindUserDepartmentRolesById;
     @JsonIgnore
-    private Collection<UserRoleRelationEntity> userRoleRelationsById;
+    private Collection<RoleRightRelationEntity> roleRightRelationsById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,20 +106,20 @@ public class RoleEntity {
     }
 
     @OneToMany(mappedBy = "roleByRoleId")
+    public Collection<BindUserDepartmentRoleEntity> getBindUserDepartmentRolesById() {
+        return bindUserDepartmentRolesById;
+    }
+
+    public void setBindUserDepartmentRolesById(Collection<BindUserDepartmentRoleEntity> bindUserDepartmentRolesById) {
+        this.bindUserDepartmentRolesById = bindUserDepartmentRolesById;
+    }
+
+    @OneToMany(mappedBy = "roleByRoleId")
     public Collection<RoleRightRelationEntity> getRoleRightRelationsById() {
         return roleRightRelationsById;
     }
 
     public void setRoleRightRelationsById(Collection<RoleRightRelationEntity> roleRightRelationsById) {
         this.roleRightRelationsById = roleRightRelationsById;
-    }
-
-    @OneToMany(mappedBy = "roleByRoleId")
-    public Collection<UserRoleRelationEntity> getUserRoleRelationsById() {
-        return userRoleRelationsById;
-    }
-
-    public void setUserRoleRelationsById(Collection<UserRoleRelationEntity> userRoleRelationsById) {
-        this.userRoleRelationsById = userRoleRelationsById;
     }
 }

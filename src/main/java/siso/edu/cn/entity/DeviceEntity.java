@@ -228,6 +228,9 @@ public class DeviceEntity {
 
         if (id != that.id) return false;
         if (isDelete != that.isDelete) return false;
+        if (typeId != that.typeId) return false;
+        if (statusId != that.statusId) return false;
+        if (userId != that.userId) return false;
         if (batteryRecordGpsInterval != that.batteryRecordGpsInterval) return false;
         if (powerRecordGpsInterval != that.powerRecordGpsInterval) return false;
         if (batterySendGpsInterval != that.batterySendGpsInterval) return false;
@@ -237,9 +240,6 @@ public class DeviceEntity {
         if (imsi != null ? !imsi.equals(that.imsi) : that.imsi != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (serialNumber != null ? !serialNumber.equals(that.serialNumber) : that.serialNumber != null) return false;
-        if (typeId != null ? !typeId.equals(that.typeId) : that.typeId != null) return false;
-        if (statusId != null ? !statusId.equals(that.statusId) : that.statusId != null) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
         if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
 
@@ -254,9 +254,9 @@ public class DeviceEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (serialNumber != null ? serialNumber.hashCode() : 0);
         result = 31 * result + isDelete;
-        result = 31 * result + (typeId != null ? typeId.hashCode() : 0);
-        result = 31 * result + (statusId != null ? statusId.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (int) (typeId ^ (typeId >>> 32));
+        result = 31 * result + (int) (statusId ^ (statusId >>> 32));
+        result = 31 * result + (int) (userId ^ (userId >>> 32));
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + batteryRecordGpsInterval;

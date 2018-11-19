@@ -2,14 +2,13 @@ package siso.edu.cn.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import siso.edu.cn.entity.BindUserDepartmentRoleEntity;
 import siso.edu.cn.entity.FlagEntity;
 import siso.edu.cn.entity.ResultEntity;
-import siso.edu.cn.entity.UserDepartmentRelationEntity;
 import siso.edu.cn.entity.UserEntity;
-import siso.edu.cn.service.UserDepartmentRelationService;
+import siso.edu.cn.service.BindUserDepartmentRoleService;
 import siso.edu.cn.service.UserService;
 
 import java.text.SimpleDateFormat;
@@ -24,10 +23,10 @@ import java.util.TimeZone;
 public class UserController {
 
     private UserService userService;
-    private UserDepartmentRelationService userDepartmentRelationService;
+    private BindUserDepartmentRoleService userDepartmentRelationService;
 
     @Autowired
-    public UserController(UserService userService, UserDepartmentRelationService userDepartmentRelationService) {
+    public UserController(UserService userService, BindUserDepartmentRoleService userDepartmentRelationService) {
         this.userService = userService;
         this.userDepartmentRelationService = userDepartmentRelationService;
     }
@@ -204,7 +203,7 @@ public class UserController {
     @RequestMapping(value = "/user/department", method = RequestMethod.POST)
     public ResultEntity bindDepartment(@RequestParam("user_id") long userId,
                                        @RequestParam("department_id") long departmentId) {
-        UserDepartmentRelationEntity entity = new UserDepartmentRelationEntity();
+        BindUserDepartmentRoleEntity entity = new BindUserDepartmentRoleEntity();
         entity.setDepartmentId(departmentId);
         entity.setUserId(userId);
 

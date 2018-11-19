@@ -27,16 +27,14 @@ public class UserEntity {
     private String mobile;
     @JsonProperty("email")
     private String email;
-    @JsonProperty("isDelete")
+    @JsonProperty("is_delete")
     private int isDelete;
+    @JsonIgnore
+    private Collection<BindUserDepartmentRoleEntity> bindUserDepartmentRolesById;
     @JsonIgnore
     private Collection<DeviceEntity> devicesById;
     @JsonIgnore
-    private Collection<UserDepartmentRelationEntity> userDepartmentRelationsById;
-    @JsonIgnore
     private Collection<UserRightRelationEntity> userRightRelationsById;
-    @JsonIgnore
-    private Collection<UserRoleRelationEntity> userRoleRelationsById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -153,6 +151,15 @@ public class UserEntity {
     }
 
     @OneToMany(mappedBy = "userByUserId")
+    public Collection<BindUserDepartmentRoleEntity> getBindUserDepartmentRolesById() {
+        return bindUserDepartmentRolesById;
+    }
+
+    public void setBindUserDepartmentRolesById(Collection<BindUserDepartmentRoleEntity> bindUserDepartmentRolesById) {
+        this.bindUserDepartmentRolesById = bindUserDepartmentRolesById;
+    }
+
+    @OneToMany(mappedBy = "userByUserId")
     public Collection<DeviceEntity> getDevicesById() {
         return devicesById;
     }
@@ -162,29 +169,11 @@ public class UserEntity {
     }
 
     @OneToMany(mappedBy = "userByUserId")
-    public Collection<UserDepartmentRelationEntity> getUserDepartmentRelationsById() {
-        return userDepartmentRelationsById;
-    }
-
-    public void setUserDepartmentRelationsById(Collection<UserDepartmentRelationEntity> userDepartmentRelationsById) {
-        this.userDepartmentRelationsById = userDepartmentRelationsById;
-    }
-
-    @OneToMany(mappedBy = "userByUserId")
     public Collection<UserRightRelationEntity> getUserRightRelationsById() {
         return userRightRelationsById;
     }
 
     public void setUserRightRelationsById(Collection<UserRightRelationEntity> userRightRelationsById) {
         this.userRightRelationsById = userRightRelationsById;
-    }
-
-    @OneToMany(mappedBy = "userByUserId")
-    public Collection<UserRoleRelationEntity> getUserRoleRelationsById() {
-        return userRoleRelationsById;
-    }
-
-    public void setUserRoleRelationsById(Collection<UserRoleRelationEntity> userRoleRelationsById) {
-        this.userRoleRelationsById = userRoleRelationsById;
     }
 }

@@ -5,18 +5,18 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import siso.edu.cn.dao.UserDepartmentRelationDao;
-import siso.edu.cn.entity.UserDepartmentRelationEntity;
+import siso.edu.cn.dao.BindUserDepartmentRoleDao;
+import siso.edu.cn.entity.BindUserDepartmentRoleEntity;
 
 @Service
 @Transactional
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class UserDepartmentRelationService extends IServiceImpl<UserDepartmentRelationEntity> {
+public class BindUserDepartmentRoleService extends IServiceImpl<BindUserDepartmentRoleEntity> {
 
-    private UserDepartmentRelationDao dao;
+    private BindUserDepartmentRoleDao dao;
 
     @Autowired
-    public UserDepartmentRelationService(UserDepartmentRelationDao dao) {
+    public BindUserDepartmentRoleService(BindUserDepartmentRoleDao dao) {
         super(dao);
 
         this.dao = dao;

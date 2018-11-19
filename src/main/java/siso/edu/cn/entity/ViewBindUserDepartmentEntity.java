@@ -1,28 +1,44 @@
 package siso.edu.cn.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "view_bind_user_department", schema = "electric_iot", catalog = "")
 public class ViewBindUserDepartmentEntity {
+    @JsonProperty("id")
     private long id;
+    @JsonProperty("department_id")
     private long departmentId;
+    @JsonProperty("department_name")
     private String departmentName;
+    @JsonProperty("level")
     private int level;
-    private Timestamp departmentCreateTime;
-    private byte departmentIsDelete;
+    @JsonProperty("department_create_time")
+    private String departmentCreateTime;
+    @JsonProperty("department_is_delete")
+    private int departmentIsDelete;
+    @JsonProperty("parent_id")
     private long parentId;
+    @JsonProperty("user_id")
     private long userId;
+    @JsonProperty("login_name")
     private String loginName;
+    @JsonProperty("login_password")
     private String loginPassword;
+    @JsonProperty("user_name")
     private String userName;
-    private Timestamp userCreateTime;
+    @JsonProperty("user_create_time")
+    private String userCreateTime;
+    @JsonProperty("mobile")
     private String mobile;
+    @JsonProperty("email")
     private String email;
-    private byte userIsDelete;
+    @JsonProperty("user_is_delete")
+    private int userIsDelete;
 
-    @Basic
+    @Id
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
@@ -64,21 +80,21 @@ public class ViewBindUserDepartmentEntity {
 
     @Basic
     @Column(name = "department_create_time", nullable = false)
-    public Timestamp getDepartmentCreateTime() {
+    public String getDepartmentCreateTime() {
         return departmentCreateTime;
     }
 
-    public void setDepartmentCreateTime(Timestamp departmentCreateTime) {
+    public void setDepartmentCreateTime(String departmentCreateTime) {
         this.departmentCreateTime = departmentCreateTime;
     }
 
     @Basic
     @Column(name = "department_is_delete", nullable = false)
-    public byte getDepartmentIsDelete() {
+    public int getDepartmentIsDelete() {
         return departmentIsDelete;
     }
 
-    public void setDepartmentIsDelete(byte departmentIsDelete) {
+    public void setDepartmentIsDelete(int departmentIsDelete) {
         this.departmentIsDelete = departmentIsDelete;
     }
 
@@ -134,11 +150,11 @@ public class ViewBindUserDepartmentEntity {
 
     @Basic
     @Column(name = "user_create_time", nullable = false)
-    public Timestamp getUserCreateTime() {
+    public String getUserCreateTime() {
         return userCreateTime;
     }
 
-    public void setUserCreateTime(Timestamp userCreateTime) {
+    public void setUserCreateTime(String userCreateTime) {
         this.userCreateTime = userCreateTime;
     }
 
@@ -164,11 +180,11 @@ public class ViewBindUserDepartmentEntity {
 
     @Basic
     @Column(name = "user_is_delete", nullable = false)
-    public byte getUserIsDelete() {
+    public int getUserIsDelete() {
         return userIsDelete;
     }
 
-    public void setUserIsDelete(byte userIsDelete) {
+    public void setUserIsDelete(int userIsDelete) {
         this.userIsDelete = userIsDelete;
     }
 
@@ -209,7 +225,7 @@ public class ViewBindUserDepartmentEntity {
         result = 31 * result + (departmentName != null ? departmentName.hashCode() : 0);
         result = 31 * result + level;
         result = 31 * result + (departmentCreateTime != null ? departmentCreateTime.hashCode() : 0);
-        result = 31 * result + (int) departmentIsDelete;
+        result = 31 * result + departmentIsDelete;
         result = 31 * result + (int) (parentId ^ (parentId >>> 32));
         result = 31 * result + (int) (userId ^ (userId >>> 32));
         result = 31 * result + (loginName != null ? loginName.hashCode() : 0);
@@ -218,7 +234,7 @@ public class ViewBindUserDepartmentEntity {
         result = 31 * result + (userCreateTime != null ? userCreateTime.hashCode() : 0);
         result = 31 * result + (mobile != null ? mobile.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (int) userIsDelete;
+        result = 31 * result + userIsDelete;
         return result;
     }
 }

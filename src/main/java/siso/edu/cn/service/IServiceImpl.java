@@ -41,4 +41,9 @@ public class IServiceImpl<T> implements IService<T> {
     public int findMaxValue(String sql) {
         return this.dao.findMaxValue(sql);
     }
+
+    @Override
+    public List<T> findAll() {
+        return this.dao.findAll();
+    }
 }

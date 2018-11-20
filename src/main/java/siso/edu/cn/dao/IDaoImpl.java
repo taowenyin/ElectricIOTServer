@@ -67,4 +67,13 @@ public class IDaoImpl<T> implements IDao<T> {
         return (int) resultList.get(0);
     }
 
+    @Override
+    public List<T> findAll() {
+        String sql = String.format("SELECT %s FROM %s %s", this.clazz.getSimpleName().toLowerCase(),
+                this.clazz.getSimpleName(), this.clazz.getSimpleName().toLowerCase());
+        Query query = this.entityManager.createQuery(sql);
+
+        return query.getResultList();
+    }
+
 }

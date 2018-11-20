@@ -20,7 +20,7 @@ import java.util.TimeZone;
  */
 @RestController
 @RequestMapping(value = "/api/manage", produces = "application/json;charset=utf-8")
-public class UserController {
+public class UserController extends IControllerImpl {
 
     private UserService userService;
     private BindUserDepartmentRoleService userDepartmentRelationService;
@@ -76,10 +76,10 @@ public class UserController {
         // 返回保存的结果
         if (userEntity.getId() > 0) {
             ObjectMapper objectMapper = new ObjectMapper();
-            return CommonController.CreateResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(userEntity, JsonNode.class));
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(userEntity, JsonNode.class));
         }
 
-        return CommonController.CreateResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
     }
 
     /**
@@ -99,7 +99,7 @@ public class UserController {
         UserEntity userEntity = userService.findById(id);
 
         if (userEntity == null) {
-            return CommonController.CreateResultEntity(ResultEntity.DELETE_ERROR);
+            return this.createResultEntity(ResultEntity.DELETE_ERROR);
         }
 
         userEntity.setIsDelete(FlagEntity.DELETE);
@@ -107,7 +107,7 @@ public class UserController {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        return CommonController.CreateResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(userEntity, JsonNode.class));
+        return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(userEntity, JsonNode.class));
     }
 
     /**
@@ -137,7 +137,7 @@ public class UserController {
         UserEntity entity = userService.findById(id);
 
         if (entity == null) {
-            return CommonController.CreateResultEntity(ResultEntity.NOT_FIND_ERROR);
+            return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
         }
 
         if (!loginName.isEmpty()) {
@@ -159,7 +159,7 @@ public class UserController {
         entity = userService.update(entity);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        return CommonController.CreateResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
+        return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
     }
 
     /**
@@ -180,11 +180,11 @@ public class UserController {
 
         if (userEntity != null) {
             ObjectMapper objectMapper = new ObjectMapper();
-            return CommonController.CreateResultEntity(ResultEntity.SUCCESS,
+            return this.createResultEntity(ResultEntity.SUCCESS,
                     objectMapper.convertValue(userEntity, JsonNode.class));
         }
 
-        return CommonController.CreateResultEntity(ResultEntity.NOT_FIND_ERROR);
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
     }
 
     /**
@@ -211,10 +211,10 @@ public class UserController {
 
         if (entity.getId() > 0) {
             ObjectMapper objectMapper = new ObjectMapper();
-            return CommonController.CreateResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
         }
 
-        return CommonController.CreateResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
     }
 
 }

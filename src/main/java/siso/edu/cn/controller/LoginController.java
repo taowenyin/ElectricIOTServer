@@ -11,7 +11,7 @@ import siso.edu.cn.service.UserService;
  */
 @RestController
 @RequestMapping(value = "/api/login", produces = "application/json")
-public class LoginController {
+public class LoginController extends IControllerImpl {
 
     private UserService userService;
 
@@ -42,10 +42,10 @@ public class LoginController {
         userEntity.setLoginPassword(loginPassword);
 
         if (userService.loginCheck(userEntity)) {
-            return CommonController.CreateResultEntity(ResultEntity.SUCCESS);
+            return this.createResultEntity(ResultEntity.SUCCESS);
         }
 
-        return CommonController.CreateResultEntity(ResultEntity.ACCOUNT_ERROR);
+        return this.createResultEntity(ResultEntity.ACCOUNT_ERROR);
     }
 
 }

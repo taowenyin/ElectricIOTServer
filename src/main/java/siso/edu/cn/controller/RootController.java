@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value = "/index", produces = "application/json;charset=utf-8")
-public class RootController {
+public class RootController extends IControllerImpl {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {

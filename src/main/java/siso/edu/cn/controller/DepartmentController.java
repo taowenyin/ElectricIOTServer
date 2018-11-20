@@ -18,7 +18,7 @@ import java.util.TimeZone;
  */
 @RestController
 @RequestMapping(value = "/api/manage", produces = "application/json;charset=utf-8")
-public class DepartmentController {
+public class DepartmentController extends IControllerImpl {
 
     private DepartmentService departmentService;
 
@@ -60,10 +60,10 @@ public class DepartmentController {
         // 返回保存的结果
         if (departmentEntity.getId() > 0) {
             ObjectMapper objectMapper = new ObjectMapper();
-            return CommonController.CreateResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(departmentEntity, JsonNode.class));
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(departmentEntity, JsonNode.class));
         }
 
-        return CommonController.CreateResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
     }
 
     /**
@@ -83,14 +83,14 @@ public class DepartmentController {
         DepartmentEntity departmentEntity = departmentService.findById(id);
 
         if (departmentEntity == null) {
-            return CommonController.CreateResultEntity(ResultEntity.DELETE_ERROR);
+            return this.createResultEntity(ResultEntity.DELETE_ERROR);
         }
 
         departmentEntity.setIsDelete(FlagEntity.DELETE);
         departmentEntity = departmentService.update(departmentEntity);
         ObjectMapper objectMapper = new ObjectMapper();
 
-        return CommonController.CreateResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(departmentEntity, JsonNode.class));
+        return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(departmentEntity, JsonNode.class));
     }
 
 
@@ -117,7 +117,7 @@ public class DepartmentController {
         DepartmentEntity entity = departmentService.findById(id);
 
         if (entity == null) {
-            return CommonController.CreateResultEntity(ResultEntity.NOT_FIND_ERROR);
+            return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
         }
 
         // 更新数据
@@ -134,7 +134,7 @@ public class DepartmentController {
         entity = departmentService.update(entity);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        return CommonController.CreateResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
+        return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
     }
 
     /**
@@ -155,11 +155,11 @@ public class DepartmentController {
 
         if (departmentEntity != null) {
             ObjectMapper objectMapper = new ObjectMapper();
-            return CommonController.CreateResultEntity(ResultEntity.SUCCESS,
+            return this.createResultEntity(ResultEntity.SUCCESS,
                     objectMapper.convertValue(departmentEntity, JsonNode.class));
         }
 
-        return CommonController.CreateResultEntity(ResultEntity.NOT_FIND_ERROR);
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
     }
 
     /**
@@ -174,6 +174,6 @@ public class DepartmentController {
      */
     @RequestMapping(value = "/department", method = RequestMethod.GET)
     public ResultEntity getDepartment() {
-        return CommonController.CreateResultEntity(ResultEntity.SUCCESS, departmentService.getOrganizationStructure());
+        return this.createResultEntity(ResultEntity.SUCCESS, departmentService.getOrganizationStructure());
     }
 }

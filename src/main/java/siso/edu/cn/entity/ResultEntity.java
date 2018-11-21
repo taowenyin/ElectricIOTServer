@@ -14,6 +14,7 @@ public class ResultEntity {
     public static final int ACCOUNT_ERROR = 2;
     public static final int NOT_FIND_ERROR = 3;
     public static final int DELETE_ERROR = 4;
+    public static final int DATA_IS_EXIST = 5;
 
     @JsonProperty("code")
     private int code = 0;
@@ -56,6 +57,9 @@ public class ResultEntity {
                 break;
             case DELETE_ERROR:
                 msg = "删除数据错误";
+                break;
+            case DATA_IS_EXIST:
+                msg = "数据已经存在";
                 break;
         }
 

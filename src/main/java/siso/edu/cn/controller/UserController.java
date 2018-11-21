@@ -13,6 +13,7 @@ import siso.edu.cn.service.UserService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -23,12 +24,12 @@ import java.util.TimeZone;
 public class UserController extends IControllerImpl {
 
     private UserService userService;
-    private BindUserDepartmentRoleService userDepartmentRelationService;
+    private BindUserDepartmentRoleService bindUserDepartmentRelationService;
 
     @Autowired
-    public UserController(UserService userService, BindUserDepartmentRoleService userDepartmentRelationService) {
+    public UserController(UserService userService, BindUserDepartmentRoleService bindUserDepartmentRelationService) {
         this.userService = userService;
-        this.userDepartmentRelationService = userDepartmentRelationService;
+        this.bindUserDepartmentRelationService = bindUserDepartmentRelationService;
     }
 
     /**
@@ -203,13 +204,55 @@ public class UserController extends IControllerImpl {
     @RequestMapping(value = "/user/department", method = RequestMethod.POST)
     public ResultEntity bindDepartment(@RequestParam("user_id") long userId,
                                        @RequestParam("department_id") long departmentId) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        List<BindUserDepartmentRoleEntity> bindUserDepartmentRoleEntityList =
+                bindUserDepartmentRelationService.getBindUserDepartmentEntity(userId, departmentId);
+
+        if (bindUserDepartmentRoleEntityList.size() > 0) {
+            return this.createResultEntity(ResultEntity.DATA_IS_EXIST, objectMapper.convertValue(
+                    bindUserDepartmentRoleEntityList.get(0), JsonNode.class));
+        }
+
         BindUserDepartmentRoleEntity entity = new BindUserDepartmentRoleEntity();
         entity.setDepartmentId(departmentId);
         entity.setUserId(userId);
 
-        userDepartmentRelationService.save(entity);
+        bindUserDepartmentRelationService.save(entity);
 
         if (entity.getId() > 0) {
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+    }
+
+    /**
+     * @api {post} /api/manage/user/role 把用户与角色进行绑定
+     * @apiVersion 0.0.1
+     * @apiName bindRole
+     * @apiGroup userGroup
+     *
+     * @apiParam {Number} user_id 用户ID
+     * @apiParam {Number} department_id 部门ID
+     * @apiParam {Number} role_id 角色ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/user/role", method = RequestMethod.POST)
+    public ResultEntity bindRole(@RequestParam("user_id") long userId,
+                                 @RequestParam("department_id") long departmentId,
+                                 @RequestParam("role_id") long roleId) {
+        List<BindUserDepartmentRoleEntity> bindUserDepartmentRoleEntityList =
+                bindUserDepartmentRelationService.getBindUserDepartmentEntity(userId, departmentId);
+
+        if (bindUserDepartmentRoleEntityList.size() > 0) {
+            BindUserDepartmentRoleEntity entity = bindUserDepartmentRoleEntityList.get(0);
+            entity.setRoleId(roleId);
+
+            entity = bindUserDepartmentRelationService.update(entity);
             ObjectMapper objectMapper = new ObjectMapper();
             return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
         }

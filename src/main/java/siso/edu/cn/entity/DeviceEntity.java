@@ -82,7 +82,7 @@ public class DeviceEntity {
     }
 
     @Basic
-    @Column(name = "imsi", nullable = false, length = 45)
+    @Column(name = "imsi", nullable = false, unique = true, length = 45)
     public String getImsi() {
         return imsi;
     }

@@ -157,7 +157,7 @@ public class RoleController extends IControllerImpl {
     }
 
     /**
-     * @api {get} /api/manage/role 根据所有角色信息
+     * @api {get} /api/manage/role 获取所有角色信息
      * @apiVersion 0.0.1
      * @apiName getAllRole
      * @apiGroup roleGroup

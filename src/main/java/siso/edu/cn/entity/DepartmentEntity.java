@@ -28,7 +28,7 @@ public class DepartmentEntity {
     @JsonIgnore
     private Collection<BindUserDepartmentRoleEntity> bindUserDepartmentRolesById;
     @JsonIgnore
-    private Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById;
+    private Collection<DeviceEntity> devicesById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -129,11 +129,11 @@ public class DepartmentEntity {
     }
 
     @OneToMany(mappedBy = "departmentByDepartmentId")
-    public Collection<DepartmentDeviceRelationEntity> getDepartmentDeviceRelationsById() {
-        return departmentDeviceRelationsById;
+    public Collection<DeviceEntity> getDevicesById() {
+        return devicesById;
     }
 
-    public void setDepartmentDeviceRelationsById(Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById) {
-        this.departmentDeviceRelationsById = departmentDeviceRelationsById;
+    public void setDevicesById(Collection<DeviceEntity> devicesById) {
+        this.devicesById = devicesById;
     }
 }

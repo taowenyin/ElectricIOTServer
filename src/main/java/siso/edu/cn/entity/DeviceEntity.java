@@ -31,6 +31,8 @@ public class DeviceEntity {
     private Long statusId;
     @JsonProperty("user_id")
     private Long userId;
+    @JsonProperty("department_id")
+    private Long departmentId;
     @JsonProperty("comment")
     private String comment;
     @JsonProperty("create_time")
@@ -46,13 +48,13 @@ public class DeviceEntity {
     @JsonProperty("power_tcp_live_interval")
     private int powerTcpLiveInterval;
     @JsonIgnore
-    private Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById;
-    @JsonIgnore
     private TypeEntity typeByTypeId;
     @JsonIgnore
     private StatusEntity statusByStatusId;
     @JsonIgnore
     private UserEntity userByUserId;
+    @JsonIgnore
+    private DepartmentEntity departmentByDepartmentId;
     @JsonIgnore
     private Collection<DeviceCmdEntity> deviceCmdsById;
     @JsonIgnore
@@ -150,6 +152,16 @@ public class DeviceEntity {
     }
 
     @Basic
+    @Column(name = "department_id", nullable = true)
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    @Basic
     @Column(name = "comment", nullable = true, length = 200)
     public String getComment() {
         return comment;
@@ -228,9 +240,6 @@ public class DeviceEntity {
 
         if (id != that.id) return false;
         if (isDelete != that.isDelete) return false;
-        if (typeId != that.typeId) return false;
-        if (statusId != that.statusId) return false;
-        if (userId != that.userId) return false;
         if (batteryRecordGpsInterval != that.batteryRecordGpsInterval) return false;
         if (powerRecordGpsInterval != that.powerRecordGpsInterval) return false;
         if (batterySendGpsInterval != that.batterySendGpsInterval) return false;
@@ -240,6 +249,10 @@ public class DeviceEntity {
         if (imsi != null ? !imsi.equals(that.imsi) : that.imsi != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (serialNumber != null ? !serialNumber.equals(that.serialNumber) : that.serialNumber != null) return false;
+        if (typeId != null ? !typeId.equals(that.typeId) : that.typeId != null) return false;
+        if (statusId != null ? !statusId.equals(that.statusId) : that.statusId != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (departmentId != null ? !departmentId.equals(that.departmentId) : that.departmentId != null) return false;
         if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
         if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
 
@@ -254,9 +267,10 @@ public class DeviceEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (serialNumber != null ? serialNumber.hashCode() : 0);
         result = 31 * result + isDelete;
-        result = 31 * result + (int) (typeId ^ (typeId >>> 32));
-        result = 31 * result + (int) (statusId ^ (statusId >>> 32));
-        result = 31 * result + (int) (userId ^ (userId >>> 32));
+        result = 31 * result + (typeId != null ? typeId.hashCode() : 0);
+        result = 31 * result + (statusId != null ? statusId.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (departmentId != null ? departmentId.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + batteryRecordGpsInterval;
@@ -265,15 +279,6 @@ public class DeviceEntity {
         result = 31 * result + powerSendGpsInterval;
         result = 31 * result + powerTcpLiveInterval;
         return result;
-    }
-
-    @OneToMany(mappedBy = "deviceByDeviceId")
-    public Collection<DepartmentDeviceRelationEntity> getDepartmentDeviceRelationsById() {
-        return departmentDeviceRelationsById;
-    }
-
-    public void setDepartmentDeviceRelationsById(Collection<DepartmentDeviceRelationEntity> departmentDeviceRelationsById) {
-        this.departmentDeviceRelationsById = departmentDeviceRelationsById;
     }
 
     @ManyToOne
@@ -304,6 +309,16 @@ public class DeviceEntity {
 
     public void setUserByUserId(UserEntity userByUserId) {
         this.userByUserId = userByUserId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id", insertable = false, updatable = false)
+    public DepartmentEntity getDepartmentByDepartmentId() {
+        return departmentByDepartmentId;
+    }
+
+    public void setDepartmentByDepartmentId(DepartmentEntity departmentByDepartmentId) {
+        this.departmentByDepartmentId = departmentByDepartmentId;
     }
 
     @OneToMany(mappedBy = "deviceByDeviceId")

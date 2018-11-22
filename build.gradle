@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 group 'siso.edu.cn'
 version '1.0-SNAPSHOT'
 
@@ -52,3 +54,27 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
 
 }
+
+// 设置任务的编码格式
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// API DOC编译任务
+task apiDocBuild(type:Exec) {
+    workingDir "./"
+
+    File apidocDir = new File("./src/main/webapp/WEB-INF/apidoc")
+    if (apidocDir.exists()) {
+        apidocDir.deleteDir()
+    }
+
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        commandLine 'cmd', '/c', "apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc"
+    } else {
+        commandLine 'bash', '/c', "apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc"
+    }
+}
+
+// 设置APIDOC的编译任务在最前端
+compileJava.dependsOn apiDocBuild

@@ -65,19 +65,12 @@ task apiDocBuild(type:Exec) {
     workingDir "./"
 
     println("RootDir=>" + rootDir.getAbsolutePath())
-    File srcDir = new File("./src")
-    println("src=>" + srcDir.exists() ? "exists" : "not exists")
-    File mainDir = new File("./src/main")
-    println("main=>" + mainDir.exists() ? "exists" : "not exists")
-    File webappDir = new File("./src/main/webapp")
-    println("webapp=>" + webappDir.exists() ? "exists" : "not exists")
-    File infoDir = new File("./src/main/webapp/WEB-INF")
-    println("WEB-INF=>" + infoDir.exists() ? "exists" : "not exists")
-
-    File apidocDir = new File(rootDir.getAbsolutePath() + "./src/main/webapp/WEB-INF/apidoc")
+    File apidocDir = new File(rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc")
     if (apidocDir.exists()) {
         apidocDir.deleteDir()
+        apidocDir.mkdir()
     }
+    println("apidoc=>" + apidocDir.exists() ? "exists" : "not exists")
 
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         println("Current OS is Windows")

@@ -65,7 +65,16 @@ task apiDocBuild(type:Exec) {
     workingDir "./"
 
     println("RootDir=>" + rootDir.getAbsolutePath())
-    File apidocDir = new File("./src/main/webapp/WEB-INF/apidoc")
+    File srcDir = new File("./src")
+    println("src=>" + srcDir.exists() ? "exists" : "not exists")
+    File mainDir = new File("./src/main")
+    println("main=>" + mainDir.exists() ? "exists" : "not exists")
+    File webappDir = new File("./src/main/webapp")
+    println("webapp=>" + webappDir.exists() ? "exists" : "not exists")
+    File infoDir = new File("./src/main/webapp/WEB-INF")
+    println("WEB-INF=>" + infoDir.exists() ? "exists" : "not exists")
+
+    File apidocDir = new File(rootDir.getAbsolutePath() + "./src/main/webapp/WEB-INF/apidoc")
     if (apidocDir.exists()) {
         apidocDir.deleteDir()
     }

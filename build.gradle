@@ -64,6 +64,7 @@ tasks.withType(JavaCompile) {
 task apiDocBuild(type:Exec) {
     workingDir "./"
 
+    println("RootDir=>" + rootDir.getAbsolutePath())
     File apidocDir = new File("./src/main/webapp/WEB-INF/apidoc")
     if (apidocDir.exists()) {
         apidocDir.deleteDir()

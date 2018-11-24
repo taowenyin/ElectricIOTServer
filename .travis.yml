@@ -1,28 +1,31 @@
 language: java
-
 sudo: false
 addons:
   apt:
     packages:
-      - oracle-java8-installer
-
+    - oracle-java8-installer
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 before_install:
-  - chmod +x ./gradlew
-  - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-  - nvm install node
-  - npm install apidoc -g
-  - apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc
-
+- chmod +x ./gradlew
+- curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh |
+  bash
+- nvm install node
+- npm install apidoc -g
+- apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc
 script:
-  - "./gradlew build --info"
-
+- "./gradlew build --info"
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+deploy:
+  provider: releases
+  api_key:
+    secure: YdCZ2aomlsUAj6AzyB+KsTIofMimMo5wbFr4gaxfM9uB7Tayp0NZwaOWxtkotlMYEWYBl7Oy7Lo2l74/onFMApqAkyg7b8J/b4Ege/zA6VYyrUowZ6nYKkvee9bWoFV8vTCEuSSqXBCrw8YNg/3JrXDGaIjM50fpu2ZveVkm/GESBm9lyMoFdE9Y4hDHpIe71JunnMAMmy/RxvGDgSl2mpTRuDAAKEA+xF44NqWTxsyGkTV6+00kucz4z+DK7l6TLlBZ0Vcm1rIGv9BpTPmVUWRDk33MirWTcZ7qZoulXFF40YfNR2FZXg4BCjFzikaou8b5avmXRUmpnflx8xIaASjWasbx8lqOZXWk6pNCGy1UNg2RH4mPAjzQjO78acY9+HGoIA4j3XA3Thlocmzuh/LTqCwFwLbMoYnD1RVrb3ERxnH1kjAwu/Vyd7v3EnbKwz1lQIOsn/QyXbOI/kGYC08o4uXx1RbDMh5iWlpjzY9IS76tBB181yvfg9S3nX1DKT+5rLHVbFe5uwi8W6Z7hYDR3hedTZHm00P4JB0BCNYrPZDIqhx9g4s0BYXXNtdqeKuyP5DeJVrWKxrgVi3uUzmKOxtx/N33aiZsV3fyHs2nEm8nOObn7qTFx78Bf0wXmmhlC8q0fYKaKv8pdvaLENS6mrQc94NaGRxCf1ateDg=
+  file: build/libs/ElectricIOTServer-*.war
+  on:
+    repo: taowenyin/ElectricIOTServer

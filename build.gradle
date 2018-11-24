@@ -70,8 +70,10 @@ task apiDocBuild(type:Exec) {
     }
 
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        println("Current OS is Windows")
         commandLine 'cmd', '/c', "apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc"
     } else {
+        println("Current OS is Linux")
         commandLine 'bash', '/c', "apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc"
     }
 }

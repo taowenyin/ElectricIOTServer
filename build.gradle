@@ -61,23 +61,23 @@ tasks.withType(JavaCompile) {
 }
 
 // API DOC编译任务
-task apiDocBuild(type:Exec) {
-    workingDir "./"
-
-    File apidocDir = new File(rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc")
-    if (apidocDir.exists()) {
-        apidocDir.deleteDir()
-        apidocDir.mkdir()
-    }
-
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        println("Current OS is Windows")
-        commandLine 'cmd', "apidoc -i " + rootDir.getAbsolutePath() + " -o " + rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc"
-    } else {
-        println("Current OS is Linux")
-        commandLine 'bash', "apidoc -i " + rootDir.getAbsolutePath() + " -o " + rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc"
-    }
-}
+//task apiDocBuild(type:Exec) {
+//    workingDir "./"
+//
+//    File apidocDir = new File(rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc")
+//    if (apidocDir.exists()) {
+//        apidocDir.deleteDir()
+//        apidocDir.mkdir()
+//    }
+//
+//    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+//        println("Current OS is Windows")
+//        commandLine 'cmd', "apidoc -i " + rootDir.getAbsolutePath() + " -o " + rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc"
+//    } else {
+//        println("Current OS is Linux")
+//        commandLine 'bash', "apidoc -i " + rootDir.getAbsolutePath() + " -o " + rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc"
+//    }
+//}
 
 // 设置APIDOC的编译任务在最前端
-compileJava.dependsOn apiDocBuild
+//compileJava.dependsOn apiDocBuild

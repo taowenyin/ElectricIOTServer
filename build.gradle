@@ -64,20 +64,18 @@ tasks.withType(JavaCompile) {
 task apiDocBuild(type:Exec) {
     workingDir "./"
 
-    println("RootDir=>" + rootDir.getAbsolutePath())
     File apidocDir = new File(rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc")
     if (apidocDir.exists()) {
         apidocDir.deleteDir()
         apidocDir.mkdir()
     }
-    println("apidoc=>" + apidocDir.exists() ? "exists" : "not exists")
 
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         println("Current OS is Windows")
-        commandLine 'cmd', "apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc"
+        commandLine 'cmd', "apidoc -i " + rootDir.getAbsolutePath() + " -o " + rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc"
     } else {
         println("Current OS is Linux")
-        commandLine 'bash', "apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc"
+        commandLine 'bash', "apidoc -i " + rootDir.getAbsolutePath() + " -o " + rootDir.getAbsolutePath() + "/src/main/webapp/WEB-INF/apidoc"
     }
 }
 

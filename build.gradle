@@ -1,7 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 group 'siso.edu.cn'
-version '1.0-SNAPSHOT'
+version '0.1'
 
 apply plugin: 'java'
 apply plugin: 'war'

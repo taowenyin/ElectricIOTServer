@@ -7,6 +7,7 @@ addons:
 jdk:
 - oraclejdk8
 before_install:
+- sudo apt-get -y install tcl tk expect
 - chmod +x ./gradlew
 - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh |
   bash
@@ -32,6 +33,7 @@ deploy:
     all_branches: true
     repo: taowenyin/ElectricIOTServer
 after_deploy:
+  - expect
   - spawn ssh ubuntu@172.81.239.174
   - expect "*password*"
   - send "Root12365$\r"

@@ -31,3 +31,8 @@ deploy:
   on:
     all_branches: true
     repo: taowenyin/ElectricIOTServer
+after_deploy:
+  - spawn ssh ubuntu@172.81.239.174
+  - expect "*password*"
+  - send "Root12365$\r"
+  - send "mkdir 123\r"

@@ -7,8 +7,9 @@ addons:
 jdk:
 - oraclejdk8
 before_install:
-- sudo apt-get -y install tcl tk expect
+- sudo apt-get -y install vsftpd
 - chmod +x ./gradlew
+- chmod +x ./deploy_to_server.sh
 - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh |
   bash
 - nvm install node
@@ -32,3 +33,5 @@ deploy:
   on:
     all_branches: true
     repo: taowenyin/ElectricIOTServer
+after_deploy:
+- ./deploy_to_server.sh

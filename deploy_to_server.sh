@@ -1,10 +1,11 @@
 #!/bin/sh
-export PUTFILE=./build/libs/ElectricIOTServer.war
+export PUT_FILE=./build/libs/ElectricIOTServer.war
+export CURRENT_DIR=$PWD
 ftp -p -v -n 172.81.239.174<<EOF
 user ubuntu Root12365$
 cd /opt/apache-tomcat-9.0.13/webapps
-lcd /root
-put $PUTFILE
+lcd $CURRENT_DIR
+put $PUT_FILE
 prompt
 bye
 EOF

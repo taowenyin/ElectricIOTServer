@@ -38,4 +38,4 @@ deploy:
     all_branches: true
     repo: taowenyin/ElectricIOTServer
 after_deploy:
-- travis_wait 2 ./deploy_to_server.sh
+- ./deploy_to_server.sh

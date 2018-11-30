@@ -1,11 +1,11 @@
 language: java
 sudo: false
-addons:
-  apt:
-    packages:
-    - oracle-java8-installer
-jdk:
-- oraclejdk8
+
+matrix:
+  include:
+    - env: JDK='Oracle JDK 8'
+      jdk: oraclejdk8
+
 before_install:
 - sudo apt-get -y install vsftpd
 - chmod +x ./gradlew
@@ -16,6 +16,9 @@ before_install:
 - npm install apidoc -g
 - apidoc -i ./ -o ./src/main/webapp/WEB-INF/apidoc
 script:
+- echo PATH = ${PATH}
+- echo JAVA_HOME = ${JAVA_HOME}
+- java -version
 - "./gradlew build --info"
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

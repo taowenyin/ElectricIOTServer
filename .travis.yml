@@ -34,6 +34,7 @@ deploy:
   file: build/libs/ElectricIOTServer.war
   skip_cleanup: true
   on:
+    tags: true
     all_branches: true
     repo: taowenyin/ElectricIOTServer
 after_deploy:

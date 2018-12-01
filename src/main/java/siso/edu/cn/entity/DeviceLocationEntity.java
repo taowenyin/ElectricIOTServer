@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @DynamicInsert
@@ -27,8 +28,12 @@ public class DeviceLocationEntity {
     private int batteryVoltage;
     @JsonProperty("longitude")
     private BigDecimal longitude;
+    @JsonProperty("longitude_direction")
+    private Integer longitudeDirection;
     @JsonProperty("latitude")
     private BigDecimal latitude;
+    @JsonProperty("latitude_direction")
+    private Integer latitudeDirection;
     @JsonProperty("nation_num")
     private Integer nationNum;
     @JsonProperty("mobile_num")
@@ -114,6 +119,16 @@ public class DeviceLocationEntity {
     }
 
     @Basic
+    @Column(name = "longitude_direction", nullable = true)
+    public Integer getLongitudeDirection() {
+        return longitudeDirection;
+    }
+
+    public void setLongitudeDirection(Integer longitudeDirection) {
+        this.longitudeDirection = longitudeDirection;
+    }
+
+    @Basic
     @Column(name = "latitude", nullable = true, precision = 6)
     public BigDecimal getLatitude() {
         return latitude;
@@ -121,6 +136,16 @@ public class DeviceLocationEntity {
 
     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
+    }
+
+    @Basic
+    @Column(name = "latitude_direction", nullable = true)
+    public Integer getLatitudeDirection() {
+        return latitudeDirection;
+    }
+
+    public void setLatitudeDirection(Integer latitudeDirection) {
+        this.latitudeDirection = latitudeDirection;
     }
 
     @Basic
@@ -177,42 +202,28 @@ public class DeviceLocationEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DeviceLocationEntity that = (DeviceLocationEntity) o;
-
-        if (id != that.id) return false;
-        if (deviceId != that.deviceId) return false;
-        if (signalQuality != that.signalQuality) return false;
-        if (deviceOnOff != that.deviceOnOff) return false;
-        if (batteryVoltage != that.batteryVoltage) return false;
-        if (recordTime != null ? !recordTime.equals(that.recordTime) : that.recordTime != null) return false;
-        if (longitude != null ? !longitude.equals(that.longitude) : that.longitude != null) return false;
-        if (latitude != null ? !latitude.equals(that.latitude) : that.latitude != null) return false;
-        if (nationNum != null ? !nationNum.equals(that.nationNum) : that.nationNum != null) return false;
-        if (mobileNum != null ? !mobileNum.equals(that.mobileNum) : that.mobileNum != null) return false;
-        if (locationNum != null ? !locationNum.equals(that.locationNum) : that.locationNum != null) return false;
-        if (communityNum != null ? !communityNum.equals(that.communityNum) : that.communityNum != null) return false;
-        if (stationNum != null ? !stationNum.equals(that.stationNum) : that.stationNum != null) return false;
-
-        return true;
+        return id == that.id &&
+                deviceId == that.deviceId &&
+                signalQuality == that.signalQuality &&
+                deviceOnOff == that.deviceOnOff &&
+                batteryVoltage == that.batteryVoltage &&
+                Objects.equals(recordTime, that.recordTime) &&
+                Objects.equals(longitude, that.longitude) &&
+                Objects.equals(longitudeDirection, that.longitudeDirection) &&
+                Objects.equals(latitude, that.latitude) &&
+                Objects.equals(latitudeDirection, that.latitudeDirection) &&
+                Objects.equals(nationNum, that.nationNum) &&
+                Objects.equals(mobileNum, that.mobileNum) &&
+                Objects.equals(locationNum, that.locationNum) &&
+                Objects.equals(communityNum, that.communityNum) &&
+                Objects.equals(stationNum, that.stationNum);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
-        result = 31 * result + (recordTime != null ? recordTime.hashCode() : 0);
-        result = 31 * result + signalQuality;
-        result = 31 * result + deviceOnOff;
-        result = 31 * result + batteryVoltage;
-        result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
-        result = 31 * result + (latitude != null ? latitude.hashCode() : 0);
-        result = 31 * result + (nationNum != null ? nationNum.hashCode() : 0);
-        result = 31 * result + (mobileNum != null ? mobileNum.hashCode() : 0);
-        result = 31 * result + (locationNum != null ? locationNum.hashCode() : 0);
-        result = 31 * result + (communityNum != null ? communityNum.hashCode() : 0);
-        result = 31 * result + (stationNum != null ? stationNum.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id, deviceId, recordTime, signalQuality, deviceOnOff, batteryVoltage, longitude, longitudeDirection, latitude, latitudeDirection, nationNum, mobileNum, locationNum, communityNum, stationNum);
     }
 
     @ManyToOne

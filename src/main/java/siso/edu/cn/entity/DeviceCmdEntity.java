@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @DynamicInsert
@@ -16,6 +17,8 @@ public class DeviceCmdEntity {
     private long id;
     @JsonProperty("device_id")
     private long deviceId;
+    @JsonProperty("create_time")
+    private String createTime;
     @JsonProperty("get_imsi")
     private Integer getImsi;
     @JsonProperty("set_device_name")
@@ -24,28 +27,22 @@ public class DeviceCmdEntity {
     private Integer getDeviceName;
     @JsonProperty("set_device_ip")
     private String setDeviceIp;
-    @JsonProperty("set_device_port")
-    private Integer setDevicePort;
     @JsonProperty("get_device_ip")
     private Integer getDeviceIp;
-    @JsonProperty("get_device_port")
-    private Integer getDevicePort;
     @JsonProperty("set_gps_record_interval")
     private Integer setGpsRecordInterval;
     @JsonProperty("get_gps_record_interval")
     private Integer getGpsRecordInterval;
-    @JsonProperty("set_gps_send_interval")
-    private Integer setGpsSendInterval;
-    @JsonProperty("get_gps_send_interval")
-    private Integer getGpsSendInterval;
+    @JsonProperty("set_gprs_send_interval")
+    private Integer setGprsSendInterval;
+    @JsonProperty("get_gprs_send_interval")
+    private Integer getGprsSendInterval;
     @JsonProperty("reset_device")
     private Integer resetDevice;
     @JsonProperty("set_power_tcp_live_interval")
     private Integer setPowerTcpLiveInterval;
     @JsonProperty("get_power_tcp_live_interval")
     private Integer getPowerTcpLiveInterval;
-    @JsonProperty("create_time")
-    private String createTime;
     @JsonProperty("send_time")
     private String sendTime;
     @JsonProperty("is_send")
@@ -72,6 +69,16 @@ public class DeviceCmdEntity {
 
     public void setDeviceId(long deviceId) {
         this.deviceId = deviceId;
+    }
+
+    @Basic
+    @Column(name = "create_time", nullable = false)
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     @Basic
@@ -115,16 +122,6 @@ public class DeviceCmdEntity {
     }
 
     @Basic
-    @Column(name = "set_device_port", nullable = true)
-    public Integer getSetDevicePort() {
-        return setDevicePort;
-    }
-
-    public void setSetDevicePort(Integer setDevicePort) {
-        this.setDevicePort = setDevicePort;
-    }
-
-    @Basic
     @Column(name = "get_device_ip", nullable = true)
     public Integer getGetDeviceIp() {
         return getDeviceIp;
@@ -132,16 +129,6 @@ public class DeviceCmdEntity {
 
     public void setGetDeviceIp(Integer getDeviceIp) {
         this.getDeviceIp = getDeviceIp;
-    }
-
-    @Basic
-    @Column(name = "get_device_port", nullable = true)
-    public Integer getGetDevicePort() {
-        return getDevicePort;
-    }
-
-    public void setGetDevicePort(Integer getDevicePort) {
-        this.getDevicePort = getDevicePort;
     }
 
     @Basic
@@ -165,23 +152,23 @@ public class DeviceCmdEntity {
     }
 
     @Basic
-    @Column(name = "set_gps_send_interval", nullable = true)
-    public Integer getSetGpsSendInterval() {
-        return setGpsSendInterval;
+    @Column(name = "set_gprs_send_interval", nullable = true)
+    public Integer getSetGprsSendInterval() {
+        return setGprsSendInterval;
     }
 
-    public void setSetGpsSendInterval(Integer setGpsSendInterval) {
-        this.setGpsSendInterval = setGpsSendInterval;
+    public void setSetGprsSendInterval(Integer setGprsSendInterval) {
+        this.setGprsSendInterval = setGprsSendInterval;
     }
 
     @Basic
-    @Column(name = "get_gps_send_interval", nullable = true)
-    public Integer getGetGpsSendInterval() {
-        return getGpsSendInterval;
+    @Column(name = "get_gprs_send_interval", nullable = true)
+    public Integer getGetGprsSendInterval() {
+        return getGprsSendInterval;
     }
 
-    public void setGetGpsSendInterval(Integer getGpsSendInterval) {
-        this.getGpsSendInterval = getGpsSendInterval;
+    public void setGetGprsSendInterval(Integer getGprsSendInterval) {
+        this.getGprsSendInterval = getGprsSendInterval;
     }
 
     @Basic
@@ -215,16 +202,6 @@ public class DeviceCmdEntity {
     }
 
     @Basic
-    @Column(name = "create_time", nullable = false)
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    @Basic
     @Column(name = "send_time", nullable = true)
     public String getSendTime() {
         return sendTime;
@@ -248,64 +225,30 @@ public class DeviceCmdEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DeviceCmdEntity that = (DeviceCmdEntity) o;
-
-        if (id != that.id) return false;
-        if (deviceId != that.deviceId) return false;
-        if (getImsi != null ? !getImsi.equals(that.getImsi) : that.getImsi != null) return false;
-        if (setDeviceName != null ? !setDeviceName.equals(that.setDeviceName) : that.setDeviceName != null)
-            return false;
-        if (getDeviceName != null ? !getDeviceName.equals(that.getDeviceName) : that.getDeviceName != null)
-            return false;
-        if (setDeviceIp != null ? !setDeviceIp.equals(that.setDeviceIp) : that.setDeviceIp != null) return false;
-        if (setDevicePort != null ? !setDevicePort.equals(that.setDevicePort) : that.setDevicePort != null)
-            return false;
-        if (getDeviceIp != null ? !getDeviceIp.equals(that.getDeviceIp) : that.getDeviceIp != null) return false;
-        if (getDevicePort != null ? !getDevicePort.equals(that.getDevicePort) : that.getDevicePort != null)
-            return false;
-        if (setGpsRecordInterval != null ? !setGpsRecordInterval.equals(that.setGpsRecordInterval) : that.setGpsRecordInterval != null)
-            return false;
-        if (getGpsRecordInterval != null ? !getGpsRecordInterval.equals(that.getGpsRecordInterval) : that.getGpsRecordInterval != null)
-            return false;
-        if (setGpsSendInterval != null ? !setGpsSendInterval.equals(that.setGpsSendInterval) : that.setGpsSendInterval != null)
-            return false;
-        if (getGpsSendInterval != null ? !getGpsSendInterval.equals(that.getGpsSendInterval) : that.getGpsSendInterval != null)
-            return false;
-        if (resetDevice != null ? !resetDevice.equals(that.resetDevice) : that.resetDevice != null) return false;
-        if (setPowerTcpLiveInterval != null ? !setPowerTcpLiveInterval.equals(that.setPowerTcpLiveInterval) : that.setPowerTcpLiveInterval != null)
-            return false;
-        if (getPowerTcpLiveInterval != null ? !getPowerTcpLiveInterval.equals(that.getPowerTcpLiveInterval) : that.getPowerTcpLiveInterval != null)
-            return false;
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
-        if (sendTime != null ? !sendTime.equals(that.sendTime) : that.sendTime != null) return false;
-        if (isSend != null ? !isSend.equals(that.isSend) : that.isSend != null) return false;
-
-        return true;
+        return id == that.id &&
+                deviceId == that.deviceId &&
+                Objects.equals(createTime, that.createTime) &&
+                Objects.equals(getImsi, that.getImsi) &&
+                Objects.equals(setDeviceName, that.setDeviceName) &&
+                Objects.equals(getDeviceName, that.getDeviceName) &&
+                Objects.equals(setDeviceIp, that.setDeviceIp) &&
+                Objects.equals(getDeviceIp, that.getDeviceIp) &&
+                Objects.equals(setGpsRecordInterval, that.setGpsRecordInterval) &&
+                Objects.equals(getGpsRecordInterval, that.getGpsRecordInterval) &&
+                Objects.equals(setGprsSendInterval, that.setGprsSendInterval) &&
+                Objects.equals(getGprsSendInterval, that.getGprsSendInterval) &&
+                Objects.equals(resetDevice, that.resetDevice) &&
+                Objects.equals(setPowerTcpLiveInterval, that.setPowerTcpLiveInterval) &&
+                Objects.equals(getPowerTcpLiveInterval, that.getPowerTcpLiveInterval) &&
+                Objects.equals(sendTime, that.sendTime) &&
+                Objects.equals(isSend, that.isSend);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
-        result = 31 * result + (getImsi != null ? getImsi.hashCode() : 0);
-        result = 31 * result + (setDeviceName != null ? setDeviceName.hashCode() : 0);
-        result = 31 * result + (getDeviceName != null ? getDeviceName.hashCode() : 0);
-        result = 31 * result + (setDeviceIp != null ? setDeviceIp.hashCode() : 0);
-        result = 31 * result + (setDevicePort != null ? setDevicePort.hashCode() : 0);
-        result = 31 * result + (getDeviceIp != null ? getDeviceIp.hashCode() : 0);
-        result = 31 * result + (getDevicePort != null ? getDevicePort.hashCode() : 0);
-        result = 31 * result + (setGpsRecordInterval != null ? setGpsRecordInterval.hashCode() : 0);
-        result = 31 * result + (getGpsRecordInterval != null ? getGpsRecordInterval.hashCode() : 0);
-        result = 31 * result + (setGpsSendInterval != null ? setGpsSendInterval.hashCode() : 0);
-        result = 31 * result + (getGpsSendInterval != null ? getGpsSendInterval.hashCode() : 0);
-        result = 31 * result + (resetDevice != null ? resetDevice.hashCode() : 0);
-        result = 31 * result + (setPowerTcpLiveInterval != null ? setPowerTcpLiveInterval.hashCode() : 0);
-        result = 31 * result + (getPowerTcpLiveInterval != null ? getPowerTcpLiveInterval.hashCode() : 0);
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (sendTime != null ? sendTime.hashCode() : 0);
-        result = 31 * result + (isSend != null ? isSend.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id, deviceId, createTime, getImsi, setDeviceName, getDeviceName, setDeviceIp, getDeviceIp, setGpsRecordInterval, getGpsRecordInterval, setGprsSendInterval, getGprsSendInterval, resetDevice, setPowerTcpLiveInterval, getPowerTcpLiveInterval, sendTime, isSend);
     }
 
     @ManyToOne

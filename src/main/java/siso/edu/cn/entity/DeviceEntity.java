@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @DynamicInsert
@@ -41,10 +42,10 @@ public class DeviceEntity {
     private int batteryRecordGpsInterval;
     @JsonProperty("power_record_gps_interval")
     private int powerRecordGpsInterval;
-    @JsonProperty("battery_send_gps_interval")
-    private int batterySendGpsInterval;
-    @JsonProperty("power_send_gps_interval")
-    private int powerSendGpsInterval;
+    @JsonProperty("battery_send_gprs_interval")
+    private int batterySendGprsInterval;
+    @JsonProperty("power_send_gprs_interval")
+    private int powerSendGprsInterval;
     @JsonProperty("power_tcp_live_interval")
     private int powerTcpLiveInterval;
     @JsonIgnore
@@ -202,23 +203,23 @@ public class DeviceEntity {
     }
 
     @Basic
-    @Column(name = "battery_send_gps_interval", nullable = false)
-    public int getBatterySendGpsInterval() {
-        return batterySendGpsInterval;
+    @Column(name = "battery_send_gprs_interval", nullable = false)
+    public int getBatterySendGprsInterval() {
+        return batterySendGprsInterval;
     }
 
-    public void setBatterySendGpsInterval(int batterySendGpsInterval) {
-        this.batterySendGpsInterval = batterySendGpsInterval;
+    public void setBatterySendGprsInterval(int batterySendGprsInterval) {
+        this.batterySendGprsInterval = batterySendGprsInterval;
     }
 
     @Basic
-    @Column(name = "power_send_gps_interval", nullable = false)
-    public int getPowerSendGpsInterval() {
-        return powerSendGpsInterval;
+    @Column(name = "power_send_gprs_interval", nullable = false)
+    public int getPowerSendGprsInterval() {
+        return powerSendGprsInterval;
     }
 
-    public void setPowerSendGpsInterval(int powerSendGpsInterval) {
-        this.powerSendGpsInterval = powerSendGpsInterval;
+    public void setPowerSendGprsInterval(int powerSendGprsInterval) {
+        this.powerSendGprsInterval = powerSendGprsInterval;
     }
 
     @Basic
@@ -235,50 +236,30 @@ public class DeviceEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DeviceEntity that = (DeviceEntity) o;
-
-        if (id != that.id) return false;
-        if (isDelete != that.isDelete) return false;
-        if (batteryRecordGpsInterval != that.batteryRecordGpsInterval) return false;
-        if (powerRecordGpsInterval != that.powerRecordGpsInterval) return false;
-        if (batterySendGpsInterval != that.batterySendGpsInterval) return false;
-        if (powerSendGpsInterval != that.powerSendGpsInterval) return false;
-        if (powerTcpLiveInterval != that.powerTcpLiveInterval) return false;
-        if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
-        if (imsi != null ? !imsi.equals(that.imsi) : that.imsi != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (serialNumber != null ? !serialNumber.equals(that.serialNumber) : that.serialNumber != null) return false;
-        if (typeId != null ? !typeId.equals(that.typeId) : that.typeId != null) return false;
-        if (statusId != null ? !statusId.equals(that.statusId) : that.statusId != null) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-        if (departmentId != null ? !departmentId.equals(that.departmentId) : that.departmentId != null) return false;
-        if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
-
-        return true;
+        return id == that.id &&
+                isDelete == that.isDelete &&
+                batteryRecordGpsInterval == that.batteryRecordGpsInterval &&
+                powerRecordGpsInterval == that.powerRecordGpsInterval &&
+                batterySendGprsInterval == that.batterySendGprsInterval &&
+                powerSendGprsInterval == that.powerSendGprsInterval &&
+                powerTcpLiveInterval == that.powerTcpLiveInterval &&
+                Objects.equals(uid, that.uid) &&
+                Objects.equals(imsi, that.imsi) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(serialNumber, that.serialNumber) &&
+                Objects.equals(typeId, that.typeId) &&
+                Objects.equals(statusId, that.statusId) &&
+                Objects.equals(userId, that.userId) &&
+                Objects.equals(departmentId, that.departmentId) &&
+                Objects.equals(comment, that.comment) &&
+                Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
-        result = 31 * result + (imsi != null ? imsi.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (serialNumber != null ? serialNumber.hashCode() : 0);
-        result = 31 * result + isDelete;
-        result = 31 * result + (typeId != null ? typeId.hashCode() : 0);
-        result = 31 * result + (statusId != null ? statusId.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (departmentId != null ? departmentId.hashCode() : 0);
-        result = 31 * result + (comment != null ? comment.hashCode() : 0);
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + batteryRecordGpsInterval;
-        result = 31 * result + powerRecordGpsInterval;
-        result = 31 * result + batterySendGpsInterval;
-        result = 31 * result + powerSendGpsInterval;
-        result = 31 * result + powerTcpLiveInterval;
-        return result;
+
+        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, statusId, userId, departmentId, comment, createTime, batteryRecordGpsInterval, powerRecordGpsInterval, batterySendGprsInterval, powerSendGprsInterval, powerTcpLiveInterval);
     }
 
     @ManyToOne

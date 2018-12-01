@@ -11,11 +11,11 @@ bye
 EOF
 echo "deploy to server successfully"
 
-export $SERVER_USERNAME = "ubuntu"
-export $SERVER_PASSWORD = "Root12365$"
-export $SERVER_IP = "172.81.239.174"
-export $SERVER_CMD1 = "sudo service tomcat restart"
-export $SERVER_CMD2 = "exit"
+export SERVER_USERNAME = "ubuntu"
+export SERVER_PASSWORD = "Root12365$"
+export SERVER_IP = "172.81.239.174"
+export SERVER_CMD1 = "sudo service tomcat restart"
+export SERVER_CMD2 = "exit"
 
 (
     sleep 10;

@@ -92,4 +92,13 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         registry.addResourceHandler("/apidoc/**").addResourceLocations("/WEB-INF/apidoc/");
     }
 
+    /*==========允许跨域访问的设置==========*/
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:4200", null)
+                .allowedMethods("POST", "GET", "PUT", "DELETE")
+                .maxAge(3600)
+                .allowCredentials(true);
+    }
 }

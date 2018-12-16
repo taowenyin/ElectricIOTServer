@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import siso.edu.cn.entity.DeviceEntity;
 import siso.edu.cn.entity.FlagEntity;
 import siso.edu.cn.entity.ResultEntity;
+import siso.edu.cn.entity.ViewGetAllDeviceInfoEntity;
 import siso.edu.cn.service.DeviceService;
+import siso.edu.cn.service.ViewGetAllDeviceInfoService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,10 +24,12 @@ import java.util.TimeZone;
 public class DeviceController extends IControllerImpl {
 
     private DeviceService deviceService;
+    private ViewGetAllDeviceInfoService viewGetAllDeviceInfoService;
 
     @Autowired
-    public DeviceController(DeviceService deviceService) {
+    public DeviceController(DeviceService deviceService, ViewGetAllDeviceInfoService viewGetAllDeviceInfoService) {
         this.deviceService = deviceService;
+        this.viewGetAllDeviceInfoService = viewGetAllDeviceInfoService;
     }
 
     /**
@@ -260,7 +264,7 @@ public class DeviceController extends IControllerImpl {
      */
     @RequestMapping(value = "/device", method = RequestMethod.GET)
     public ResultEntity getAllDevice() {
-        List<DeviceEntity> deviceEntityList = deviceService.findAll();
+        List<ViewGetAllDeviceInfoEntity> deviceEntityList = viewGetAllDeviceInfoService.findAll();
 
         if (deviceEntityList.size() > 0) {
             ObjectMapper objectMapper = new ObjectMapper();

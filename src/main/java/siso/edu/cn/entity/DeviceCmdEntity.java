@@ -29,20 +29,20 @@ public class DeviceCmdEntity {
     private String setDeviceIp;
     @JsonProperty("get_device_ip")
     private Integer getDeviceIp;
-    @JsonProperty("set_gps_record_interval")
-    private Integer setGpsRecordInterval;
-    @JsonProperty("get_gps_record_interval")
-    private Integer getGpsRecordInterval;
-    @JsonProperty("set_gprs_send_interval")
-    private Integer setGprsSendInterval;
-    @JsonProperty("get_gprs_send_interval")
-    private Integer getGprsSendInterval;
+    @JsonProperty("set_keep_live_interval")
+    private Integer setKeepLiveInterval;
+    @JsonProperty("get_keep_live_interval")
+    private Integer getKeepLiveInterval;
+    @JsonProperty("set_battery_sleep_time")
+    private Integer setBatterySleepTime;
+    @JsonProperty("get_battery_sleep_time")
+    private Integer getBatterySleepTime;
     @JsonProperty("reset_device")
     private Integer resetDevice;
-    @JsonProperty("set_power_tcp_live_interval")
-    private Integer setPowerTcpLiveInterval;
-    @JsonProperty("get_power_tcp_live_interval")
-    private Integer getPowerTcpLiveInterval;
+    @JsonProperty("set_battery_keep_live_time")
+    private Integer setBatteryKeepLiveTime;
+    @JsonProperty("get_battery_keep_live_time")
+    private Integer getBatteryKeepLiveTime;
     @JsonProperty("send_time")
     private String sendTime;
     @JsonProperty("is_send")
@@ -132,43 +132,43 @@ public class DeviceCmdEntity {
     }
 
     @Basic
-    @Column(name = "set_gps_record_interval", nullable = true)
-    public Integer getSetGpsRecordInterval() {
-        return setGpsRecordInterval;
+    @Column(name = "set_keep_live_interval", nullable = true)
+    public Integer getSetKeepLiveInterval() {
+        return setKeepLiveInterval;
     }
 
-    public void setSetGpsRecordInterval(Integer setGpsRecordInterval) {
-        this.setGpsRecordInterval = setGpsRecordInterval;
-    }
-
-    @Basic
-    @Column(name = "get_gps_record_interval", nullable = true)
-    public Integer getGetGpsRecordInterval() {
-        return getGpsRecordInterval;
-    }
-
-    public void setGetGpsRecordInterval(Integer getGpsRecordInterval) {
-        this.getGpsRecordInterval = getGpsRecordInterval;
+    public void setSetKeepLiveInterval(Integer setKeepLiveInterval) {
+        this.setKeepLiveInterval = setKeepLiveInterval;
     }
 
     @Basic
-    @Column(name = "set_gprs_send_interval", nullable = true)
-    public Integer getSetGprsSendInterval() {
-        return setGprsSendInterval;
+    @Column(name = "get_keep_live_interval", nullable = true)
+    public Integer getGetKeepLiveInterval() {
+        return getKeepLiveInterval;
     }
 
-    public void setSetGprsSendInterval(Integer setGprsSendInterval) {
-        this.setGprsSendInterval = setGprsSendInterval;
+    public void setGetKeepLiveInterval(Integer getKeepLiveInterval) {
+        this.getKeepLiveInterval = getKeepLiveInterval;
     }
 
     @Basic
-    @Column(name = "get_gprs_send_interval", nullable = true)
-    public Integer getGetGprsSendInterval() {
-        return getGprsSendInterval;
+    @Column(name = "set_battery_sleep_time", nullable = true)
+    public Integer getSetBatterySleepTime() {
+        return setBatterySleepTime;
     }
 
-    public void setGetGprsSendInterval(Integer getGprsSendInterval) {
-        this.getGprsSendInterval = getGprsSendInterval;
+    public void setSetBatterySleepTime(Integer setBatterySleepTime) {
+        this.setBatterySleepTime = setBatterySleepTime;
+    }
+
+    @Basic
+    @Column(name = "get_battery_sleep_time", nullable = true)
+    public Integer getGetBatterySleepTime() {
+        return getBatterySleepTime;
+    }
+
+    public void setGetBatterySleepTime(Integer getBatterySleepTime) {
+        this.getBatterySleepTime = getBatterySleepTime;
     }
 
     @Basic
@@ -182,23 +182,23 @@ public class DeviceCmdEntity {
     }
 
     @Basic
-    @Column(name = "set_power_tcp_live_interval", nullable = true)
-    public Integer getSetPowerTcpLiveInterval() {
-        return setPowerTcpLiveInterval;
+    @Column(name = "set_battery_keep_live_time", nullable = true)
+    public Integer getSetBatteryKeepLiveTime() {
+        return setBatteryKeepLiveTime;
     }
 
-    public void setSetPowerTcpLiveInterval(Integer setPowerTcpLiveInterval) {
-        this.setPowerTcpLiveInterval = setPowerTcpLiveInterval;
+    public void setSetBatteryKeepLiveTime(Integer setBatteryKeepLiveTime) {
+        this.setBatteryKeepLiveTime = setBatteryKeepLiveTime;
     }
 
     @Basic
-    @Column(name = "get_power_tcp_live_interval", nullable = true)
-    public Integer getGetPowerTcpLiveInterval() {
-        return getPowerTcpLiveInterval;
+    @Column(name = "get_battery_keep_live_time", nullable = true)
+    public Integer getGetBatteryKeepLiveTime() {
+        return getBatteryKeepLiveTime;
     }
 
-    public void setGetPowerTcpLiveInterval(Integer getPowerTcpLiveInterval) {
-        this.getPowerTcpLiveInterval = getPowerTcpLiveInterval;
+    public void setGetBatteryKeepLiveTime(Integer getBatteryKeepLiveTime) {
+        this.getBatteryKeepLiveTime = getBatteryKeepLiveTime;
     }
 
     @Basic
@@ -234,13 +234,13 @@ public class DeviceCmdEntity {
                 Objects.equals(getDeviceName, that.getDeviceName) &&
                 Objects.equals(setDeviceIp, that.setDeviceIp) &&
                 Objects.equals(getDeviceIp, that.getDeviceIp) &&
-                Objects.equals(setGpsRecordInterval, that.setGpsRecordInterval) &&
-                Objects.equals(getGpsRecordInterval, that.getGpsRecordInterval) &&
-                Objects.equals(setGprsSendInterval, that.setGprsSendInterval) &&
-                Objects.equals(getGprsSendInterval, that.getGprsSendInterval) &&
+                Objects.equals(setKeepLiveInterval, that.setKeepLiveInterval) &&
+                Objects.equals(getKeepLiveInterval, that.getKeepLiveInterval) &&
+                Objects.equals(setBatterySleepTime, that.setBatterySleepTime) &&
+                Objects.equals(getBatterySleepTime, that.getBatterySleepTime) &&
                 Objects.equals(resetDevice, that.resetDevice) &&
-                Objects.equals(setPowerTcpLiveInterval, that.setPowerTcpLiveInterval) &&
-                Objects.equals(getPowerTcpLiveInterval, that.getPowerTcpLiveInterval) &&
+                Objects.equals(setBatteryKeepLiveTime, that.setBatteryKeepLiveTime) &&
+                Objects.equals(getBatteryKeepLiveTime, that.getBatteryKeepLiveTime) &&
                 Objects.equals(sendTime, that.sendTime) &&
                 Objects.equals(isSend, that.isSend);
     }
@@ -248,7 +248,7 @@ public class DeviceCmdEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, deviceId, createTime, getImsi, setDeviceName, getDeviceName, setDeviceIp, getDeviceIp, setGpsRecordInterval, getGpsRecordInterval, setGprsSendInterval, getGprsSendInterval, resetDevice, setPowerTcpLiveInterval, getPowerTcpLiveInterval, sendTime, isSend);
+        return Objects.hash(id, deviceId, createTime, getImsi, setDeviceName, getDeviceName, setDeviceIp, getDeviceIp, setKeepLiveInterval, getKeepLiveInterval, setBatterySleepTime, getBatterySleepTime, resetDevice, setBatteryKeepLiveTime, getBatteryKeepLiveTime, sendTime, isSend);
     }
 
     @ManyToOne

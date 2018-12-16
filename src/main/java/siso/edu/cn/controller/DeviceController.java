@@ -43,11 +43,9 @@ public class DeviceController extends IControllerImpl {
      * @apiParam {Number} [userId] 保管员用户ID
      * @apiParam {Number} [departmentId] 设备所属部门ID
      * @apiParam {String} [comment] 设备说明
-     * @apiParam {Number} [batteryRecordGpsInterval] 电池供电时GPS采集间隔
-     * @apiParam {Number} [powerRecordGpsInterval] 电源供电时GPS采集间隔
-     * @apiParam {Number} [batterySendGprsInterval] 电池供电时GPRS发送间隔
-     * @apiParam {Number} [powerSendGprsInterval] 电源供电时GPRS发送间隔
-     * @apiParam {Number} [powerTcpLiveInterval] 电源供电时，TCP心跳包的发送间隔
+     * @apiParam {Number} [keepLiveInterval=60] 设备心跳间隔（单位：秒）
+     * @apiParam {Number} [batterySleepTime=180] 电源供电时的休眠时间（单位：分钟）
+     * @apiParam {Number} [batteryKeepLiveTime=300] 电池供电时心跳包发送后保持连接的时间（单位：秒）
      *
      * @apiSuccess {String} code 返回码.
      * @apiSuccess {String} msg  返回消息.
@@ -63,11 +61,9 @@ public class DeviceController extends IControllerImpl {
                                      @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,
                                      @RequestParam(name = "department_id", required = false, defaultValue = "-1") long departmentId,
                                      @RequestParam(name = "comment", required = false, defaultValue = "") String comment,
-                                     @RequestParam(name = "battery_record_gps_interval", required = false, defaultValue = "180") int batteryRecordGpsInterval,
-                                     @RequestParam(name = "power_record_gps_interval", required = false, defaultValue = "5") int powerRecordGpsInterval,
-                                     @RequestParam(name = "battery_send_gprs_interval", required = false, defaultValue = "180") int batterySendGprsInterval,
-                                     @RequestParam(name = "power_send_gprs_interval", required = false, defaultValue = "5") int powerSendGprsInterval,
-                                     @RequestParam(name = "power_tcp_live_interval", required = false, defaultValue = "10") int powerTcpLiveInterval) {
+                                     @RequestParam(name = "keep_live_interval", required = false, defaultValue = "60") int keepLiveInterval,
+                                     @RequestParam(name = "battery_sleep_time", required = false, defaultValue = "180") int batterySleepTime,
+                                     @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "300") int batteryKeepLiveTime) {
         ObjectMapper objectMapper = new ObjectMapper();
         List<DeviceEntity> deviceEntityList = deviceService.findDeviceByImsi(imsi);
 
@@ -83,11 +79,9 @@ public class DeviceController extends IControllerImpl {
         deviceEntity.setImsi(imsi);
         deviceEntity.setIsDelete(FlagEntity.NO_DELETE);
         deviceEntity.setCreateTime(simpleDateFormat.format(new Date()));
-        deviceEntity.setBatteryRecordGpsInterval(batteryRecordGpsInterval);
-        deviceEntity.setPowerRecordGpsInterval(powerRecordGpsInterval);
-        deviceEntity.setBatterySendGprsInterval(batterySendGprsInterval);
-        deviceEntity.setPowerSendGprsInterval(powerSendGprsInterval);
-        deviceEntity.setPowerTcpLiveInterval(powerTcpLiveInterval);
+        deviceEntity.setKeepLiveInterval(keepLiveInterval);
+        deviceEntity.setBatterySleepTime(batterySleepTime);
+        deviceEntity.setBatteryKeepLiveTime(batteryKeepLiveTime);
         if (!uid.isEmpty()) {
             deviceEntity.setUid(uid);
         }
@@ -166,11 +160,9 @@ public class DeviceController extends IControllerImpl {
      * @apiParam {Number} [userId] 保管员用户ID
      * @apiParam {Number} [departmentId] 设备所属部门ID
      * @apiParam {String} [comment] 设备说明
-     * @apiParam {Number} [batteryRecordGpsInterval] 电池供电时GPS采集间隔
-     * @apiParam {Number} [powerRecordGpsInterval] 电源供电时GPS采集间隔
-     * @apiParam {Number} [batterySendGprsInterval] 电池供电时GPS发送间隔
-     * @apiParam {Number} [powerSendGprsInterval] 电源供电时GPS发送间隔
-     * @apiParam {Number} [powerTcpLiveInterval] 电源供电时，TCP心跳包的发送间隔
+     * @apiParam {Number} [keepLiveInterval=60] 设备心跳间隔（单位：秒）
+     * @apiParam {Number} [batterySleepTime=180] 电源供电时的休眠时间（单位：分钟）
+     * @apiParam {Number} [batteryKeepLiveTime=300] 电池供电时心跳包发送后保持连接的时间（单位：秒）
      *
      * @apiSuccess {String} code 返回码.
      * @apiSuccess {String} msg  返回消息.
@@ -186,11 +178,9 @@ public class DeviceController extends IControllerImpl {
                                      @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,
                                      @RequestParam(name = "department_id", required = false, defaultValue = "-1") long departmentId,
                                      @RequestParam(name = "comment", required = false, defaultValue = "-1") String comment,
-                                     @RequestParam(name = "battery_record_gps_interval", required = false, defaultValue = "180") int batteryRecordGpsInterval,
-                                     @RequestParam(name = "power_record_gps_interval", required = false, defaultValue = "5") int powerRecordGpsInterval,
-                                     @RequestParam(name = "battery_send_gprs_interval", required = false, defaultValue = "180") int batterySendGprsInterval,
-                                     @RequestParam(name = "power_send_gprs_interval", required = false, defaultValue = "5") int powerSendGprsInterval,
-                                     @RequestParam(name = "power_tcp_live_interval", required = false, defaultValue = "10") int powerTcpLiveInterval) {
+                                     @RequestParam(name = "keep_live_interval", required = false, defaultValue = "60") int keepLiveInterval,
+                                     @RequestParam(name = "battery_sleep_time", required = false, defaultValue = "180") int batterySleepTime,
+                                     @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "300") int batteryKeepLiveTime) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         DeviceEntity entity = deviceService.findById(id);
@@ -199,11 +189,9 @@ public class DeviceController extends IControllerImpl {
         }
 
         // 构建实体对象
-        entity.setBatteryRecordGpsInterval(batteryRecordGpsInterval);
-        entity.setPowerRecordGpsInterval(powerRecordGpsInterval);
-        entity.setBatterySendGprsInterval(batterySendGprsInterval);
-        entity.setPowerSendGprsInterval(powerSendGprsInterval);
-        entity.setPowerTcpLiveInterval(powerTcpLiveInterval);
+        entity.setKeepLiveInterval(keepLiveInterval);
+        entity.setBatterySleepTime(batterySleepTime);
+        entity.setBatteryKeepLiveTime(batteryKeepLiveTime);
         if (!uid.isEmpty()) {
             entity.setUid(uid);
         }

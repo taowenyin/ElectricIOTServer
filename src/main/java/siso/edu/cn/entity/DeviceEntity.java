@@ -38,16 +38,12 @@ public class DeviceEntity {
     private String comment;
     @JsonProperty("create_time")
     private String createTime;
-    @JsonProperty("battery_record_gps_interval")
-    private int batteryRecordGpsInterval;
-    @JsonProperty("power_record_gps_interval")
-    private int powerRecordGpsInterval;
-    @JsonProperty("battery_send_gprs_interval")
-    private int batterySendGprsInterval;
-    @JsonProperty("power_send_gprs_interval")
-    private int powerSendGprsInterval;
-    @JsonProperty("power_tcp_live_interval")
-    private int powerTcpLiveInterval;
+    @JsonProperty("keep_live_interval")
+    private int keepLiveInterval;
+    @JsonProperty("battery_sleep_time")
+    private int batterySleepTime;
+    @JsonProperty("battery_keep_live_time")
+    private int batteryKeepLiveTime;
     @JsonIgnore
     private TypeEntity typeByTypeId;
     @JsonIgnore
@@ -83,7 +79,7 @@ public class DeviceEntity {
     }
 
     @Basic
-    @Column(name = "imsi", nullable = false, unique = true, length = 45)
+    @Column(name = "imsi", nullable = false, length = 45)
     public String getImsi() {
         return imsi;
     }
@@ -183,53 +179,33 @@ public class DeviceEntity {
     }
 
     @Basic
-    @Column(name = "battery_record_gps_interval", nullable = false)
-    public int getBatteryRecordGpsInterval() {
-        return batteryRecordGpsInterval;
+    @Column(name = "keep_live_interval", nullable = false)
+    public int getKeepLiveInterval() {
+        return keepLiveInterval;
     }
 
-    public void setBatteryRecordGpsInterval(int batteryRecordGpsInterval) {
-        this.batteryRecordGpsInterval = batteryRecordGpsInterval;
-    }
-
-    @Basic
-    @Column(name = "power_record_gps_interval", nullable = false)
-    public int getPowerRecordGpsInterval() {
-        return powerRecordGpsInterval;
-    }
-
-    public void setPowerRecordGpsInterval(int powerRecordGpsInterval) {
-        this.powerRecordGpsInterval = powerRecordGpsInterval;
+    public void setKeepLiveInterval(int keepLiveInterval) {
+        this.keepLiveInterval = keepLiveInterval;
     }
 
     @Basic
-    @Column(name = "battery_send_gprs_interval", nullable = false)
-    public int getBatterySendGprsInterval() {
-        return batterySendGprsInterval;
+    @Column(name = "battery_sleep_time", nullable = false)
+    public int getBatterySleepTime() {
+        return batterySleepTime;
     }
 
-    public void setBatterySendGprsInterval(int batterySendGprsInterval) {
-        this.batterySendGprsInterval = batterySendGprsInterval;
-    }
-
-    @Basic
-    @Column(name = "power_send_gprs_interval", nullable = false)
-    public int getPowerSendGprsInterval() {
-        return powerSendGprsInterval;
-    }
-
-    public void setPowerSendGprsInterval(int powerSendGprsInterval) {
-        this.powerSendGprsInterval = powerSendGprsInterval;
+    public void setBatterySleepTime(int batterySleepTime) {
+        this.batterySleepTime = batterySleepTime;
     }
 
     @Basic
-    @Column(name = "power_tcp_live_interval", nullable = false)
-    public int getPowerTcpLiveInterval() {
-        return powerTcpLiveInterval;
+    @Column(name = "battery_keep_live_time", nullable = false)
+    public int getBatteryKeepLiveTime() {
+        return batteryKeepLiveTime;
     }
 
-    public void setPowerTcpLiveInterval(int powerTcpLiveInterval) {
-        this.powerTcpLiveInterval = powerTcpLiveInterval;
+    public void setBatteryKeepLiveTime(int batteryKeepLiveTime) {
+        this.batteryKeepLiveTime = batteryKeepLiveTime;
     }
 
     @Override
@@ -239,11 +215,9 @@ public class DeviceEntity {
         DeviceEntity that = (DeviceEntity) o;
         return id == that.id &&
                 isDelete == that.isDelete &&
-                batteryRecordGpsInterval == that.batteryRecordGpsInterval &&
-                powerRecordGpsInterval == that.powerRecordGpsInterval &&
-                batterySendGprsInterval == that.batterySendGprsInterval &&
-                powerSendGprsInterval == that.powerSendGprsInterval &&
-                powerTcpLiveInterval == that.powerTcpLiveInterval &&
+                keepLiveInterval == that.keepLiveInterval &&
+                batterySleepTime == that.batterySleepTime &&
+                batteryKeepLiveTime == that.batteryKeepLiveTime &&
                 Objects.equals(uid, that.uid) &&
                 Objects.equals(imsi, that.imsi) &&
                 Objects.equals(name, that.name) &&
@@ -259,7 +233,7 @@ public class DeviceEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, statusId, userId, departmentId, comment, createTime, batteryRecordGpsInterval, powerRecordGpsInterval, batterySendGprsInterval, powerSendGprsInterval, powerTcpLiveInterval);
+        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, statusId, userId, departmentId, comment, createTime, keepLiveInterval, batterySleepTime, batteryKeepLiveTime);
     }
 
     @ManyToOne

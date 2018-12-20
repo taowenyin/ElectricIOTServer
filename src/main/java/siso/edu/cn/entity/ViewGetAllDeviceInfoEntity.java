@@ -20,12 +20,20 @@ public class ViewGetAllDeviceInfoEntity {
     private String serialNumber;
     @JsonProperty("is_delete")
     private int isDelete;
+    @JsonProperty("type_id")
+    private Long typeId;
     @JsonProperty("type")
     private String type;
+    @JsonProperty("status_id")
+    private Long statusId;
     @JsonProperty("status")
     private String status;
+    @JsonProperty("user_id")
+    private Long userId;
     @JsonProperty("user")
     private String user;
+    @JsonProperty("department_id")
+    private Long departmentId;
     @JsonProperty("department")
     private String department;
     @JsonProperty("comment")
@@ -100,6 +108,16 @@ public class ViewGetAllDeviceInfoEntity {
     }
 
     @Basic
+    @Column(name = "type_id", nullable = true)
+    public Long getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
+
+    @Basic
     @Column(name = "type", nullable = false, length = 45)
     public String getType() {
         return type;
@@ -107,6 +125,16 @@ public class ViewGetAllDeviceInfoEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Basic
+    @Column(name = "status_id", nullable = true)
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
     }
 
     @Basic
@@ -120,6 +148,16 @@ public class ViewGetAllDeviceInfoEntity {
     }
 
     @Basic
+    @Column(name = "user_id", nullable = true)
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    @Basic
     @Column(name = "user", nullable = false, length = 45)
     public String getUser() {
         return user;
@@ -127,6 +165,16 @@ public class ViewGetAllDeviceInfoEntity {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    @Basic
+    @Column(name = "department_id", nullable = true)
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 
     @Basic
@@ -203,9 +251,13 @@ public class ViewGetAllDeviceInfoEntity {
                 Objects.equals(imsi, that.imsi) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(serialNumber, that.serialNumber) &&
+                Objects.equals(typeId, that.typeId) &&
                 Objects.equals(type, that.type) &&
+                Objects.equals(statusId, that.statusId) &&
                 Objects.equals(status, that.status) &&
+                Objects.equals(userId, that.userId) &&
                 Objects.equals(user, that.user) &&
+                Objects.equals(departmentId, that.departmentId) &&
                 Objects.equals(department, that.department) &&
                 Objects.equals(comment, that.comment) &&
                 Objects.equals(createTime, that.createTime);
@@ -214,6 +266,6 @@ public class ViewGetAllDeviceInfoEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, type, status, user, department, comment, createTime, keepLiveInterval, batterySleepTime, batteryKeepLiveTime);
+        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, type, statusId, status, userId, user, departmentId, department, comment, createTime, keepLiveInterval, batterySleepTime, batteryKeepLiveTime);
     }
 }

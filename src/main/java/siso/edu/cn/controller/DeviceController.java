@@ -158,7 +158,7 @@ public class DeviceController extends IControllerImpl {
      * @apiParam {Number} id 设备ID
      * @apiParam {String} [uid] 自定义ID
      * @apiParam {String} [name] 设备名称
-     * @apiParam {String} [serial_name] 设备序列号
+     * @apiParam {String} [serial_number] 设备序列号
      * @apiParam {Number} [type_id] 设备类型ID
      * @apiParam {Number} [status_id] 设备状态ID
      * @apiParam {Number} [user_id] 保管员用户ID
@@ -176,7 +176,7 @@ public class DeviceController extends IControllerImpl {
     public ResultEntity modifyDeviceById(@RequestParam("id") long id,
                                      @RequestParam(name = "uid", required = false, defaultValue = "") String uid,
                                      @RequestParam(name = "name", required = false, defaultValue = "") String name,
-                                     @RequestParam(name = "serial_name", required = false, defaultValue = "") String serialName,
+                                     @RequestParam(name = "serial_number", required = false, defaultValue = "") String serialName,
                                      @RequestParam(name = "type_id", required = false, defaultValue = "-1") long typeId,
                                      @RequestParam(name = "status_id", required = false, defaultValue = "-1") long statusId,
                                      @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,

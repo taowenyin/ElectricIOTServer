@@ -41,15 +41,15 @@ public class DeviceController extends IControllerImpl {
      * @apiParam {String} imsi 手机卡IMSI
      * @apiParam {String} [uid] 自定义ID
      * @apiParam {String} [name] 设备名称
-     * @apiParam {String} [serialName] 设备序列号
-     * @apiParam {Number} [typeId] 设备类型ID
-     * @apiParam {Number} [statusId] 设备状态ID
-     * @apiParam {Number} [userId] 保管员用户ID
-     * @apiParam {Number} [departmentId] 设备所属部门ID
+     * @apiParam {String} [serial_number] 设备序列号
+     * @apiParam {Number} [type_id] 设备类型ID
+     * @apiParam {Number} [status_id] 设备状态ID
+     * @apiParam {Number} [user_id] 保管员用户ID
+     * @apiParam {Number} [department_id] 设备所属部门ID
      * @apiParam {String} [comment] 设备说明
-     * @apiParam {Number} [keepLiveInterval=60] 设备心跳间隔（单位：秒）
-     * @apiParam {Number} [batterySleepTime=180] 电源供电时的休眠时间（单位：分钟）
-     * @apiParam {Number} [batteryKeepLiveTime=300] 电池供电时心跳包发送后保持连接的时间（单位：秒）
+     * @apiParam {Number} [keep_live_interval=60] 设备心跳间隔（单位：秒）
+     * @apiParam {Number} [battery_sleep_time=180] 电源供电时的休眠时间（单位：分钟）
+     * @apiParam {Number} [battery_keep_live_time=300] 电池供电时心跳包发送后保持连接的时间（单位：秒）
      *
      * @apiSuccess {String} code 返回码.
      * @apiSuccess {String} msg  返回消息.
@@ -59,7 +59,7 @@ public class DeviceController extends IControllerImpl {
     public ResultEntity createDevice(@RequestParam("imsi") String imsi,
                                      @RequestParam(name = "uid", required = false, defaultValue = "") String uid,
                                      @RequestParam(name = "name", required = false, defaultValue = "") String name,
-                                     @RequestParam(name = "serial_name", required = false, defaultValue = "") String serialName,
+                                     @RequestParam(name = "serial_number", required = false, defaultValue = "") String serialNumber,
                                      @RequestParam(name = "type_id", required = false, defaultValue = "-1") long typeId,
                                      @RequestParam(name = "status_id", required = false, defaultValue = "-1") long statusId,
                                      @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,
@@ -92,8 +92,8 @@ public class DeviceController extends IControllerImpl {
         if (!name.isEmpty()) {
             deviceEntity.setName(name);
         }
-        if (!serialName.isEmpty()) {
-            deviceEntity.setSerialNumber(serialName);
+        if (!serialNumber.isEmpty()) {
+            deviceEntity.setSerialNumber(serialNumber);
         }
         if (typeId > 0) {
             deviceEntity.setTypeId(typeId);
@@ -176,7 +176,7 @@ public class DeviceController extends IControllerImpl {
     public ResultEntity modifyDeviceById(@RequestParam("id") long id,
                                      @RequestParam(name = "uid", required = false, defaultValue = "") String uid,
                                      @RequestParam(name = "name", required = false, defaultValue = "") String name,
-                                     @RequestParam(name = "serial_number", required = false, defaultValue = "") String serialName,
+                                     @RequestParam(name = "serial_number", required = false, defaultValue = "") String serialNumber,
                                      @RequestParam(name = "type_id", required = false, defaultValue = "-1") long typeId,
                                      @RequestParam(name = "status_id", required = false, defaultValue = "-1") long statusId,
                                      @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,
@@ -202,8 +202,8 @@ public class DeviceController extends IControllerImpl {
         if (!name.isEmpty()) {
             entity.setName(name);
         }
-        if (!serialName.isEmpty()) {
-            entity.setSerialNumber(serialName);
+        if (!serialNumber.isEmpty()) {
+            entity.setSerialNumber(serialNumber);
         }
         if (typeId > 0) {
             entity.setTypeId(typeId);

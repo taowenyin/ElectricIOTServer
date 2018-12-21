@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import siso.edu.cn.entity.BindUserDepartmentRoleEntity;
-import siso.edu.cn.entity.FlagEntity;
-import siso.edu.cn.entity.ResultEntity;
-import siso.edu.cn.entity.UserEntity;
+import siso.edu.cn.entity.*;
 import siso.edu.cn.service.BindUserDepartmentRoleService;
 import siso.edu.cn.service.UserService;
+import siso.edu.cn.service.ViewBindUserDepartmentRoleService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,11 +23,15 @@ public class UserController extends IControllerImpl {
 
     private UserService userService;
     private BindUserDepartmentRoleService bindUserDepartmentRelationService;
+    private ViewBindUserDepartmentRoleService viewBindUserDepartmentRoleService;
 
     @Autowired
-    public UserController(UserService userService, BindUserDepartmentRoleService bindUserDepartmentRelationService) {
+    public UserController(UserService userService,
+                          BindUserDepartmentRoleService bindUserDepartmentRelationService,
+                          ViewBindUserDepartmentRoleService viewBindUserDepartmentRoleService) {
         this.userService = userService;
         this.bindUserDepartmentRelationService = bindUserDepartmentRelationService;
+        this.viewBindUserDepartmentRoleService = viewBindUserDepartmentRoleService;
     }
 
     /**
@@ -258,6 +260,30 @@ public class UserController extends IControllerImpl {
         }
 
         return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+    }
+
+    /**
+     * @api {get} /api/manage/user/department/:id 根据部门ID获取归属的用户
+     * @apiVersion 0.0.1
+     * @apiName getUserListByDepartmentId
+     * @apiGroup userGroup
+     *
+     * @apiParam {Number} id 部门ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/user/department/{id}", method = RequestMethod.GET)
+    public ResultEntity getUserListByDepartmentId(@PathVariable("id") long departmentId) {
+        List<ViewBindUserDepartmentRoleEntity> userList = viewBindUserDepartmentRoleService.getUserByDepartmentId(departmentId);
+
+        if (userList.size() > 0) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(userList, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
     }
 
 }

@@ -11,6 +11,7 @@ import siso.edu.cn.service.DepartmentService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -163,9 +164,24 @@ public class DepartmentController extends IControllerImpl {
     }
 
     /**
-     * @api {get} /api/manage/department 获取部门组织结构
+     * @api {get} /api/manage/department/structure 获取部门组织结构
      * @apiVersion 0.0.1
-     * @apiName getDepartment
+     * @apiName getDepartmentStructure
+     * @apiGroup departmentGroup
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/department/structure", method = RequestMethod.GET)
+    public ResultEntity getDepartmentStructure() {
+        return this.createResultEntity(ResultEntity.SUCCESS, departmentService.getOrganizationStructure());
+    }
+
+    /**
+     * @api {get} /api/manage/department 获取所有部门信息
+     * @apiVersion 0.0.1
+     * @apiName getAllDepartment
      * @apiGroup departmentGroup
      *
      * @apiSuccess {String} code 返回码.
@@ -173,7 +189,15 @@ public class DepartmentController extends IControllerImpl {
      * @apiSuccess {Object} data  JSON格式的对象.
      */
     @RequestMapping(value = "/department", method = RequestMethod.GET)
-    public ResultEntity getDepartment() {
-        return this.createResultEntity(ResultEntity.SUCCESS, departmentService.getOrganizationStructure());
+    public ResultEntity getAllDepartment() {
+        List<DepartmentEntity> departmentEntityList = departmentService.findAll();
+
+        if (departmentEntityList.size() > 0) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return this.createResultEntity(ResultEntity.SUCCESS,
+                    objectMapper.convertValue(departmentEntityList, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
     }
 }

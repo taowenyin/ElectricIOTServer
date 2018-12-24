@@ -213,25 +213,53 @@ public class DeviceController extends IControllerImpl {
                                      @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,
                                      @RequestParam(name = "department_id", required = false, defaultValue = "-1") long departmentId,
                                      @RequestParam(name = "comment", required = false, defaultValue = "-1") String comment,
-                                     @RequestParam(name = "keep_live_interval", required = false, defaultValue = "60") int keepLiveInterval,
-                                     @RequestParam(name = "battery_sleep_time", required = false, defaultValue = "180") int batterySleepTime,
-                                     @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "300") int batteryKeepLiveTime) {
+                                     @RequestParam(name = "keep_live_interval", required = false, defaultValue = "-1") int keepLiveInterval,
+                                     @RequestParam(name = "battery_sleep_time", required = false, defaultValue = "-1") int batterySleepTime,
+                                     @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "-1") int batteryKeepLiveTime) {
         ObjectMapper objectMapper = new ObjectMapper();
+
+        // 获取时间格式
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+
+        // 创建指令实体对象
+        DeviceCmdEntity deviceCmdEntity = new DeviceCmdEntity();
 
         DeviceEntity entity = deviceService.findById(id);
         if (entity == null) {
             return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
         }
 
-        // 构建实体对象
-        entity.setKeepLiveInterval(keepLiveInterval);
-        entity.setBatterySleepTime(batterySleepTime);
-        entity.setBatteryKeepLiveTime(batteryKeepLiveTime);
+        // 设置设备指令的ID
+        deviceCmdEntity.setDeviceId(id);
+        // 设置设备指令的创建时间
+        deviceCmdEntity.setCreateTime(simpleDateFormat.format(new Date()));
+
+        if (keepLiveInterval > 0) {
+            entity.setKeepLiveInterval(keepLiveInterval);
+            // 设置设备的心跳间隔时间指令
+            deviceCmdEntity.setSetKeepLiveInterval(keepLiveInterval);
+        }
+
+        if (batterySleepTime > 0) {
+            entity.setBatterySleepTime(batterySleepTime);
+            // 设置设备的电池供电休眠时间指令
+            deviceCmdEntity.setSetBatterySleepTime(batterySleepTime);
+        }
+
+        if (batteryKeepLiveTime > 0) {
+            entity.setBatteryKeepLiveTime(batteryKeepLiveTime);
+            // 设置设备电池供电时保持链接的时间指令
+            deviceCmdEntity.setSetBatteryKeepLiveTime(batteryKeepLiveTime);
+        }
+
         if (!uid.isEmpty()) {
             entity.setUid(uid);
         }
         if (!name.isEmpty()) {
             entity.setName(name);
+            // 设置设备名字的指令
+            deviceCmdEntity.setSetDeviceName(name);
         }
         if (!serialNumber.isEmpty()) {
             entity.setSerialNumber(serialNumber);
@@ -254,6 +282,14 @@ public class DeviceController extends IControllerImpl {
 
         // 保存并更新实体
         entity = deviceService.update(entity);
+
+        // 保存指令
+        deviceCmdService.save(deviceCmdEntity);
+        if (deviceCmdEntity.getId() > 0) {
+            System.out.println("===Save Device CMD OK ===");
+        } else {
+            System.out.println("===Save Device CMD Fail ===");
+        }
 
         return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
     }

@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import siso.edu.cn.entity.DeviceEntity;
-import siso.edu.cn.entity.FlagEntity;
-import siso.edu.cn.entity.ResultEntity;
-import siso.edu.cn.entity.ViewGetAllDeviceInfoEntity;
+import siso.edu.cn.entity.*;
+import siso.edu.cn.service.DeviceCmdService;
 import siso.edu.cn.service.DeviceService;
 import siso.edu.cn.service.ViewGetAllDeviceInfoService;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -25,11 +25,15 @@ public class DeviceController extends IControllerImpl {
 
     private DeviceService deviceService;
     private ViewGetAllDeviceInfoService viewGetAllDeviceInfoService;
+    private DeviceCmdService deviceCmdService;
 
     @Autowired
-    public DeviceController(DeviceService deviceService, ViewGetAllDeviceInfoService viewGetAllDeviceInfoService) {
+    public DeviceController(DeviceService deviceService,
+                            ViewGetAllDeviceInfoService viewGetAllDeviceInfoService,
+                            DeviceCmdService deviceCmdService) {
         this.deviceService = deviceService;
         this.viewGetAllDeviceInfoService = viewGetAllDeviceInfoService;
+        this.deviceCmdService = deviceCmdService;
     }
 
     /**
@@ -67,9 +71,11 @@ public class DeviceController extends IControllerImpl {
                                      @RequestParam(name = "comment", required = false, defaultValue = "") String comment,
                                      @RequestParam(name = "keep_live_interval", required = false, defaultValue = "60") int keepLiveInterval,
                                      @RequestParam(name = "battery_sleep_time", required = false, defaultValue = "180") int batterySleepTime,
-                                     @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "300") int batteryKeepLiveTime) {
+                                     @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "300") int batteryKeepLiveTime) throws UnknownHostException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<DeviceEntity> deviceEntityList = deviceService.findDeviceByImsi(imsi);
+        // 创建指令实体对象
+        DeviceCmdEntity deviceCmdEntity = new DeviceCmdEntity();
 
         if (deviceEntityList.size() > 0) {
             return this.createResultEntity(ResultEntity.DATA_IS_EXIST, objectMapper.convertValue(deviceEntityList.get(0), JsonNode.class));
@@ -91,6 +97,8 @@ public class DeviceController extends IControllerImpl {
         }
         if (!name.isEmpty()) {
             deviceEntity.setName(name);
+            // 设置设备名称指令
+            deviceCmdEntity.setSetDeviceName(name);
         }
         if (!serialNumber.isEmpty()) {
             deviceEntity.setSerialNumber(serialNumber);
@@ -111,11 +119,34 @@ public class DeviceController extends IControllerImpl {
             deviceEntity.setComment(comment);
         }
 
+        // 设置指令的创建时间
+        deviceCmdEntity.setCreateTime(deviceEntity.getCreateTime());
+        // 设置服务器IP指令
+        deviceCmdEntity.setSetDeviceIp(InetAddress.getLocalHost().getHostAddress() + ":8090");
+        // 设置设备的心跳间隔时间指令
+        deviceCmdEntity.setSetKeepLiveInterval(keepLiveInterval);
+        // 设置设备的电池供电休眠时间指令
+        deviceCmdEntity.setSetBatterySleepTime(batterySleepTime);
+        // 设置设备电池供电时保持链接的时间指令
+        deviceCmdEntity.setSetBatteryKeepLiveTime(batteryKeepLiveTime);
+        // 设置为未发送
+        deviceCmdEntity.setIsSend(0);
+
         // 保存并更新实体
         deviceService.save(deviceEntity);
 
         // 返回保存的结果
         if (deviceEntity.getId() > 0) {
+            // 设置设备ID
+            deviceCmdEntity.setDeviceId(deviceEntity.getId());
+            // 保存指令
+            deviceCmdService.save(deviceCmdEntity);
+            if (deviceCmdEntity.getId() > 0) {
+                System.out.println("===Save Device CMD OK ===");
+            } else {
+                System.out.println("===Save Device CMD Fail ===");
+            }
+
             return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(deviceEntity, JsonNode.class));
         }
 

@@ -96,7 +96,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://172.81.239.174:4200", null)
+                .allowedOrigins("http://172.81.239.174", null)
                 .allowedMethods("POST", "GET", "PUT", "DELETE")
                 .maxAge(3600)
                 .allowCredentials(true);

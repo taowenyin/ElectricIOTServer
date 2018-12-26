@@ -8,6 +8,7 @@ import siso.edu.cn.entity.*;
 import siso.edu.cn.service.DeviceCmdService;
 import siso.edu.cn.service.DeviceService;
 import siso.edu.cn.service.ViewGetAllDeviceInfoService;
+import siso.edu.cn.service.ViewGetDeviceLastLocationService;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -26,14 +27,17 @@ public class DeviceController extends IControllerImpl {
     private DeviceService deviceService;
     private ViewGetAllDeviceInfoService viewGetAllDeviceInfoService;
     private DeviceCmdService deviceCmdService;
+    private ViewGetDeviceLastLocationService viewGetDeviceLastLocationService;
 
     @Autowired
     public DeviceController(DeviceService deviceService,
                             ViewGetAllDeviceInfoService viewGetAllDeviceInfoService,
-                            DeviceCmdService deviceCmdService) {
+                            DeviceCmdService deviceCmdService,
+                            ViewGetDeviceLastLocationService viewGetDeviceLastLocationService) {
         this.deviceService = deviceService;
         this.viewGetAllDeviceInfoService = viewGetAllDeviceInfoService;
         this.deviceCmdService = deviceCmdService;
+        this.viewGetDeviceLastLocationService = viewGetDeviceLastLocationService;
     }
 
     /**
@@ -337,6 +341,29 @@ public class DeviceController extends IControllerImpl {
             ObjectMapper objectMapper = new ObjectMapper();
             return this.createResultEntity(ResultEntity.SUCCESS,
                     objectMapper.convertValue(deviceEntityList, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
+    }
+
+    /**
+     * @api {get} /api/manage/device/location 获取所有设备的最新位置信息
+     * @apiVersion 0.0.1
+     * @apiName getAllDeviceLastLocation
+     * @apiGroup deviceGroup
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/device/location", method = RequestMethod.GET)
+    public ResultEntity getAllDeviceLastLocation() {
+        List<ViewGetDeviceLastLocationEntity> deviceInfoEntityList = viewGetDeviceLastLocationService.findAll();
+
+        if (deviceInfoEntityList.size() > 0) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return this.createResultEntity(ResultEntity.SUCCESS,
+                    objectMapper.convertValue(deviceInfoEntityList, JsonNode.class));
         }
 
         return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);

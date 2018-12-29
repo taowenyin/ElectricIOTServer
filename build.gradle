@@ -53,6 +53,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
 
+    compile 'com.squareup.okhttp3:okhttp:3.12.1'
 }
 
 // 设置任务的编码格式

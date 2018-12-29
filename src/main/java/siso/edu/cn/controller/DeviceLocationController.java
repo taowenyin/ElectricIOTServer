@@ -2,6 +2,8 @@ package siso.edu.cn.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsonschema.JsonSchema;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -229,15 +231,119 @@ public class DeviceLocationController extends IControllerImpl {
                 agps += (signalStrength4 * -1);
             }
 
-            Map<String, String> urlVariables = new HashMap<String, String>();
+            String url = String.format(
+                    "http://api.gpsspg.com/bs/?oid=%s&key=%s&type=%s&bs=%s&hex=%s&to=%s&output=%s",
+                    (Object[]) new String[] {"9620", "9557xx754z822y0wv8uz6x001u9yy4u2yz509", "gsm", agps, "10", "2", "json"});
 
-            urlVariables.put("oid", "9620");
-            urlVariables.put("key", "9557xx754z822y0wv8uz6x001u9yy4u2yz509");
-            urlVariables.put("type", "gsm");
-            urlVariables.put("bs", agps);
-            urlVariables.put("hex", "10");
-            urlVariables.put("to", "2");
-            urlVariables.put("output", "json");
+            Request request = new Request.Builder().url(url).build();
+            Response response = httpClient.newCall(request).execute();
+            String data = response.body().string();
+            AGpsEntity aGpsEntity = objectMapper.readValue(data, AGpsEntity.class);
+
+            // 数据获取成功
+            if (aGpsEntity.getStatus() == 200) {
+                deviceLocationEntity.setLongitude(aGpsEntity.getLongitude());
+                deviceLocationEntity.setLatitude(aGpsEntity.getLatitude());
+
+                if (aGpsEntity.getLongitude().compareTo(new BigDecimal(0)) > 0) {
+                    deviceLocationEntity.setLongitudeDirection(1);
+                } else {
+                    deviceLocationEntity.setLongitudeDirection(-1);
+                }
+                if (aGpsEntity.getLatitude().compareTo(new BigDecimal(0)) > 0) {
+                    deviceLocationEntity.setLatitudeDirection(1);
+                } else {
+                    deviceLocationEntity.setLatitudeDirection(-1);
+                }
+            }
+        }
+
+        deviceLocationService.save(deviceLocationEntity);
+
+        if (deviceLocationEntity.getId() > 0) {
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(deviceLocationEntity, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+    }
+
+    /**
+     * @api {put} /api/manage/location 根据位置ID更新设备的实时位置
+     * @apiVersion 0.0.1
+     * @apiName updateDeviceLocationById
+     * @apiGroup deviceLocationGroup
+     *
+     * @apiParam {Number} id 位置ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/location", method = RequestMethod.PUT)
+    public ResultEntity updateDeviceLocationById(@RequestParam("id") long id) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        DeviceLocationEntity entity = deviceLocationService.findById(id);
+        if (entity == null) {
+            return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
+        }
+
+        if (entity.getAgpsStationNum() > 0) {
+            String agps = "";
+
+            if ((entity.getNationNum1() >= 0) &&
+                    (entity.getMobileNum1() >= 0) &&
+                    (entity.getLocationNum1() >= 0) &&
+                    (entity.getCommunityNum1() >= 0) &&
+                    (entity.getStationFlag1() >= 0) &&
+                    (entity.getSignalStrength1() >= 0)) {
+                agps += (entity.getNationNum1() + ",");
+                agps += (String.format("%02d", entity.getMobileNum1()) + ",");
+                agps += (entity.getLocationNum1() + ",");
+                agps += (entity.getCommunityNum1() + ",");
+                agps += (entity.getSignalStrength1() * -1);
+            }
+
+            if ((entity.getNationNum2() >= 0) &&
+                    (entity.getMobileNum2() >= 0) &&
+                    (entity.getLocationNum2() >= 0) &&
+                    (entity.getCommunityNum2() >= 0) &&
+                    (entity.getStationFlag2() >= 0) &&
+                    (entity.getSignalStrength2() >= 0)) {
+                agps += ("|");
+                agps += (entity.getNationNum2() + ",");
+                agps += (String.format("%02d", entity.getMobileNum2()) + ",");
+                agps += (entity.getLocationNum2() + ",");
+                agps += (entity.getCommunityNum2() + ",");
+                agps += (entity.getSignalStrength2() * -1);
+            }
+
+            if ((entity.getNationNum3() >= 0) &&
+                    (entity.getMobileNum3() >= 0) &&
+                    (entity.getLocationNum3() >= 0) &&
+                    (entity.getCommunityNum3() >= 0) &&
+                    (entity.getStationFlag3() >= 0) &&
+                    (entity.getSignalStrength3() >= 0)) {
+                agps += ("|");
+                agps += (entity.getNationNum3() + ",");
+                agps += (String.format("%02d", entity.getMobileNum3()) + ",");
+                agps += (entity.getLocationNum3() + ",");
+                agps += (entity.getCommunityNum3() + ",");
+                agps += (entity.getSignalStrength3() * -1);
+            }
+
+            if ((entity.getNationNum4() >= 0) &&
+                    (entity.getMobileNum4() >= 0) &&
+                    (entity.getLocationNum4() >= 0) &&
+                    (entity.getCommunityNum4() >= 0) &&
+                    (entity.getStationFlag4() >= 0) &&
+                    (entity.getSignalStrength4() >= 0)) {
+                agps += ("|");
+                agps += (entity.getNationNum4() + ",");
+                agps += (String.format("%02d", entity.getMobileNum4()) + ",");
+                agps += (entity.getLocationNum4() + ",");
+                agps += (entity.getCommunityNum4() + ",");
+                agps += (entity.getSignalStrength4() * -1);
+            }
 
             String url = String.format(
                     "http://api.gpsspg.com/bs/?oid=%s&key=%s&type=%s&bs=%s&hex=%s&to=%s&output=%s",
@@ -245,16 +351,35 @@ public class DeviceLocationController extends IControllerImpl {
 
             Request request = new Request.Builder().url(url).build();
             Response response = httpClient.newCall(request).execute();
+            String data = response.body().string();
+            AGpsEntity aGpsEntity = objectMapper.readValue(data, AGpsEntity.class);
 
-            JsonNode aGpsEntity = objectMapper.convertValue(response.body().string(), JsonNode.class);
+            // 数据获取成功
+            if (aGpsEntity.getStatus() == 200) {
+                entity.setLongitude(aGpsEntity.getLongitude());
+                entity.setLatitude(aGpsEntity.getLatitude());
 
-            System.out.println(response.body().string());
-        }
+                if (aGpsEntity.getLongitude().compareTo(new BigDecimal(0)) > 0) {
+                    entity.setLongitudeDirection(1);
+                } else {
+                    entity.setLongitudeDirection(-1);
+                }
+                if (aGpsEntity.getLatitude().compareTo(new BigDecimal(0)) > 0) {
+                    entity.setLatitudeDirection(1);
+                } else {
+                    entity.setLatitudeDirection(-1);
+                }
+            }
 
-        deviceLocationService.save(deviceLocationEntity);
+            entity = deviceLocationService.update(entity);
 
-        if (deviceLocationEntity.getId() > 0) {
-            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(deviceLocationEntity, JsonNode.class));
+            if (entity.getId() > 0) {
+                System.out.println("===Save Device Location CMD OK ===");
+            } else {
+                System.out.println("===Save Device Location CMD Fail ===");
+            }
+
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
         }
 
         return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);

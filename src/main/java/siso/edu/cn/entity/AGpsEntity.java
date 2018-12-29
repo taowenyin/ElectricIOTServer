@@ -2,29 +2,30 @@ package siso.edu.cn.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class AGpsEntity {
     @JsonProperty("status")
-    private String status;
+    private int status;
     @JsonProperty("msg")
     private String msg;
     @JsonProperty("match")
-    private String match;
+    private int match;
     @JsonProperty("count")
-    private String count;
+    private int count;
     @JsonProperty("latitude")
-    private String latitude;
+    private BigDecimal latitude;
     @JsonProperty("longitude")
-    private String longitude;
+    private BigDecimal longitude;
     @JsonProperty("result")
     private List<AGpsResultEntity> result;
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -36,35 +37,35 @@ public class AGpsEntity {
         this.msg = msg;
     }
 
-    public String getMatch() {
+    public int getMatch() {
         return match;
     }
 
-    public void setMatch(String match) {
+    public void setMatch(int match) {
         this.match = match;
     }
 
-    public String getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
-    public String getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 

@@ -2,15 +2,17 @@ package siso.edu.cn.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
+
 public class AGpsResultEntity {
     @JsonProperty("id")
     private String id;
     @JsonProperty("lat")
-    private String lat;
+    private BigDecimal lat;
     @JsonProperty("lng")
-    private String lng;
+    private BigDecimal lng;
     @JsonProperty("radius")
-    private String radius;
+    private int radius;
     @JsonProperty("address")
     private String address;
     @JsonProperty("roads")
@@ -28,27 +30,27 @@ public class AGpsResultEntity {
         this.id = id;
     }
 
-    public String getLat() {
+    public BigDecimal getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(BigDecimal lat) {
         this.lat = lat;
     }
 
-    public String getLng() {
+    public BigDecimal getLng() {
         return lng;
     }
 
-    public void setLng(String lng) {
+    public void setLng(BigDecimal lng) {
         this.lng = lng;
     }
 
-    public String getRadius() {
+    public int getRadius() {
         return radius;
     }
 
-    public void setRadius(String radius) {
+    public void setRadius(int radius) {
         this.radius = radius;
     }
 

@@ -290,12 +290,12 @@ public class DeviceLocationController extends IControllerImpl {
         if (entity.getAgpsStationNum() > 0) {
             String agps = "";
 
-            if ((entity.getNationNum1() >= 0) &&
-                    (entity.getMobileNum1() >= 0) &&
-                    (entity.getLocationNum1() >= 0) &&
-                    (entity.getCommunityNum1() >= 0) &&
-                    (entity.getStationFlag1() >= 0) &&
-                    (entity.getSignalStrength1() >= 0)) {
+            if ((entity.getNationNum1() != null && entity.getNationNum1() >= 0) &&
+                    (entity.getMobileNum1() != null && entity.getMobileNum1() >= 0) &&
+                    (entity.getLocationNum1() != null && entity.getLocationNum1() >= 0) &&
+                    (entity.getCommunityNum1() != null && entity.getCommunityNum1() >= 0) &&
+                    (entity.getStationFlag1() != null && entity.getStationFlag1() >= 0) &&
+                    (entity.getSignalStrength1() != null && entity.getSignalStrength1() >= 0)) {
                 agps += (entity.getNationNum1() + ",");
                 agps += (String.format("%02d", entity.getMobileNum1()) + ",");
                 agps += (entity.getLocationNum1() + ",");
@@ -303,12 +303,12 @@ public class DeviceLocationController extends IControllerImpl {
                 agps += (entity.getSignalStrength1() * -1);
             }
 
-            if ((entity.getNationNum2() >= 0) &&
-                    (entity.getMobileNum2() >= 0) &&
-                    (entity.getLocationNum2() >= 0) &&
-                    (entity.getCommunityNum2() >= 0) &&
-                    (entity.getStationFlag2() >= 0) &&
-                    (entity.getSignalStrength2() >= 0)) {
+            if ((entity.getNationNum2() != null && entity.getNationNum2() >= 0) &&
+                    (entity.getMobileNum2() != null && entity.getMobileNum2() >= 0) &&
+                    (entity.getLocationNum2() != null && entity.getLocationNum2() >= 0) &&
+                    (entity.getCommunityNum2() != null && entity.getCommunityNum2() >= 0) &&
+                    (entity.getStationFlag2() != null && entity.getStationFlag2() >= 0) &&
+                    (entity.getSignalStrength2() != null && entity.getSignalStrength2() >= 0)) {
                 agps += ("|");
                 agps += (entity.getNationNum2() + ",");
                 agps += (String.format("%02d", entity.getMobileNum2()) + ",");
@@ -317,12 +317,12 @@ public class DeviceLocationController extends IControllerImpl {
                 agps += (entity.getSignalStrength2() * -1);
             }
 
-            if ((entity.getNationNum3() >= 0) &&
-                    (entity.getMobileNum3() >= 0) &&
-                    (entity.getLocationNum3() >= 0) &&
-                    (entity.getCommunityNum3() >= 0) &&
-                    (entity.getStationFlag3() >= 0) &&
-                    (entity.getSignalStrength3() >= 0)) {
+            if ((entity.getNationNum3() != null && entity.getNationNum3() >= 0) &&
+                    (entity.getMobileNum3() != null && entity.getMobileNum3() >= 0) &&
+                    (entity.getLocationNum3() != null && entity.getLocationNum3() >= 0) &&
+                    (entity.getCommunityNum3() != null && entity.getCommunityNum3() >= 0) &&
+                    (entity.getStationFlag3() != null && entity.getStationFlag3() >= 0) &&
+                    (entity.getSignalStrength3() != null && entity.getSignalStrength3() >= 0)) {
                 agps += ("|");
                 agps += (entity.getNationNum3() + ",");
                 agps += (String.format("%02d", entity.getMobileNum3()) + ",");
@@ -331,12 +331,12 @@ public class DeviceLocationController extends IControllerImpl {
                 agps += (entity.getSignalStrength3() * -1);
             }
 
-            if ((entity.getNationNum4() >= 0) &&
-                    (entity.getMobileNum4() >= 0) &&
-                    (entity.getLocationNum4() >= 0) &&
-                    (entity.getCommunityNum4() >= 0) &&
-                    (entity.getStationFlag4() >= 0) &&
-                    (entity.getSignalStrength4() >= 0)) {
+            if ((entity.getNationNum4() != null && entity.getNationNum4() >= 0) &&
+                    (entity.getMobileNum4() != null && entity.getMobileNum4() >= 0) &&
+                    (entity.getLocationNum4() != null && entity.getLocationNum4() >= 0) &&
+                    (entity.getCommunityNum4() != null && entity.getCommunityNum4() >= 0) &&
+                    (entity.getStationFlag4() != null &&entity.getStationFlag4() >= 0) &&
+                    (entity.getSignalStrength4() != null && entity.getSignalStrength4() >= 0)) {
                 agps += ("|");
                 agps += (entity.getNationNum4() + ",");
                 agps += (String.format("%02d", entity.getMobileNum4()) + ",");

@@ -30,7 +30,7 @@ public class DatabaseConfig {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/electric_iot?useSSL=true&serverTimezone=UTC");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/electric_iot?useSSL=true&serverTimezone=Asia/Shanghai");
         dataSource.setUsername("root");
         dataSource.setPassword("05200902");
 

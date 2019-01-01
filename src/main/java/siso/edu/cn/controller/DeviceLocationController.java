@@ -347,7 +347,7 @@ public class DeviceLocationController extends IControllerImpl {
 
             String url = String.format(
                     "http://api.gpsspg.com/bs/?oid=%s&key=%s&type=%s&bs=%s&hex=%s&to=%s&output=%s",
-                    (Object[]) new String[] {"9620", "9557xx754z822y0wv8uz6x001u9yy4u2yz509", "gsm", agps, "10", "2", "json"});
+                    (Object[]) new String[] {"9628", "9564xy0zx29yu427ywz50439u49uu16370yxx", "gsm", agps, "10", "2", "json"});
 
             Request request = new Request.Builder().url(url).build();
             Response response = httpClient.newCall(request).execute();

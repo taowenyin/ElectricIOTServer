@@ -37,5 +37,5 @@ deploy:
     tags: true
     all_branches: true
     repo: taowenyin/ElectricIOTServer
-after_deploy:
-- ./deploy_to_server.sh
+#after_deploy:
+#- ./deploy_to_server.sh

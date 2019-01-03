@@ -369,6 +369,8 @@ public class DeviceLocationController extends IControllerImpl {
                 } else {
                     entity.setLatitudeDirection(-1);
                 }
+            } else {
+                System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
             }
 
             entity = deviceLocationService.update(entity);

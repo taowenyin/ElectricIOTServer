@@ -7,13 +7,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import siso.edu.cn.entity.AGpsEntity;
-import siso.edu.cn.entity.DeviceLocationEntity;
-import siso.edu.cn.entity.ResultEntity;
+import siso.edu.cn.entity.*;
 import siso.edu.cn.service.DeviceLocationService;
 import sun.net.www.http.HttpClient;
 
@@ -29,6 +28,11 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/api/manage", produces = "application/json;charset=utf-8")
 public class DeviceLocationController extends IControllerImpl {
+
+    // 基站信息转经纬度接口
+    public static final String AGPS_CONVERT_URL = "http://api.gpsspg.com/bs/?oid=%s&key=9564xy0zx29yu427ywz50439u49uu16370yxx&type=%s&bs=%s&hex=%s&to=%s&output=%s";
+    // 经纬度转地理信息接口
+    public static final String GECODE_CONVERT_URL = "https://restapi.amap.com/v3/geocode/regeo?key=f11511080fd76b66485b50902cb00a75&location=%s";
 
     private DeviceLocationService deviceLocationService;
     private OkHttpClient httpClient = null;
@@ -232,8 +236,8 @@ public class DeviceLocationController extends IControllerImpl {
             }
 
             String url = String.format(
-                    "http://api.gpsspg.com/bs/?oid=%s&key=%s&type=%s&bs=%s&hex=%s&to=%s&output=%s",
-                    (Object[]) new String[] {"9620", "9557xx754z822y0wv8uz6x001u9yy4u2yz509", "gsm", agps, "10", "2", "json"});
+                    AGPS_CONVERT_URL,
+                    (Object[]) new String[] {"9620", "gsm", agps, "10", "2", "json"});
 
             Request request = new Request.Builder().url(url).build();
             Response response = httpClient.newCall(request).execute();
@@ -282,109 +286,227 @@ public class DeviceLocationController extends IControllerImpl {
     @RequestMapping(value = "/location", method = RequestMethod.PUT)
     public ResultEntity updateDeviceLocationById(@RequestParam("id") long id) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        DeviceLocationEntity entity = deviceLocationService.findById(id);
-        if (entity == null) {
-            return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
+        // 获取当前要更新的位置数据
+        DeviceLocationEntity locationEntity = deviceLocationService.findById(id);
+        // Step1：获取获取当前设备的上一条位置数据
+        List<DeviceLocationEntity> lastEntityList = deviceLocationService.getPreviousData(locationEntity.getDeviceId(), id);
+
+        // 如果上一条数据的省市区没写则更新
+        if (lastEntityList.size() == 1) {
+            DeviceLocationEntity lastLocationEntity = lastEntityList.get(0);
+            if (lastLocationEntity.getProvince() == null) {
+                String gecodeUrl = String.format(
+                        GECODE_CONVERT_URL,
+                        (Object[]) new String[] {lastLocationEntity.getLongitude().toString() + "," + lastLocationEntity.getLatitude()});
+                Request request = new Request.Builder().url(gecodeUrl).build();
+                String data = httpClient.newCall(request).execute().body().string();
+
+                // 获取JSON数据
+                JsonNode geocodeNode = objectMapper.readTree(data);
+                if (Integer.valueOf(geocodeNode.get("status").asText()) == 1) {
+                    String province = geocodeNode.get("regeocode").get("addressComponent").get("province").isArray() ?
+                            null : geocodeNode.get("regeocode").get("addressComponent").get("province").textValue();
+                    String city = geocodeNode.get("regeocode").get("addressComponent").get("city").isArray() ?
+                            null : geocodeNode.get("regeocode").get("addressComponent").get("city").textValue();
+                    String district = geocodeNode.get("regeocode").get("addressComponent").get("district").isArray() ?
+                            null : geocodeNode.get("regeocode").get("addressComponent").get("district").textValue();
+                    // 如果数据有问题则删除数据
+                    if (province != null && city != null && district != null) {
+                        lastLocationEntity.setProvince(province);
+                        lastLocationEntity.setCity(city);
+                        lastLocationEntity.setDistrict(district);
+                        this.deviceLocationService.update(lastLocationEntity);
+                    } else {
+                        this.deviceLocationService.delete(lastLocationEntity.getId());
+                        return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+                    }
+                }
+            }
         }
 
-        if (entity.getAgpsStationNum() > 0) {
-            String agps = "";
+        // 如果该条数据既没有经纬度，有没有基站，那么数据就有问题，则删除
+        if (locationEntity.getAgpsStationNum() <= 0) {
+            return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        }
 
-            if ((entity.getNationNum1() != null && entity.getNationNum1() >= 0) &&
-                    (entity.getMobileNum1() != null && entity.getMobileNum1() >= 0) &&
-                    (entity.getLocationNum1() != null && entity.getLocationNum1() >= 0) &&
-                    (entity.getCommunityNum1() != null && entity.getCommunityNum1() >= 0) &&
-                    (entity.getStationFlag1() != null && entity.getStationFlag1() >= 0) &&
-                    (entity.getSignalStrength1() != null && entity.getSignalStrength1() >= 0)) {
-                agps += (entity.getNationNum1() + ",");
-                agps += (String.format("%02d", entity.getMobileNum1()) + ",");
-                agps += (entity.getLocationNum1() + ",");
-                agps += (entity.getCommunityNum1() + ",");
-                agps += (entity.getSignalStrength1() * -1);
-            }
+        String agps = StringUtils.EMPTY;
+        if ((locationEntity.getNationNum1() != null && locationEntity.getNationNum1() >= 0) &&
+                (locationEntity.getMobileNum1() != null && locationEntity.getMobileNum1() >= 0) &&
+                (locationEntity.getLocationNum1() != null && locationEntity.getLocationNum1() >= 0) &&
+                (locationEntity.getCommunityNum1() != null && locationEntity.getCommunityNum1() >= 0) &&
+                (locationEntity.getStationFlag1() != null && locationEntity.getStationFlag1() >= 0) &&
+                (locationEntity.getSignalStrength1() != null && locationEntity.getSignalStrength1() >= 0)) {
+            agps += (locationEntity.getNationNum1() + ",");
+            agps += (String.format("%02d", locationEntity.getMobileNum1()) + ",");
+            agps += (locationEntity.getLocationNum1() + ",");
+            agps += (locationEntity.getCommunityNum1() + ",");
+            agps += (locationEntity.getSignalStrength1() * -1);
+        }
 
-            if ((entity.getNationNum2() != null && entity.getNationNum2() >= 0) &&
-                    (entity.getMobileNum2() != null && entity.getMobileNum2() >= 0) &&
-                    (entity.getLocationNum2() != null && entity.getLocationNum2() >= 0) &&
-                    (entity.getCommunityNum2() != null && entity.getCommunityNum2() >= 0) &&
-                    (entity.getStationFlag2() != null && entity.getStationFlag2() >= 0) &&
-                    (entity.getSignalStrength2() != null && entity.getSignalStrength2() >= 0)) {
-                agps += ("|");
-                agps += (entity.getNationNum2() + ",");
-                agps += (String.format("%02d", entity.getMobileNum2()) + ",");
-                agps += (entity.getLocationNum2() + ",");
-                agps += (entity.getCommunityNum2() + ",");
-                agps += (entity.getSignalStrength2() * -1);
-            }
+        if ((locationEntity.getNationNum2() != null && locationEntity.getNationNum2() >= 0) &&
+                (locationEntity.getMobileNum2() != null && locationEntity.getMobileNum2() >= 0) &&
+                (locationEntity.getLocationNum2() != null && locationEntity.getLocationNum2() >= 0) &&
+                (locationEntity.getCommunityNum2() != null && locationEntity.getCommunityNum2() >= 0) &&
+                (locationEntity.getStationFlag2() != null && locationEntity.getStationFlag2() >= 0) &&
+                (locationEntity.getSignalStrength2() != null && locationEntity.getSignalStrength2() >= 0)) {
+            agps += ("|");
+            agps += (locationEntity.getNationNum2() + ",");
+            agps += (String.format("%02d", locationEntity.getMobileNum2()) + ",");
+            agps += (locationEntity.getLocationNum2() + ",");
+            agps += (locationEntity.getCommunityNum2() + ",");
+            agps += (locationEntity.getSignalStrength2() * -1);
+        }
 
-            if ((entity.getNationNum3() != null && entity.getNationNum3() >= 0) &&
-                    (entity.getMobileNum3() != null && entity.getMobileNum3() >= 0) &&
-                    (entity.getLocationNum3() != null && entity.getLocationNum3() >= 0) &&
-                    (entity.getCommunityNum3() != null && entity.getCommunityNum3() >= 0) &&
-                    (entity.getStationFlag3() != null && entity.getStationFlag3() >= 0) &&
-                    (entity.getSignalStrength3() != null && entity.getSignalStrength3() >= 0)) {
-                agps += ("|");
-                agps += (entity.getNationNum3() + ",");
-                agps += (String.format("%02d", entity.getMobileNum3()) + ",");
-                agps += (entity.getLocationNum3() + ",");
-                agps += (entity.getCommunityNum3() + ",");
-                agps += (entity.getSignalStrength3() * -1);
-            }
+        if ((locationEntity.getNationNum3() != null && locationEntity.getNationNum3() >= 0) &&
+                (locationEntity.getMobileNum3() != null && locationEntity.getMobileNum3() >= 0) &&
+                (locationEntity.getLocationNum3() != null && locationEntity.getLocationNum3() >= 0) &&
+                (locationEntity.getCommunityNum3() != null && locationEntity.getCommunityNum3() >= 0) &&
+                (locationEntity.getStationFlag3() != null && locationEntity.getStationFlag3() >= 0) &&
+                (locationEntity.getSignalStrength3() != null && locationEntity.getSignalStrength3() >= 0)) {
+            agps += ("|");
+            agps += (locationEntity.getNationNum3() + ",");
+            agps += (String.format("%02d", locationEntity.getMobileNum3()) + ",");
+            agps += (locationEntity.getLocationNum3() + ",");
+            agps += (locationEntity.getCommunityNum3() + ",");
+            agps += (locationEntity.getSignalStrength3() * -1);
+        }
 
-            if ((entity.getNationNum4() != null && entity.getNationNum4() >= 0) &&
-                    (entity.getMobileNum4() != null && entity.getMobileNum4() >= 0) &&
-                    (entity.getLocationNum4() != null && entity.getLocationNum4() >= 0) &&
-                    (entity.getCommunityNum4() != null && entity.getCommunityNum4() >= 0) &&
-                    (entity.getStationFlag4() != null &&entity.getStationFlag4() >= 0) &&
-                    (entity.getSignalStrength4() != null && entity.getSignalStrength4() >= 0)) {
-                agps += ("|");
-                agps += (entity.getNationNum4() + ",");
-                agps += (String.format("%02d", entity.getMobileNum4()) + ",");
-                agps += (entity.getLocationNum4() + ",");
-                agps += (entity.getCommunityNum4() + ",");
-                agps += (entity.getSignalStrength4() * -1);
-            }
+        if ((locationEntity.getNationNum4() != null && locationEntity.getNationNum4() >= 0) &&
+                (locationEntity.getMobileNum4() != null && locationEntity.getMobileNum4() >= 0) &&
+                (locationEntity.getLocationNum4() != null && locationEntity.getLocationNum4() >= 0) &&
+                (locationEntity.getCommunityNum4() != null && locationEntity.getCommunityNum4() >= 0) &&
+                (locationEntity.getStationFlag4() != null &&locationEntity.getStationFlag4() >= 0) &&
+                (locationEntity.getSignalStrength4() != null && locationEntity.getSignalStrength4() >= 0)) {
+            agps += ("|");
+            agps += (locationEntity.getNationNum4() + ",");
+            agps += (String.format("%02d", locationEntity.getMobileNum4()) + ",");
+            agps += (locationEntity.getLocationNum4() + ",");
+            agps += (locationEntity.getCommunityNum4() + ",");
+            agps += (locationEntity.getSignalStrength4() * -1);
+        }
 
-            String url = String.format(
-                    "http://api.gpsspg.com/bs/?oid=%s&key=%s&type=%s&bs=%s&hex=%s&to=%s&output=%s",
-                    (Object[]) new String[] {"9628", "9564xy0zx29yu427ywz50439u49uu16370yxx", "gsm", agps, "10", "2", "json"});
+        // Step2：根据基站数据获取高德的经纬度数据
+        String aGpsUrl = String.format(
+                AGPS_CONVERT_URL,
+                (Object[]) new String[] {"9628", "gsm", agps, "10", "2", "json"});
+        Request request = new Request.Builder().url(aGpsUrl).build();
+        String data = httpClient.newCall(request).execute().body().string();
+        AGpsEntity aGpsEntity = objectMapper.readValue(data, AGpsEntity.class);
 
-            Request request = new Request.Builder().url(url).build();
-            Response response = httpClient.newCall(request).execute();
-            String data = response.body().string();
-            AGpsEntity aGpsEntity = objectMapper.readValue(data, AGpsEntity.class);
+        // 数据获取错误，说明数据有问题，则删除
+        if (aGpsEntity.getStatus() != 200) {
+            this.deviceLocationService.delete(locationEntity.getId());
+            System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
+            return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        }
 
-            // 数据获取成功
-            if (aGpsEntity.getStatus() == 200) {
-                entity.setLongitude(aGpsEntity.getLongitude());
-                entity.setLatitude(aGpsEntity.getLatitude());
+        // Step3：把经纬度转化为地理信息
+        String gecodeUrl = String.format(
+                GECODE_CONVERT_URL,
+                (Object[]) new String[] {aGpsEntity.getLongitude().toString() + "," + aGpsEntity.getLatitude()});
+        request = new Request.Builder().url(gecodeUrl).build();
+        data = httpClient.newCall(request).execute().body().string();
+        JsonNode geocodeNode = objectMapper.readTree(data);
 
-                if (aGpsEntity.getLongitude().compareTo(new BigDecimal(0)) > 0) {
-                    entity.setLongitudeDirection(1);
-                } else {
-                    entity.setLongitudeDirection(-1);
-                }
-                if (aGpsEntity.getLatitude().compareTo(new BigDecimal(0)) > 0) {
-                    entity.setLatitudeDirection(1);
-                } else {
-                    entity.setLatitudeDirection(-1);
-                }
+        // 转化为地理信息出错，说明数据有问题
+        if (Integer.valueOf(geocodeNode.get("status").asText()) != 1) {
+            this.deviceLocationService.delete(locationEntity.getId());
+            System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
+            return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        }
+
+        // 获取地理信息中的省市县数据
+        String province = geocodeNode.get("regeocode").get("addressComponent").get("province").isArray() ?
+                null : geocodeNode.get("regeocode").get("addressComponent").get("province").textValue();
+        String city = geocodeNode.get("regeocode").get("addressComponent").get("city").isArray() ?
+                null : geocodeNode.get("regeocode").get("addressComponent").get("city").textValue();
+        String district = geocodeNode.get("regeocode").get("addressComponent").get("district").isArray() ?
+                null : geocodeNode.get("regeocode").get("addressComponent").get("district").textValue();
+
+        // Step4：判断市是否相同
+        // CASE1：只要有一个数据为空说明数据有问题，则删除
+        if (province == null || city == null || district == null) {
+            this.deviceLocationService.delete(locationEntity.getId());
+            return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        }
+        // CASE2：判断省或市有一个相同，那么就保存
+        if (city.equals(lastEntityList.get(0).getCity()) || province.equals(lastEntityList.get(0).getProvince())) {
+            locationEntity.setProvince(province);
+            locationEntity.setCity(city);
+            locationEntity.setDistrict(district);
+
+            locationEntity.setLongitude(aGpsEntity.getLongitude());
+            locationEntity.setLatitude(aGpsEntity.getLatitude());
+
+            if (aGpsEntity.getLongitude().compareTo(new BigDecimal(0)) > 0) {
+                locationEntity.setLongitudeDirection((int) 'E');
             } else {
+                locationEntity.setLongitudeDirection((int) 'W');
+            }
+            if (aGpsEntity.getLatitude().compareTo(new BigDecimal(0)) > 0) {
+                locationEntity.setLatitudeDirection((int) 'N');
+            } else {
+                locationEntity.setLatitudeDirection((int) 'S');
+            }
+
+            locationEntity = deviceLocationService.update(locationEntity);
+            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(locationEntity, JsonNode.class));
+        }
+
+        // Step5：进一步判断所有基站是否相同
+        List<String> cityList = new ArrayList<String>();
+        // 利用Set唯一性判断数组元素是否全相同
+        Set<String> cityEquals = new HashSet<String>();
+        // 获取所有城市信息
+        for (AGpsResultEntity resultEntity : aGpsEntity.getResult()) {
+            String itemGecodeUrl = String.format(
+                    GECODE_CONVERT_URL,
+                    (Object[]) new String[] {resultEntity.getLng().toString() + "," + resultEntity.getLat().toString()});
+            request = new Request.Builder().url(itemGecodeUrl).build();
+            data = httpClient.newCall(request).execute().body().string();
+            JsonNode itemGeocodeNode = objectMapper.readTree(data);
+
+            String itemCity = itemGeocodeNode.get("regeocode").get("addressComponent").get("city").isArray() ?
+                    null : itemGeocodeNode.get("regeocode").get("addressComponent").get("city").textValue();
+            // 如果数据错误则删除
+            if (itemCity == null) {
+                this.deviceLocationService.delete(locationEntity.getId());
                 System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
-            }
-
-            entity = deviceLocationService.update(entity);
-
-            if (entity.getId() > 0) {
-                System.out.println("===Save Device Location CMD OK ===");
+                return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
             } else {
-                System.out.println("===Save Device Location CMD Fail ===");
+                cityList.add(itemCity);
+                cityEquals.add(itemCity);
             }
-
-            return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(entity, JsonNode.class));
         }
 
-        return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        // Step6：如果全部市数据相同，则保存
+        // 如果满足条件说明城市有不同，则数据错误
+        if (cityEquals.size() != 1) {
+            this.deviceLocationService.delete(locationEntity.getId());
+            System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
+            return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        }
+
+        locationEntity.setProvince(province);
+        locationEntity.setCity(city);
+        locationEntity.setDistrict(district);
+
+        locationEntity.setLongitude(aGpsEntity.getLongitude());
+        locationEntity.setLatitude(aGpsEntity.getLatitude());
+
+        if (aGpsEntity.getLongitude().compareTo(new BigDecimal(0)) > 0) {
+            locationEntity.setLongitudeDirection((int) 'E');
+        } else {
+            locationEntity.setLongitudeDirection((int) 'W');
+        }
+        if (aGpsEntity.getLatitude().compareTo(new BigDecimal(0)) > 0) {
+            locationEntity.setLatitudeDirection((int) 'N');
+        } else {
+            locationEntity.setLatitudeDirection((int) 'S');
+        }
+
+        locationEntity = deviceLocationService.update(locationEntity);
+        return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(locationEntity, JsonNode.class));
     }
 
     /**

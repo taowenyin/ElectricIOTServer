@@ -60,6 +60,17 @@ public class IDaoImpl<T> implements IDao<T> {
     }
 
     @Override
+    public List<T> findByParams(String sql, Object[] params, int limit) {
+        Query query = this.entityManager.createQuery(sql);
+        query.setMaxResults(limit);
+        for (int i = 1; params != null && i <= params.length; i++) {
+            query.setParameter(i, params[i - 1]);
+        }
+
+        return query.getResultList();
+    }
+
+    @Override
     public int findMaxValue(String sql) {
         Query query = this.entityManager.createQuery(sql);
         List resultList = query.getResultList();

@@ -310,10 +310,14 @@ public class DeviceLocationController extends IControllerImpl {
                             null : geocodeNode.get("regeocode").get("addressComponent").get("city").textValue();
                     String district = geocodeNode.get("regeocode").get("addressComponent").get("district").isArray() ?
                             null : geocodeNode.get("regeocode").get("addressComponent").get("district").textValue();
-                    // 如果数据有问题则删除数据
-                    if (province != null && city != null && district != null) {
+                    // 如果数据有问题则删除数据，兼容市直辖市数据中城市为空的问题
+                    if (province != null && (city != null || district != null)) {
                         lastLocationEntity.setProvince(province);
-                        lastLocationEntity.setCity(city);
+                        if (city == null && district != null) {
+                            lastLocationEntity.setCity(district);
+                        } else {
+                            lastLocationEntity.setCity(city);
+                        }
                         lastLocationEntity.setDistrict(district);
                         this.deviceLocationService.update(lastLocationEntity);
                     } else {
@@ -424,10 +428,14 @@ public class DeviceLocationController extends IControllerImpl {
                 null : geocodeNode.get("regeocode").get("addressComponent").get("district").textValue();
 
         // Step4：判断市是否相同
-        // CASE1：只要有一个数据为空说明数据有问题，则删除
-        if (province == null || city == null || district == null) {
+        // CASE1：只要有一个数据为空说明数据有问题，则删除, 兼容市直辖市数据中城市为空的问题
+        if (province == null || district == null) {
             this.deviceLocationService.delete(locationEntity.getId());
             return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
+        }
+        // 兼容市直辖市数据中城市为空的问题
+        if (city == null && district != null) {
+            city = district;
         }
         // CASE2：判断省或市有一个相同，那么就保存
         if (city.equals(lastEntityList.get(0).getCity()) || province.equals(lastEntityList.get(0).getProvince())) {

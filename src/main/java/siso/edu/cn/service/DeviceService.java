@@ -15,8 +15,14 @@ import java.util.List;
 @Transactional
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class DeviceService extends IServiceImpl<DeviceEntity> {
-    public final static String SQL_FIND_DEVICE_BY_IMSI =
+    private final static String SQL_FIND_DEVICE_BY_IMSI =
             "SELECT device FROM DeviceEntity device WHERE device.imsi = ?1";
+
+    private final static String SQL_FIND_DEVICE_BY_TYPE =
+            "SELECT device FROM DeviceEntity device WHERE device.typeId = ?1";
+
+    private final static String SQL_FIND_DEVICE_BY_TYPE_NULL =
+            "SELECT device FROM DeviceEntity device WHERE device.typeId is null";
 
     private DeviceDao dao;
 
@@ -29,5 +35,13 @@ public class DeviceService extends IServiceImpl<DeviceEntity> {
 
     public List<DeviceEntity> findDeviceByImsi(String imsi) {
         return this.dao.findByParams(SQL_FIND_DEVICE_BY_IMSI, new Object[]{imsi});
+    }
+
+    public List<DeviceEntity> findDeviceByType(Long typeId) {
+        if (typeId != null) {
+            return this.dao.findByParams(SQL_FIND_DEVICE_BY_TYPE, new Object[]{typeId});
+        }
+
+        return this.dao.findByParams(SQL_FIND_DEVICE_BY_TYPE_NULL, null);
     }
 }

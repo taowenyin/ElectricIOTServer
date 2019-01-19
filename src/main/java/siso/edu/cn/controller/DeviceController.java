@@ -5,14 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import siso.edu.cn.entity.*;
-import siso.edu.cn.service.DeviceCmdService;
-import siso.edu.cn.service.DeviceService;
-import siso.edu.cn.service.ViewGetAllDeviceInfoService;
-import siso.edu.cn.service.ViewGetDeviceLastLocationService;
+import siso.edu.cn.service.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -25,19 +23,23 @@ import java.util.TimeZone;
 public class DeviceController extends IControllerImpl {
 
     private DeviceService deviceService;
-    private ViewGetAllDeviceInfoService viewGetAllDeviceInfoService;
     private DeviceCmdService deviceCmdService;
+    private TypeService typeService;
+
     private ViewGetDeviceLastLocationService viewGetDeviceLastLocationService;
+    private ViewGetAllDeviceInfoService viewGetAllDeviceInfoService;
 
     @Autowired
     public DeviceController(DeviceService deviceService,
-                            ViewGetAllDeviceInfoService viewGetAllDeviceInfoService,
                             DeviceCmdService deviceCmdService,
+                            TypeService typeService,
+                            ViewGetAllDeviceInfoService viewGetAllDeviceInfoService,
                             ViewGetDeviceLastLocationService viewGetDeviceLastLocationService) {
         this.deviceService = deviceService;
-        this.viewGetAllDeviceInfoService = viewGetAllDeviceInfoService;
         this.deviceCmdService = deviceCmdService;
+        this.typeService = typeService;
         this.viewGetDeviceLastLocationService = viewGetDeviceLastLocationService;
+        this.viewGetAllDeviceInfoService = viewGetAllDeviceInfoService;
     }
 
     /**
@@ -364,6 +366,51 @@ public class DeviceController extends IControllerImpl {
             ObjectMapper objectMapper = new ObjectMapper();
             return this.createResultEntity(ResultEntity.SUCCESS,
                     objectMapper.convertValue(deviceInfoEntityList, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
+    }
+
+    /**
+     * @api {get} /api/manage/device/type 根据设备类型进行分类获取所有设备
+     * @apiVersion 0.0.1
+     * @apiName getAllDeviceByTypeClassify
+     * @apiGroup deviceGroup
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/device/type", method = RequestMethod.GET)
+    public ResultEntity getAllDeviceByTypeClassify() {
+        List<TypeEntity> typeEntityList = this.typeService.findAll();
+        List<DeviceTypeClassifyEntity> deviceTypeClassifyEntityList = new ArrayList<DeviceTypeClassifyEntity>();
+
+        for (TypeEntity typeEntity : typeEntityList) {
+            DeviceTypeClassifyEntity deviceTypeClassifyEntity = new DeviceTypeClassifyEntity();
+            // 设置当前分组的类型
+            deviceTypeClassifyEntity.setTypeEntity(typeEntity);
+
+            // 获取当前类型的设备列表
+            List<DeviceEntity> deviceEntityList = deviceService.findDeviceByType(typeEntity.getId());
+            deviceTypeClassifyEntity.setDeviceEntityList(deviceEntityList);
+
+            // 加入分类列表
+            deviceTypeClassifyEntityList.add(deviceTypeClassifyEntity);
+        }
+
+        // 获取类型为null的设备
+        DeviceTypeClassifyEntity deviceTypeClassifyEntity = new DeviceTypeClassifyEntity();
+        List<DeviceEntity> nullDeviceEntityList = deviceService.findDeviceByType(null);
+        TypeEntity nullTypeEntity = new TypeEntity();
+        deviceTypeClassifyEntity.setTypeEntity(nullTypeEntity);
+        deviceTypeClassifyEntity.setDeviceEntityList(nullDeviceEntityList);
+        deviceTypeClassifyEntityList.add(deviceTypeClassifyEntity);
+
+        if (deviceTypeClassifyEntityList.size() > 0) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return this.createResultEntity(ResultEntity.SUCCESS,
+                    objectMapper.convertValue(deviceTypeClassifyEntityList, JsonNode.class));
         }
 
         return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);

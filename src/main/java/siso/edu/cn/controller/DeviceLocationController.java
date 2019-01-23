@@ -329,73 +329,77 @@ public class DeviceLocationController extends IControllerImpl {
         }
 
         // 如果该条数据既没有经纬度，有没有基站，那么数据就有问题，则删除
-        if (locationEntity.getAgpsStationNum() <= 0) {
-            return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
-        }
+        AGpsEntity aGpsEntity = null;
+        if (locationEntity.getLongitude() == null && locationEntity.getLatitude() == null) {
+            String agps = StringUtils.EMPTY;
+            if ((locationEntity.getNationNum1() != null && locationEntity.getNationNum1() >= 0) &&
+                    (locationEntity.getMobileNum1() != null && locationEntity.getMobileNum1() >= 0) &&
+                    (locationEntity.getLocationNum1() != null && locationEntity.getLocationNum1() >= 0) &&
+                    (locationEntity.getCommunityNum1() != null && locationEntity.getCommunityNum1() >= 0) &&
+                    (locationEntity.getStationFlag1() != null && locationEntity.getStationFlag1() >= 0) &&
+                    (locationEntity.getSignalStrength1() != null && locationEntity.getSignalStrength1() >= 0)) {
+                agps += (locationEntity.getNationNum1() + ",");
+                agps += (String.format("%02d", locationEntity.getMobileNum1()) + ",");
+                agps += (locationEntity.getLocationNum1() + ",");
+                agps += (locationEntity.getCommunityNum1() + ",");
+                agps += (locationEntity.getSignalStrength1() * -1);
+            }
 
-        String agps = StringUtils.EMPTY;
-        if ((locationEntity.getNationNum1() != null && locationEntity.getNationNum1() >= 0) &&
-                (locationEntity.getMobileNum1() != null && locationEntity.getMobileNum1() >= 0) &&
-                (locationEntity.getLocationNum1() != null && locationEntity.getLocationNum1() >= 0) &&
-                (locationEntity.getCommunityNum1() != null && locationEntity.getCommunityNum1() >= 0) &&
-                (locationEntity.getStationFlag1() != null && locationEntity.getStationFlag1() >= 0) &&
-                (locationEntity.getSignalStrength1() != null && locationEntity.getSignalStrength1() >= 0)) {
-            agps += (locationEntity.getNationNum1() + ",");
-            agps += (String.format("%02d", locationEntity.getMobileNum1()) + ",");
-            agps += (locationEntity.getLocationNum1() + ",");
-            agps += (locationEntity.getCommunityNum1() + ",");
-            agps += (locationEntity.getSignalStrength1() * -1);
-        }
+            if ((locationEntity.getNationNum2() != null && locationEntity.getNationNum2() >= 0) &&
+                    (locationEntity.getMobileNum2() != null && locationEntity.getMobileNum2() >= 0) &&
+                    (locationEntity.getLocationNum2() != null && locationEntity.getLocationNum2() >= 0) &&
+                    (locationEntity.getCommunityNum2() != null && locationEntity.getCommunityNum2() >= 0) &&
+                    (locationEntity.getStationFlag2() != null && locationEntity.getStationFlag2() >= 0) &&
+                    (locationEntity.getSignalStrength2() != null && locationEntity.getSignalStrength2() >= 0)) {
+                agps += ("|");
+                agps += (locationEntity.getNationNum2() + ",");
+                agps += (String.format("%02d", locationEntity.getMobileNum2()) + ",");
+                agps += (locationEntity.getLocationNum2() + ",");
+                agps += (locationEntity.getCommunityNum2() + ",");
+                agps += (locationEntity.getSignalStrength2() * -1);
+            }
 
-        if ((locationEntity.getNationNum2() != null && locationEntity.getNationNum2() >= 0) &&
-                (locationEntity.getMobileNum2() != null && locationEntity.getMobileNum2() >= 0) &&
-                (locationEntity.getLocationNum2() != null && locationEntity.getLocationNum2() >= 0) &&
-                (locationEntity.getCommunityNum2() != null && locationEntity.getCommunityNum2() >= 0) &&
-                (locationEntity.getStationFlag2() != null && locationEntity.getStationFlag2() >= 0) &&
-                (locationEntity.getSignalStrength2() != null && locationEntity.getSignalStrength2() >= 0)) {
-            agps += ("|");
-            agps += (locationEntity.getNationNum2() + ",");
-            agps += (String.format("%02d", locationEntity.getMobileNum2()) + ",");
-            agps += (locationEntity.getLocationNum2() + ",");
-            agps += (locationEntity.getCommunityNum2() + ",");
-            agps += (locationEntity.getSignalStrength2() * -1);
-        }
+            if ((locationEntity.getNationNum3() != null && locationEntity.getNationNum3() >= 0) &&
+                    (locationEntity.getMobileNum3() != null && locationEntity.getMobileNum3() >= 0) &&
+                    (locationEntity.getLocationNum3() != null && locationEntity.getLocationNum3() >= 0) &&
+                    (locationEntity.getCommunityNum3() != null && locationEntity.getCommunityNum3() >= 0) &&
+                    (locationEntity.getStationFlag3() != null && locationEntity.getStationFlag3() >= 0) &&
+                    (locationEntity.getSignalStrength3() != null && locationEntity.getSignalStrength3() >= 0)) {
+                agps += ("|");
+                agps += (locationEntity.getNationNum3() + ",");
+                agps += (String.format("%02d", locationEntity.getMobileNum3()) + ",");
+                agps += (locationEntity.getLocationNum3() + ",");
+                agps += (locationEntity.getCommunityNum3() + ",");
+                agps += (locationEntity.getSignalStrength3() * -1);
+            }
 
-        if ((locationEntity.getNationNum3() != null && locationEntity.getNationNum3() >= 0) &&
-                (locationEntity.getMobileNum3() != null && locationEntity.getMobileNum3() >= 0) &&
-                (locationEntity.getLocationNum3() != null && locationEntity.getLocationNum3() >= 0) &&
-                (locationEntity.getCommunityNum3() != null && locationEntity.getCommunityNum3() >= 0) &&
-                (locationEntity.getStationFlag3() != null && locationEntity.getStationFlag3() >= 0) &&
-                (locationEntity.getSignalStrength3() != null && locationEntity.getSignalStrength3() >= 0)) {
-            agps += ("|");
-            agps += (locationEntity.getNationNum3() + ",");
-            agps += (String.format("%02d", locationEntity.getMobileNum3()) + ",");
-            agps += (locationEntity.getLocationNum3() + ",");
-            agps += (locationEntity.getCommunityNum3() + ",");
-            agps += (locationEntity.getSignalStrength3() * -1);
-        }
+            if ((locationEntity.getNationNum4() != null && locationEntity.getNationNum4() >= 0) &&
+                    (locationEntity.getMobileNum4() != null && locationEntity.getMobileNum4() >= 0) &&
+                    (locationEntity.getLocationNum4() != null && locationEntity.getLocationNum4() >= 0) &&
+                    (locationEntity.getCommunityNum4() != null && locationEntity.getCommunityNum4() >= 0) &&
+                    (locationEntity.getStationFlag4() != null &&locationEntity.getStationFlag4() >= 0) &&
+                    (locationEntity.getSignalStrength4() != null && locationEntity.getSignalStrength4() >= 0)) {
+                agps += ("|");
+                agps += (locationEntity.getNationNum4() + ",");
+                agps += (String.format("%02d", locationEntity.getMobileNum4()) + ",");
+                agps += (locationEntity.getLocationNum4() + ",");
+                agps += (locationEntity.getCommunityNum4() + ",");
+                agps += (locationEntity.getSignalStrength4() * -1);
+            }
 
-        if ((locationEntity.getNationNum4() != null && locationEntity.getNationNum4() >= 0) &&
-                (locationEntity.getMobileNum4() != null && locationEntity.getMobileNum4() >= 0) &&
-                (locationEntity.getLocationNum4() != null && locationEntity.getLocationNum4() >= 0) &&
-                (locationEntity.getCommunityNum4() != null && locationEntity.getCommunityNum4() >= 0) &&
-                (locationEntity.getStationFlag4() != null &&locationEntity.getStationFlag4() >= 0) &&
-                (locationEntity.getSignalStrength4() != null && locationEntity.getSignalStrength4() >= 0)) {
-            agps += ("|");
-            agps += (locationEntity.getNationNum4() + ",");
-            agps += (String.format("%02d", locationEntity.getMobileNum4()) + ",");
-            agps += (locationEntity.getLocationNum4() + ",");
-            agps += (locationEntity.getCommunityNum4() + ",");
-            agps += (locationEntity.getSignalStrength4() * -1);
+            // Step2：根据基站数据获取高德的经纬度数据
+            String aGpsUrl = String.format(
+                    AGPS_CONVERT_URL,
+                    (Object[]) new String[] {"9628", "gsm", agps, "10", "2", "json"});
+            Request request = new Request.Builder().url(aGpsUrl).build();
+            String data = httpClient.newCall(request).execute().body().string();
+            aGpsEntity = objectMapper.readValue(data, AGpsEntity.class);
+        } else {
+            aGpsEntity = new AGpsEntity();
+            aGpsEntity.setLatitude(locationEntity.getLatitude());
+            aGpsEntity.setLongitude(locationEntity.getLongitude());
+            aGpsEntity.setStatus(200);
         }
-
-        // Step2：根据基站数据获取高德的经纬度数据
-        String aGpsUrl = String.format(
-                AGPS_CONVERT_URL,
-                (Object[]) new String[] {"9628", "gsm", agps, "10", "2", "json"});
-        Request request = new Request.Builder().url(aGpsUrl).build();
-        String data = httpClient.newCall(request).execute().body().string();
-        AGpsEntity aGpsEntity = objectMapper.readValue(data, AGpsEntity.class);
 
         // 数据获取错误，说明数据有问题，则删除
         if (aGpsEntity.getStatus() != 200) {
@@ -408,8 +412,8 @@ public class DeviceLocationController extends IControllerImpl {
         String gecodeUrl = String.format(
                 GECODE_CONVERT_URL,
                 (Object[]) new String[] {aGpsEntity.getLongitude().toString() + "," + aGpsEntity.getLatitude()});
-        request = new Request.Builder().url(gecodeUrl).build();
-        data = httpClient.newCall(request).execute().body().string();
+        Request request = new Request.Builder().url(gecodeUrl).build();
+        String data = httpClient.newCall(request).execute().body().string();
         JsonNode geocodeNode = objectMapper.readTree(data);
 
         // 转化为地理信息出错，说明数据有问题
@@ -437,24 +441,28 @@ public class DeviceLocationController extends IControllerImpl {
         if (city == null) {
             city = district;
         }
-        // CASE2：判断省或市有一个相同，那么就保存
-        if (city.equals(lastEntityList.get(0).getCity())) {
+        // CASE2：判断市数据相同或者只是经纬度数据也保存，
+        if ((lastEntityList.size() > 0 && city.equals(lastEntityList.get(0).getCity())) ||
+                aGpsEntity.getResult() == null ||
+                (locationEntity.getProvince() == null && locationEntity.getLongitude() != null)) {
             locationEntity.setProvince(province);
             locationEntity.setCity(city);
             locationEntity.setDistrict(district);
 
-            locationEntity.setLongitude(aGpsEntity.getLongitude());
-            locationEntity.setLatitude(aGpsEntity.getLatitude());
+            if (locationEntity.getLongitude() == null) {
+                locationEntity.setLongitude(aGpsEntity.getLongitude());
+                locationEntity.setLatitude(aGpsEntity.getLatitude());
 
-            if (aGpsEntity.getLongitude().compareTo(new BigDecimal(0)) > 0) {
-                locationEntity.setLongitudeDirection((int) 'E');
-            } else {
-                locationEntity.setLongitudeDirection((int) 'W');
-            }
-            if (aGpsEntity.getLatitude().compareTo(new BigDecimal(0)) > 0) {
-                locationEntity.setLatitudeDirection((int) 'N');
-            } else {
-                locationEntity.setLatitudeDirection((int) 'S');
+                if (aGpsEntity.getLongitude().compareTo(new BigDecimal(0)) > 0) {
+                    locationEntity.setLongitudeDirection((int) 'E');
+                } else {
+                    locationEntity.setLongitudeDirection((int) 'W');
+                }
+                if (aGpsEntity.getLatitude().compareTo(new BigDecimal(0)) > 0) {
+                    locationEntity.setLatitudeDirection((int) 'N');
+                } else {
+                    locationEntity.setLatitudeDirection((int) 'S');
+                }
             }
 
             locationEntity = deviceLocationService.update(locationEntity);

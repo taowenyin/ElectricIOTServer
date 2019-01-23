@@ -434,11 +434,11 @@ public class DeviceLocationController extends IControllerImpl {
             return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
         }
         // 兼容市直辖市数据中城市为空的问题
-        if (city == null && district != null) {
+        if (city == null) {
             city = district;
         }
         // CASE2：判断省或市有一个相同，那么就保存
-        if (city.equals(lastEntityList.get(0).getCity()) || province.equals(lastEntityList.get(0).getProvince())) {
+        if (city.equals(lastEntityList.get(0).getCity())) {
             locationEntity.setProvince(province);
             locationEntity.setCity(city);
             locationEntity.setDistrict(district);

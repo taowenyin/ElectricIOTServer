@@ -3,6 +3,6 @@
   "version": "0.0.1",
   "description": "开发技术接口文档",
   "title": "华电服务器API文档",
-  "url": "http://172.81.239.174:8080/ElectricIOTServer",
-  "sampleUrl": "http://172.81.239.174:8080/ElectricIOTServer"
+  "url": "http://localhost:8080/",
+  "sampleUrl": "http://localhost:8080/"
 }

@@ -9,6 +9,11 @@ import java.io.Serializable;
 public class DeviceLocationInterceptor extends EmptyInterceptor {
 
     @Override
+    public String onPrepareStatement(String sql) {
+        return super.onPrepareStatement(sql);
+    }
+
+    @Override
     public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
 
         if (entity instanceof DeviceLocationEntity) {

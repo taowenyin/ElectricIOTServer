@@ -95,7 +95,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     /*==========允许跨域访问的设置==========*/
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // 华电测试配置
+        // 华电配置
         registry.addMapping("/**")
                 .allowedOrigins("http://192.168.247.130", null)
                 .allowedMethods("POST", "GET", "PUT", "DELETE")

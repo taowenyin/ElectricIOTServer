@@ -97,7 +97,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public void addCorsMappings(CorsRegistry registry) {
         // 华电配置
         registry.addMapping("/**")
-                .allowedOrigins("http://192.168.0.7", null)
+                .allowedOrigins("http://192.168.0.7:8001", null)
                 .allowedMethods("POST", "GET", "PUT", "DELETE")
                 .maxAge(3600)
                 .allowCredentials(true);

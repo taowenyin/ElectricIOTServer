@@ -46,6 +46,8 @@ public class ViewGetAllDeviceInfoEntity {
     private int batterySleepTime;
     @JsonProperty("battery_keep_live_time")
     private int batteryKeepLiveTime;
+    @JsonProperty("server_ip")
+    private String serverIp;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -237,6 +239,16 @@ public class ViewGetAllDeviceInfoEntity {
         this.batteryKeepLiveTime = batteryKeepLiveTime;
     }
 
+    @Basic
+    @Column(name = "server_ip", nullable = false)
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -260,12 +272,12 @@ public class ViewGetAllDeviceInfoEntity {
                 Objects.equals(departmentId, that.departmentId) &&
                 Objects.equals(department, that.department) &&
                 Objects.equals(comment, that.comment) &&
-                Objects.equals(createTime, that.createTime);
+                Objects.equals(createTime, that.createTime) &&
+                Objects.equals(serverIp, that.serverIp);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, type, statusId, status, userId, user, departmentId, department, comment, createTime, keepLiveInterval, batterySleepTime, batteryKeepLiveTime);
+        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, type, statusId, status, userId, user, departmentId, department, comment, createTime, keepLiveInterval, batterySleepTime, batteryKeepLiveTime, serverIp);
     }
 }

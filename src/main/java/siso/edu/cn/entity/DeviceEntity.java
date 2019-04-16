@@ -44,6 +44,8 @@ public class DeviceEntity {
     private int batterySleepTime;
     @JsonProperty("battery_keep_live_time")
     private int batteryKeepLiveTime;
+    @JsonProperty("server_ip")
+    private String serverIp;
     @JsonIgnore
     private TypeEntity typeByTypeId;
     @JsonIgnore
@@ -199,13 +201,23 @@ public class DeviceEntity {
     }
 
     @Basic
-    @Column(name = "battery_keep_live_time", nullable = false)
+    @Column(name = "battery_keep_live_time")
     public int getBatteryKeepLiveTime() {
         return batteryKeepLiveTime;
     }
 
     public void setBatteryKeepLiveTime(int batteryKeepLiveTime) {
         this.batteryKeepLiveTime = batteryKeepLiveTime;
+    }
+
+    @Basic
+    @Column(name = "server_ip", nullable = false)
+    public String getServerIp() {
+        return serverIp;
+    }
+
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
     }
 
     @Override
@@ -227,13 +239,13 @@ public class DeviceEntity {
                 Objects.equals(userId, that.userId) &&
                 Objects.equals(departmentId, that.departmentId) &&
                 Objects.equals(comment, that.comment) &&
-                Objects.equals(createTime, that.createTime);
+                Objects.equals(createTime, that.createTime) &&
+                Objects.equals(serverIp, that.serverIp);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, statusId, userId, departmentId, comment, createTime, keepLiveInterval, batterySleepTime, batteryKeepLiveTime);
+        return Objects.hash(id, uid, imsi, name, serialNumber, isDelete, typeId, statusId, userId, departmentId, comment, createTime, keepLiveInterval, batterySleepTime, batteryKeepLiveTime, serverIp);
     }
 
     @ManyToOne

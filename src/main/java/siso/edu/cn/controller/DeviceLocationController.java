@@ -234,6 +234,7 @@ public class DeviceLocationController extends IControllerImpl {
                 agps += (communityNum4 + ",");
                 agps += (signalStrength4 * -1);
             }
+            deviceLocationEntity.setIsDelete(0);
 
             String url = String.format(
                     AGPS_CONVERT_URL,
@@ -321,7 +322,8 @@ public class DeviceLocationController extends IControllerImpl {
                         lastLocationEntity.setDistrict(district);
                         this.deviceLocationService.update(lastLocationEntity);
                     } else {
-                        this.deviceLocationService.delete(lastLocationEntity.getId());
+                        lastLocationEntity.setIsDelete(1);
+                        this.deviceLocationService.update(lastLocationEntity);
                         return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
                     }
                 }
@@ -403,7 +405,8 @@ public class DeviceLocationController extends IControllerImpl {
 
         // 数据获取错误，说明数据有问题，则删除
         if (aGpsEntity.getStatus() != 200) {
-            this.deviceLocationService.delete(locationEntity.getId());
+            locationEntity.setIsDelete(1);
+            this.deviceLocationService.update(locationEntity);
             System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
             return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
         }
@@ -418,7 +421,8 @@ public class DeviceLocationController extends IControllerImpl {
 
         // 转化为地理信息出错，说明数据有问题
         if (Integer.valueOf(geocodeNode.get("status").asText()) != 1) {
-            this.deviceLocationService.delete(locationEntity.getId());
+            locationEntity.setIsDelete(1);
+            this.deviceLocationService.update(locationEntity);
             System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
             return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
         }
@@ -434,7 +438,8 @@ public class DeviceLocationController extends IControllerImpl {
         // Step4：判断市是否相同
         // CASE1：只要有一个数据为空说明数据有问题，则删除, 兼容市直辖市数据中城市为空的问题
         if (province == null || district == null) {
-            this.deviceLocationService.delete(locationEntity.getId());
+            locationEntity.setIsDelete(1);
+            this.deviceLocationService.update(locationEntity);
             return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
         }
         // 兼容市直辖市数据中城市为空的问题
@@ -486,7 +491,8 @@ public class DeviceLocationController extends IControllerImpl {
                     null : itemGeocodeNode.get("regeocode").get("addressComponent").get("city").textValue();
             // 如果数据错误则删除
             if (itemCity == null) {
-                this.deviceLocationService.delete(locationEntity.getId());
+                locationEntity.setIsDelete(1);
+                this.deviceLocationService.update(locationEntity);
                 System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
                 return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
             } else {
@@ -498,7 +504,8 @@ public class DeviceLocationController extends IControllerImpl {
         // Step6：如果全部市数据相同，则保存
         // 如果满足条件说明城市有不同，则数据错误
         if (cityEquals.size() != 1) {
-            this.deviceLocationService.delete(locationEntity.getId());
+            locationEntity.setIsDelete(1);
+            this.deviceLocationService.update(locationEntity);
             System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
             return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
         }

@@ -204,6 +204,7 @@ public class DeviceController extends IControllerImpl {
      * @apiParam {Number} [keep_live_interval=60] 设备心跳间隔（单位：秒）
      * @apiParam {Number} [battery_sleep_time=180] 电源供电时的休眠时间（单位：分钟）
      * @apiParam {Number} [battery_keep_live_time=300] 电池供电时心跳包发送后保持连接的时间（单位：秒）
+     * @apiParam {String} [server_ip] 设备连接服务器的地址
      *
      * @apiSuccess {String} code 返回码.
      * @apiSuccess {String} msg  返回消息.
@@ -211,17 +212,18 @@ public class DeviceController extends IControllerImpl {
      */
     @RequestMapping(value = "/device", method = RequestMethod.PUT)
     public ResultEntity modifyDeviceById(@RequestParam("id") long id,
-                                     @RequestParam(name = "uid", required = false, defaultValue = "") String uid,
-                                     @RequestParam(name = "name", required = false, defaultValue = "") String name,
-                                     @RequestParam(name = "serial_number", required = false, defaultValue = "") String serialNumber,
-                                     @RequestParam(name = "type_id", required = false, defaultValue = "-1") long typeId,
-                                     @RequestParam(name = "status_id", required = false, defaultValue = "-1") long statusId,
-                                     @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,
-                                     @RequestParam(name = "department_id", required = false, defaultValue = "-1") long departmentId,
-                                     @RequestParam(name = "comment", required = false, defaultValue = "-1") String comment,
-                                     @RequestParam(name = "keep_live_interval", required = false, defaultValue = "-1") int keepLiveInterval,
-                                     @RequestParam(name = "battery_sleep_time", required = false, defaultValue = "-1") int batterySleepTime,
-                                     @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "-1") int batteryKeepLiveTime) {
+                                         @RequestParam(name = "uid", required = false, defaultValue = "") String uid,
+                                         @RequestParam(name = "name", required = false, defaultValue = "") String name,
+                                         @RequestParam(name = "serial_number", required = false, defaultValue = "") String serialNumber,
+                                         @RequestParam(name = "type_id", required = false, defaultValue = "-1") long typeId,
+                                         @RequestParam(name = "status_id", required = false, defaultValue = "-1") long statusId,
+                                         @RequestParam(name = "user_id", required = false, defaultValue = "-1") long userId,
+                                         @RequestParam(name = "department_id", required = false, defaultValue = "-1") long departmentId,
+                                         @RequestParam(name = "comment", required = false, defaultValue = "-1") String comment,
+                                         @RequestParam(name = "keep_live_interval", required = false, defaultValue = "-1") int keepLiveInterval,
+                                         @RequestParam(name = "battery_sleep_time", required = false, defaultValue = "-1") int batterySleepTime,
+                                         @RequestParam(name = "battery_keep_live_time", required = false, defaultValue = "-1") int batteryKeepLiveTime,
+                                         @RequestParam(name = "server_ip", required = false, defaultValue = "172.81.239.174:65001") String serverIp) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         // 获取时间格式
@@ -284,6 +286,10 @@ public class DeviceController extends IControllerImpl {
         }
         if (!comment.isEmpty()) {
             entity.setComment(comment);
+        }
+        if (!serverIp.equals("172.81.239.174:65001")) {
+            entity.setServerIp(serverIp);
+            deviceCmdEntity.setSetDeviceIp(serverIp);
         }
 
         // 保存并更新实体

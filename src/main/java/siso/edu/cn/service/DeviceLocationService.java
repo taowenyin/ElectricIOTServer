@@ -20,7 +20,7 @@ public class DeviceLocationService extends IServiceImpl<DeviceLocationEntity> {
             "SELECT location FROM DeviceLocationEntity location WHERE location.deviceId = ?1";
 
     public final static String SQL_GET_PREVIOUS_DATA_BY_DEVICE_ID =
-            "SELECT location FROM DeviceLocationEntity location WHERE location.deviceId = ?1 AND location.id < ?2 ORDER BY location.id DESC";
+            "SELECT location FROM DeviceLocationEntity location WHERE location.isDelete != 1 AND location.deviceId = ?1 AND location.id < ?2 ORDER BY location.id DESC";
 
     private DeviceLocationDao deviceLocationDao;
 

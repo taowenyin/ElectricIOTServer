@@ -92,6 +92,8 @@ public class DeviceLocationEntity {
     private Integer stationFlag4;
     @JsonProperty("signal_strength_4")
     private Integer signalStrength4;
+    @JsonProperty("is_delete")
+    private Integer isDelete;
     @JsonIgnore
     private DeviceEntity deviceByDeviceId;
 
@@ -486,112 +488,67 @@ public class DeviceLocationEntity {
         this.signalStrength4 = signalStrength4;
     }
 
+    @Basic
+    @Column(name = "is_delete", nullable = true)
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         DeviceLocationEntity that = (DeviceLocationEntity) o;
-
-        if (id != that.id) return false;
-        if (deviceId != that.deviceId) return false;
-        if (signalQuality != that.signalQuality) return false;
-        if (deviceOnOff != that.deviceOnOff) return false;
-        if (Double.compare(that.batteryVoltage, batteryVoltage) != 0) return false;
-        if (recordTime != null ? !recordTime.equals(that.recordTime) : that.recordTime != null) return false;
-        if (deviceTime != null ? !deviceTime.equals(that.deviceTime) : that.deviceTime != null) return false;
-        if (longitude != null ? !longitude.equals(that.longitude) : that.longitude != null) return false;
-        if (longitudeDirection != null ? !longitudeDirection.equals(that.longitudeDirection) : that.longitudeDirection != null)
-            return false;
-        if (latitude != null ? !latitude.equals(that.latitude) : that.latitude != null) return false;
-        if (latitudeDirection != null ? !latitudeDirection.equals(that.latitudeDirection) : that.latitudeDirection != null)
-            return false;
-        if (province != null ? !province.equals(that.province) : that.province != null) return false;
-        if (city != null ? !city.equals(that.city) : that.city != null) return false;
-        if (district != null ? !district.equals(that.district) : that.district != null) return false;
-        if (agpsStationNum != null ? !agpsStationNum.equals(that.agpsStationNum) : that.agpsStationNum != null)
-            return false;
-        if (nationNum1 != null ? !nationNum1.equals(that.nationNum1) : that.nationNum1 != null) return false;
-        if (mobileNum1 != null ? !mobileNum1.equals(that.mobileNum1) : that.mobileNum1 != null) return false;
-        if (locationNum1 != null ? !locationNum1.equals(that.locationNum1) : that.locationNum1 != null) return false;
-        if (communityNum1 != null ? !communityNum1.equals(that.communityNum1) : that.communityNum1 != null)
-            return false;
-        if (stationFlag1 != null ? !stationFlag1.equals(that.stationFlag1) : that.stationFlag1 != null) return false;
-        if (signalStrength1 != null ? !signalStrength1.equals(that.signalStrength1) : that.signalStrength1 != null)
-            return false;
-        if (nationNum2 != null ? !nationNum2.equals(that.nationNum2) : that.nationNum2 != null) return false;
-        if (mobileNum2 != null ? !mobileNum2.equals(that.mobileNum2) : that.mobileNum2 != null) return false;
-        if (locationNum2 != null ? !locationNum2.equals(that.locationNum2) : that.locationNum2 != null) return false;
-        if (communityNum2 != null ? !communityNum2.equals(that.communityNum2) : that.communityNum2 != null)
-            return false;
-        if (stationFlag2 != null ? !stationFlag2.equals(that.stationFlag2) : that.stationFlag2 != null) return false;
-        if (signalStrength2 != null ? !signalStrength2.equals(that.signalStrength2) : that.signalStrength2 != null)
-            return false;
-        if (nationNum3 != null ? !nationNum3.equals(that.nationNum3) : that.nationNum3 != null) return false;
-        if (mobileNum3 != null ? !mobileNum3.equals(that.mobileNum3) : that.mobileNum3 != null) return false;
-        if (locationNum3 != null ? !locationNum3.equals(that.locationNum3) : that.locationNum3 != null) return false;
-        if (communityNum3 != null ? !communityNum3.equals(that.communityNum3) : that.communityNum3 != null)
-            return false;
-        if (stationFlag3 != null ? !stationFlag3.equals(that.stationFlag3) : that.stationFlag3 != null) return false;
-        if (signalStrength3 != null ? !signalStrength3.equals(that.signalStrength3) : that.signalStrength3 != null)
-            return false;
-        if (nationNum4 != null ? !nationNum4.equals(that.nationNum4) : that.nationNum4 != null) return false;
-        if (mobileNum4 != null ? !mobileNum4.equals(that.mobileNum4) : that.mobileNum4 != null) return false;
-        if (locationNum4 != null ? !locationNum4.equals(that.locationNum4) : that.locationNum4 != null) return false;
-        if (communityNum4 != null ? !communityNum4.equals(that.communityNum4) : that.communityNum4 != null)
-            return false;
-        if (stationFlag4 != null ? !stationFlag4.equals(that.stationFlag4) : that.stationFlag4 != null) return false;
-        if (signalStrength4 != null ? !signalStrength4.equals(that.signalStrength4) : that.signalStrength4 != null)
-            return false;
-
-        return true;
+        return id == that.id &&
+                deviceId == that.deviceId &&
+                signalQuality == that.signalQuality &&
+                deviceOnOff == that.deviceOnOff &&
+                Double.compare(that.batteryVoltage, batteryVoltage) == 0 &&
+                Objects.equals(recordTime, that.recordTime) &&
+                Objects.equals(deviceTime, that.deviceTime) &&
+                Objects.equals(longitude, that.longitude) &&
+                Objects.equals(longitudeDirection, that.longitudeDirection) &&
+                Objects.equals(latitude, that.latitude) &&
+                Objects.equals(latitudeDirection, that.latitudeDirection) &&
+                Objects.equals(province, that.province) &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(district, that.district) &&
+                Objects.equals(agpsStationNum, that.agpsStationNum) &&
+                Objects.equals(nationNum1, that.nationNum1) &&
+                Objects.equals(mobileNum1, that.mobileNum1) &&
+                Objects.equals(locationNum1, that.locationNum1) &&
+                Objects.equals(communityNum1, that.communityNum1) &&
+                Objects.equals(stationFlag1, that.stationFlag1) &&
+                Objects.equals(signalStrength1, that.signalStrength1) &&
+                Objects.equals(nationNum2, that.nationNum2) &&
+                Objects.equals(mobileNum2, that.mobileNum2) &&
+                Objects.equals(locationNum2, that.locationNum2) &&
+                Objects.equals(communityNum2, that.communityNum2) &&
+                Objects.equals(stationFlag2, that.stationFlag2) &&
+                Objects.equals(signalStrength2, that.signalStrength2) &&
+                Objects.equals(nationNum3, that.nationNum3) &&
+                Objects.equals(mobileNum3, that.mobileNum3) &&
+                Objects.equals(locationNum3, that.locationNum3) &&
+                Objects.equals(communityNum3, that.communityNum3) &&
+                Objects.equals(stationFlag3, that.stationFlag3) &&
+                Objects.equals(signalStrength3, that.signalStrength3) &&
+                Objects.equals(nationNum4, that.nationNum4) &&
+                Objects.equals(mobileNum4, that.mobileNum4) &&
+                Objects.equals(locationNum4, that.locationNum4) &&
+                Objects.equals(communityNum4, that.communityNum4) &&
+                Objects.equals(stationFlag4, that.stationFlag4) &&
+                Objects.equals(signalStrength4, that.signalStrength4) &&
+                Objects.equals(isDelete, that.isDelete);
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (deviceId ^ (deviceId >>> 32));
-        result = 31 * result + (recordTime != null ? recordTime.hashCode() : 0);
-        result = 31 * result + (deviceTime != null ? deviceTime.hashCode() : 0);
-        result = 31 * result + signalQuality;
-        result = 31 * result + deviceOnOff;
-        temp = Double.doubleToLongBits(batteryVoltage);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (longitude != null ? longitude.hashCode() : 0);
-        result = 31 * result + (longitudeDirection != null ? longitudeDirection.hashCode() : 0);
-        result = 31 * result + (latitude != null ? latitude.hashCode() : 0);
-        result = 31 * result + (latitudeDirection != null ? latitudeDirection.hashCode() : 0);
-        result = 31 * result + (province != null ? province.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (district != null ? district.hashCode() : 0);
-        result = 31 * result + (agpsStationNum != null ? agpsStationNum.hashCode() : 0);
-        result = 31 * result + (nationNum1 != null ? nationNum1.hashCode() : 0);
-        result = 31 * result + (mobileNum1 != null ? mobileNum1.hashCode() : 0);
-        result = 31 * result + (locationNum1 != null ? locationNum1.hashCode() : 0);
-        result = 31 * result + (communityNum1 != null ? communityNum1.hashCode() : 0);
-        result = 31 * result + (stationFlag1 != null ? stationFlag1.hashCode() : 0);
-        result = 31 * result + (signalStrength1 != null ? signalStrength1.hashCode() : 0);
-        result = 31 * result + (nationNum2 != null ? nationNum2.hashCode() : 0);
-        result = 31 * result + (mobileNum2 != null ? mobileNum2.hashCode() : 0);
-        result = 31 * result + (locationNum2 != null ? locationNum2.hashCode() : 0);
-        result = 31 * result + (communityNum2 != null ? communityNum2.hashCode() : 0);
-        result = 31 * result + (stationFlag2 != null ? stationFlag2.hashCode() : 0);
-        result = 31 * result + (signalStrength2 != null ? signalStrength2.hashCode() : 0);
-        result = 31 * result + (nationNum3 != null ? nationNum3.hashCode() : 0);
-        result = 31 * result + (mobileNum3 != null ? mobileNum3.hashCode() : 0);
-        result = 31 * result + (locationNum3 != null ? locationNum3.hashCode() : 0);
-        result = 31 * result + (communityNum3 != null ? communityNum3.hashCode() : 0);
-        result = 31 * result + (stationFlag3 != null ? stationFlag3.hashCode() : 0);
-        result = 31 * result + (signalStrength3 != null ? signalStrength3.hashCode() : 0);
-        result = 31 * result + (nationNum4 != null ? nationNum4.hashCode() : 0);
-        result = 31 * result + (mobileNum4 != null ? mobileNum4.hashCode() : 0);
-        result = 31 * result + (locationNum4 != null ? locationNum4.hashCode() : 0);
-        result = 31 * result + (communityNum4 != null ? communityNum4.hashCode() : 0);
-        result = 31 * result + (stationFlag4 != null ? stationFlag4.hashCode() : 0);
-        result = 31 * result + (signalStrength4 != null ? signalStrength4.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id, deviceId, recordTime, deviceTime, signalQuality, deviceOnOff, batteryVoltage, longitude, longitudeDirection, latitude, latitudeDirection, province, city, district, agpsStationNum, nationNum1, mobileNum1, locationNum1, communityNum1, stationFlag1, signalStrength1, nationNum2, mobileNum2, locationNum2, communityNum2, stationFlag2, signalStrength2, nationNum3, mobileNum3, locationNum3, communityNum3, stationFlag3, signalStrength3, nationNum4, mobileNum4, locationNum4, communityNum4, stationFlag4, signalStrength4, isDelete);
     }
 
     @ManyToOne

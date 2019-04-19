@@ -405,8 +405,10 @@ public class DeviceLocationController extends IControllerImpl {
 
         // 数据获取错误，说明数据有问题，则删除
         if (aGpsEntity.getStatus() != 200) {
-            locationEntity.setIsDelete(1);
-            this.deviceLocationService.update(locationEntity);
+            if (aGpsEntity.getStatus() != 702) {
+                locationEntity.setIsDelete(1);
+                this.deviceLocationService.update(locationEntity);
+            }
             System.out.println(String.format("Status = %d, Msg = %s", aGpsEntity.getStatus(), aGpsEntity.getMsg()));
             return this.createResultEntity(ResultEntity.SAVE_DATA_ERROR);
         }

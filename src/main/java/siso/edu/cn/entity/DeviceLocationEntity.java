@@ -94,7 +94,10 @@ public class DeviceLocationEntity {
     private Integer signalStrength4;
     @JsonProperty("is_delete")
     private Integer isDelete;
-    @JsonIgnore
+    @JsonProperty("temp")
+    private String temp;
+    @JsonProperty("humidity")
+    private String humidity;
     private DeviceEntity deviceByDeviceId;
 
     @Id
@@ -498,6 +501,26 @@ public class DeviceLocationEntity {
         this.isDelete = isDelete;
     }
 
+    @Basic
+    @Column(name = "temp", nullable = true, length = 45)
+    public String getTemp() {
+        return temp;
+    }
+
+    public void setTemp(String temp) {
+        this.temp = temp;
+    }
+
+    @Basic
+    @Column(name = "humidity", nullable = true, length = 45)
+    public String getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -542,13 +565,15 @@ public class DeviceLocationEntity {
                 Objects.equals(communityNum4, that.communityNum4) &&
                 Objects.equals(stationFlag4, that.stationFlag4) &&
                 Objects.equals(signalStrength4, that.signalStrength4) &&
-                Objects.equals(isDelete, that.isDelete);
+                Objects.equals(isDelete, that.isDelete) &&
+                Objects.equals(temp, that.temp) &&
+                Objects.equals(humidity, that.humidity);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, deviceId, recordTime, deviceTime, signalQuality, deviceOnOff, batteryVoltage, longitude, longitudeDirection, latitude, latitudeDirection, province, city, district, agpsStationNum, nationNum1, mobileNum1, locationNum1, communityNum1, stationFlag1, signalStrength1, nationNum2, mobileNum2, locationNum2, communityNum2, stationFlag2, signalStrength2, nationNum3, mobileNum3, locationNum3, communityNum3, stationFlag3, signalStrength3, nationNum4, mobileNum4, locationNum4, communityNum4, stationFlag4, signalStrength4, isDelete);
+        return Objects.hash(id, deviceId, recordTime, deviceTime, signalQuality, deviceOnOff, batteryVoltage, longitude, longitudeDirection, latitude, latitudeDirection, province, city, district, agpsStationNum, nationNum1, mobileNum1, locationNum1, communityNum1, stationFlag1, signalStrength1, nationNum2, mobileNum2, locationNum2, communityNum2, stationFlag2, signalStrength2, nationNum3, mobileNum3, locationNum3, communityNum3, stationFlag3, signalStrength3, nationNum4, mobileNum4, locationNum4, communityNum4, stationFlag4, signalStrength4, isDelete, temp, humidity);
     }
 
     @ManyToOne

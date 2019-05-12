@@ -33,6 +33,8 @@ public class DeviceLocationController extends IControllerImpl {
     public static final String AGPS_CONVERT_URL = "http://api.gpsspg.com/bs/?oid=%s&key=9564xy0zx29yu427ywz50439u49uu16370yxx&type=%s&bs=%s&hex=%s&to=%s&output=%s";
     // 经纬度转地理信息接口
     public static final String GECODE_CONVERT_URL = "https://restapi.amap.com/v3/geocode/regeo?key=f11511080fd76b66485b50902cb00a75&location=%s";
+    // 天气转换接口
+    public static final String WEATHER_CONVERT_URL = "http://v.juhe.cn/weather/geo?key=e0fca72351651e3c4e910ed848f57d0f&dtype=json&format=1&lon=%s&lat=%s";
 
     private DeviceLocationService deviceLocationService;
     private OkHttpClient httpClient = null;
@@ -472,6 +474,17 @@ public class DeviceLocationController extends IControllerImpl {
                 }
             }
 
+            String weatherUrl = String.format(
+                    WEATHER_CONVERT_URL,
+                    (Object[]) new String[] {aGpsEntity.getLongitude().toString(), aGpsEntity.getLatitude().toString()});
+            Request weatherRequest = new Request.Builder().url(weatherUrl).build();
+            String weatherData = httpClient.newCall(weatherRequest).execute().body().string();
+            JsonNode weatherNode = objectMapper.readTree(weatherData);
+            if (weatherNode.findValue("resultcode").textValue().equals("200")) {
+                locationEntity.setTemp(weatherNode.findValue("temp").textValue());
+                locationEntity.setHumidity(weatherNode.findValue("humidity").textValue());
+            }
+
             locationEntity = deviceLocationService.update(locationEntity);
             return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(locationEntity, JsonNode.class));
         }
@@ -528,6 +541,17 @@ public class DeviceLocationController extends IControllerImpl {
             locationEntity.setLatitudeDirection((int) 'N');
         } else {
             locationEntity.setLatitudeDirection((int) 'S');
+        }
+
+        String weatherUrl = String.format(
+                WEATHER_CONVERT_URL,
+                (Object[]) new String[] {aGpsEntity.getLongitude().toString(), aGpsEntity.getLatitude().toString()});
+        Request weatherRequest = new Request.Builder().url(weatherUrl).build();
+        String weatherData = httpClient.newCall(weatherRequest).execute().body().string();
+        JsonNode weatherNode = objectMapper.readTree(weatherData);
+        if (weatherNode.findValue("resultcode").textValue().equals("200")) {
+            locationEntity.setTemp(weatherNode.findValue("temp").textValue());
+            locationEntity.setHumidity(weatherNode.findValue("humidity").textValue());
         }
 
         locationEntity = deviceLocationService.update(locationEntity);

@@ -93,6 +93,8 @@ public class ViewGetDeviceLastLocationEntity {
     private String temp;
     @JsonProperty("humidity")
     private String humidity;
+	@JsonProperty("weather")
+    private String weather;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -514,6 +516,16 @@ public class ViewGetDeviceLastLocationEntity {
         this.humidity = humidity;
     }
 
+    @Basic
+    @Column(name = "weather", nullable = true, length = 45)
+    public String getWeather() {
+        return weather;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -560,12 +572,13 @@ public class ViewGetDeviceLastLocationEntity {
                 Objects.equals(signalStrength4, that.signalStrength4) &&
                 Objects.equals(isDelete, that.isDelete) &&
                 Objects.equals(temp, that.temp) &&
-                Objects.equals(humidity, that.humidity);
+                Objects.equals(humidity, that.humidity) &&
+                Objects.equals(weather, that.weather);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, deviceId, recordTime, deviceTime, signalQuality, deviceOnOff, batteryVoltage, longitude, longitudeDirection, latitude, latitudeDirection, province, city, district, agpsStationNum, nationNum1, mobileNum1, locationNum1, communityNum1, stationFlag1, signalStrength1, nationNum2, mobileNum2, locationNum2, communityNum2, stationFlag2, signalStrength2, nationNum3, mobileNum3, locationNum3, communityNum3, stationFlag3, signalStrength3, nationNum4, mobileNum4, locationNum4, communityNum4, stationFlag4, signalStrength4, isDelete, temp, humidity);
+        return Objects.hash(id, deviceId, recordTime, deviceTime, signalQuality, deviceOnOff, batteryVoltage, longitude, longitudeDirection, latitude, latitudeDirection, province, city, district, agpsStationNum, nationNum1, mobileNum1, locationNum1, communityNum1, stationFlag1, signalStrength1, nationNum2, mobileNum2, locationNum2, communityNum2, stationFlag2, signalStrength2, nationNum3, mobileNum3, locationNum3, communityNum3, stationFlag3, signalStrength3, nationNum4, mobileNum4, locationNum4, communityNum4, stationFlag4, signalStrength4, isDelete, temp, humidity, weather);
     }
 }

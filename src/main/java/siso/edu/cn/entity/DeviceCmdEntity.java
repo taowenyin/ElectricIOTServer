@@ -265,7 +265,7 @@ public class DeviceCmdEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "device_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     public DeviceEntity getDeviceByDeviceId() {
         return deviceByDeviceId;
     }

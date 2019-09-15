@@ -28,7 +28,7 @@ public class ReceiveDeviceDataService extends IServiceImpl<ReceiveDeviceDataEnti
     }
 
     public List<ReceiveDeviceDataEntity> getCommandDataList(Long deviceId) {
-        return this.dao.findByParams(SQL_FIND_COMMAND_BY_DEVICE, new Object[] {deviceId});
+        return this.dao.findByParams(SQL_FIND_COMMAND_BY_DEVICE, new Object[] {deviceId}, 5);
     }
 
 }

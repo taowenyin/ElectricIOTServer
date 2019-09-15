@@ -492,6 +492,12 @@ public class DeviceController extends IControllerImpl {
         List<ReceiveDeviceDataEntity> dataList = this.receiveDeviceDataService.getCommandDataList(id);
 
         if (dataList.size() > 0) {
+
+            for (ReceiveDeviceDataEntity item : dataList ) {
+                item.setIsRead(1);
+                receiveDeviceDataService.update(item);
+            }
+
             ObjectMapper objectMapper = new ObjectMapper();
             return this.createResultEntity(ResultEntity.SUCCESS,
                     objectMapper.convertValue(dataList, JsonNode.class));

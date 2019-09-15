@@ -25,6 +25,7 @@ public class DeviceController extends IControllerImpl {
     private DeviceService deviceService;
     private DeviceCmdService deviceCmdService;
     private TypeService typeService;
+    private ReceiveDeviceDataService receiveDeviceDataService;
 
     private ViewGetDeviceLastLocationService viewGetDeviceLastLocationService;
     private ViewGetAllDeviceInfoService viewGetAllDeviceInfoService;
@@ -33,11 +34,13 @@ public class DeviceController extends IControllerImpl {
     public DeviceController(DeviceService deviceService,
                             DeviceCmdService deviceCmdService,
                             TypeService typeService,
+                            ReceiveDeviceDataService receiveDeviceDataService,
                             ViewGetAllDeviceInfoService viewGetAllDeviceInfoService,
                             ViewGetDeviceLastLocationService viewGetDeviceLastLocationService) {
         this.deviceService = deviceService;
         this.deviceCmdService = deviceCmdService;
         this.typeService = typeService;
+        this.receiveDeviceDataService = receiveDeviceDataService;
         this.viewGetDeviceLastLocationService = viewGetDeviceLastLocationService;
         this.viewGetAllDeviceInfoService = viewGetAllDeviceInfoService;
     }
@@ -423,30 +426,6 @@ public class DeviceController extends IControllerImpl {
     }
 
     /**
-     * @api {post} /api/manage/device 创建新设备
-     * @apiVersion 0.0.1
-     * @apiName createDevice
-     * @apiGroup deviceGroup
-     *
-     * @apiParam {String} imsi 手机卡IMSI
-     * @apiParam {String} [uid] 自定义ID
-     * @apiParam {String} [name] 设备名称
-     * @apiParam {String} [serial_number] 设备序列号
-     * @apiParam {Number} [type_id] 设备类型ID
-     * @apiParam {Number} [status_id] 设备状态ID
-     * @apiParam {Number} [user_id] 保管员用户ID
-     * @apiParam {Number} [department_id] 设备所属部门ID
-     * @apiParam {String} [comment] 设备说明
-     * @apiParam {Number} [keep_live_interval=60] 设备心跳间隔（单位：秒）
-     * @apiParam {Number} [battery_sleep_time=180] 电源供电时的休眠时间（单位：分钟）
-     * @apiParam {Number} [battery_keep_live_time=300] 电池供电时心跳包发送后保持连接的时间（单位：秒）
-     *
-     * @apiSuccess {String} code 返回码.
-     * @apiSuccess {String} msg  返回消息.
-     * @apiSuccess {Object} data  JSON格式的对象.
-     */
-
-    /**
      * @api {post} /api/manage/device/command 向设备添加通用指令
      * @apiVersion 0.0.1
      * @apiName createCommand
@@ -494,6 +473,31 @@ public class DeviceController extends IControllerImpl {
         }
 
         return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(deviceCmdEntity, JsonNode.class));
+    }
+
+    /**
+     * @api {get} /api/manage/device/command/:id 根据设备ID获取接收到的数据
+     * @apiVersion 0.0.1
+     * @apiName getReceiveDataById
+     * @apiGroup deviceGroup
+     *
+     * @apiParam {Number} id 设备ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/device/command/{id}", method = RequestMethod.GET)
+    public ResultEntity getReceiveDataById(@PathVariable("id") long id) {
+        List<ReceiveDeviceDataEntity> dataList = this.receiveDeviceDataService.getCommandDataList(id);
+
+        if (dataList.size() > 0) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return this.createResultEntity(ResultEntity.SUCCESS,
+                    objectMapper.convertValue(dataList, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
     }
 
 }

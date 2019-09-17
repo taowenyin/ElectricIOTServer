@@ -45,6 +45,8 @@ public class DeviceCmdEntity {
     private Integer getBatteryKeepLiveTime;
     @JsonProperty("send_time")
     private String sendTime;
+    @JsonProperty("set_command")
+    private String setCommand;
     @JsonProperty("is_send")
     private Integer isSend;
     @JsonIgnore
@@ -212,6 +214,16 @@ public class DeviceCmdEntity {
     }
 
     @Basic
+    @Column(name = "set_command", nullable = true, length = 45)
+    public String getSetCommand() {
+        return setCommand;
+    }
+
+    public void setSetCommand(String setCommand) {
+        this.setCommand = setCommand;
+    }
+
+    @Basic
     @Column(name = "is_send", nullable = true)
     public Integer getIsSend() {
         return isSend;
@@ -242,13 +254,14 @@ public class DeviceCmdEntity {
                 Objects.equals(setBatteryKeepLiveTime, that.setBatteryKeepLiveTime) &&
                 Objects.equals(getBatteryKeepLiveTime, that.getBatteryKeepLiveTime) &&
                 Objects.equals(sendTime, that.sendTime) &&
+                Objects.equals(setCommand, that.setCommand) &&
                 Objects.equals(isSend, that.isSend);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, deviceId, createTime, getImsi, setDeviceName, getDeviceName, setDeviceIp, getDeviceIp, setKeepLiveInterval, getKeepLiveInterval, setBatterySleepTime, getBatterySleepTime, resetDevice, setBatteryKeepLiveTime, getBatteryKeepLiveTime, sendTime, isSend);
+        return Objects.hash(id, deviceId, createTime, getImsi, setDeviceName, getDeviceName, setDeviceIp, getDeviceIp, setKeepLiveInterval, getKeepLiveInterval, setBatterySleepTime, getBatterySleepTime, resetDevice, setBatteryKeepLiveTime, getBatteryKeepLiveTime, sendTime, setCommand, isSend);
     }
 
     @ManyToOne

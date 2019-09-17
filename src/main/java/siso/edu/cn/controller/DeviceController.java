@@ -25,6 +25,7 @@ public class DeviceController extends IControllerImpl {
     private DeviceService deviceService;
     private DeviceCmdService deviceCmdService;
     private TypeService typeService;
+    private ReceiveDeviceDataService receiveDeviceDataService;
 
     private ViewGetDeviceLastLocationService viewGetDeviceLastLocationService;
     private ViewGetAllDeviceInfoService viewGetAllDeviceInfoService;
@@ -33,11 +34,13 @@ public class DeviceController extends IControllerImpl {
     public DeviceController(DeviceService deviceService,
                             DeviceCmdService deviceCmdService,
                             TypeService typeService,
+                            ReceiveDeviceDataService receiveDeviceDataService,
                             ViewGetAllDeviceInfoService viewGetAllDeviceInfoService,
                             ViewGetDeviceLastLocationService viewGetDeviceLastLocationService) {
         this.deviceService = deviceService;
         this.deviceCmdService = deviceCmdService;
         this.typeService = typeService;
+        this.receiveDeviceDataService = receiveDeviceDataService;
         this.viewGetDeviceLastLocationService = viewGetDeviceLastLocationService;
         this.viewGetAllDeviceInfoService = viewGetAllDeviceInfoService;
     }
@@ -417,6 +420,87 @@ public class DeviceController extends IControllerImpl {
             ObjectMapper objectMapper = new ObjectMapper();
             return this.createResultEntity(ResultEntity.SUCCESS,
                     objectMapper.convertValue(deviceTypeClassifyEntityList, JsonNode.class));
+        }
+
+        return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
+    }
+
+    /**
+     * @api {post} /api/manage/device/command 向设备添加通用指令
+     * @apiVersion 0.0.1
+     * @apiName createCommand
+     * @apiGroup deviceGroup
+     *
+     * @apiParam {Number} id 设备ID
+     * @apiParam {String} command  指令内容
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/device/command", method = RequestMethod.POST)
+    public ResultEntity createCommand(@RequestParam("id") long id, @RequestParam(name = "command") String command) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // 获取时间格式
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+
+        // 创建指令实体对象
+        DeviceCmdEntity deviceCmdEntity = new DeviceCmdEntity();
+
+        DeviceEntity entity = deviceService.findById(id);
+        if (entity == null) {
+            return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
+        }
+
+        // 设置设备指令的ID
+        deviceCmdEntity.setDeviceId(id);
+        // 设置设备指令的创建时间
+        deviceCmdEntity.setCreateTime(simpleDateFormat.format(new Date()));
+
+        if (!command.isEmpty()) {
+            // 设置设备通用指令
+            deviceCmdEntity.setSetCommand(command);
+        }
+
+        // 保存指令
+        deviceCmdService.save(deviceCmdEntity);
+        if (deviceCmdEntity.getId() > 0) {
+            System.out.println("===Save Device CMD OK ===");
+        } else {
+            System.out.println("===Save Device CMD Fail ===");
+        }
+
+        return this.createResultEntity(ResultEntity.SUCCESS, objectMapper.convertValue(deviceCmdEntity, JsonNode.class));
+    }
+
+    /**
+     * @api {get} /api/manage/device/command/:id 根据设备ID获取接收到的数据
+     * @apiVersion 0.0.1
+     * @apiName getReceiveDataById
+     * @apiGroup deviceGroup
+     *
+     * @apiParam {Number} id 设备ID
+     *
+     * @apiSuccess {String} code 返回码.
+     * @apiSuccess {String} msg  返回消息.
+     * @apiSuccess {Object} data  JSON格式的对象.
+     */
+    @RequestMapping(value = "/device/command/{id}", method = RequestMethod.GET)
+    public ResultEntity getReceiveDataById(@PathVariable("id") long id) {
+        List<ReceiveDeviceDataEntity> dataList = this.receiveDeviceDataService.getCommandDataList(id);
+
+        if (dataList.size() > 0) {
+
+            for (ReceiveDeviceDataEntity item : dataList ) {
+                item.setIsRead(1);
+                receiveDeviceDataService.update(item);
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            return this.createResultEntity(ResultEntity.SUCCESS,
+                    objectMapper.convertValue(dataList, JsonNode.class));
         }
 
         return this.createResultEntity(ResultEntity.NOT_FIND_ERROR);
